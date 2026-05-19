@@ -32,3 +32,4 @@ class pasien:
     def danger_score(self):
         #untuk di sort
         pass
+

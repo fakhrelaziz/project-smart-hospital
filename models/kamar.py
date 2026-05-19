@@ -2,8 +2,8 @@ import json
 import os
 
 class kamar:
-    def __init__(self, nama_file = "kamar.json"):
-        self.nama_file = nama_file
+    def __init__(self):
+        pass
 
     def semua_kamar(self):
         pass
