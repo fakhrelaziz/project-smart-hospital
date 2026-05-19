@@ -22,5 +22,13 @@
         "layanan": "Rawat Inap",
         "status": "terdaftar",
         "danger_score": 0
+    },
+    {
+        "nik": "3201010101010004",
+        "nama": "Michael Johnson",
+        "umur": 35,
+        "layanan": "UGD",
+        "status": "terdaftar",
+        "danger_score": 5
     }
 ]
