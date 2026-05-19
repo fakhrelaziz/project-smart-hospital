@@ -1,0 +1,26 @@
+[
+    {
+        "nik": "3201010101010001",
+        "nama": "Albert Edison",
+        "umur": 35,
+        "layanan": "UGD",
+        "status": "terdaftar",
+        "danger_score": 0
+    },
+    {
+        "nik": "3201010101010002",
+        "nama": "Olivia Rodriguez",
+        "umur": 28,
+        "layanan": "Rawat Jalan",
+        "status": "terdaftar",
+        "danger_score": 0
+    },
+    {
+        "nik": "3201010101010003",
+        "nama": "Sabrina Carpenter",
+        "umur": 45,
+        "layanan": "Rawat Inap",
+        "status": "terdaftar",
+        "danger_score": 0
+    }
+]
