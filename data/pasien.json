@@ -30,5 +30,13 @@
         "layanan": "UGD",
         "status": "terdaftar",
         "danger_score": 5
+    },
+    {
+        "nik": "3201010101010005",
+        "nama": "Emily Davis",
+        "umur": 22,
+        "layanan": "Rawat Jalan",
+        "status": "terdaftar",
+        "danger_score": 0
     }
 ]
