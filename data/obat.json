@@ -1,0 +1,37 @@
+[
+    {
+        "kode": "OBT001",
+        "nama": "Paracetamol 500mg",
+        "kategori": "Obat Dalam",
+        "stok": 50,
+        "harga": 5000
+    },
+    {
+        "kode": "OBT002",
+        "nama": "Amoxicillin 500mg",
+        "kategori": "Antibiotik",
+        "stok": 30,
+        "harga": 12000
+    },
+    {
+        "kode": "OBT003",
+        "nama": "Antasida",
+        "kategori": "Obat Dalam",
+        "stok": 100,
+        "harga": 3500
+    },
+    {
+        "kode": "OBT004",
+        "nama": "Ibuprofen 400mg",
+        "kategori": "Analgesik",
+        "stok": 45,
+        "harga": 8000
+    },
+    {
+        "kode": "OBT005",
+        "nama": "Ranitidin 150mg",
+        "kategori": "Antasida",
+        "stok": 20,
+        "harga": 6500
+    }
+]

@@ -1,0 +1,32 @@
+[
+    {
+        "nomor": "K101",
+        "tipe": "VIP",
+        "status": "tersedia",
+        "pasien_terisi": null
+    },
+    {
+        "nomor": "K102",
+        "tipe": "VIP",
+        "status": "terisi",
+        "pasien_terisi": "3201010101010003"
+    },
+    {
+        "nomor": "K201",
+        "tipe": "Umum",
+        "status": "tersedia",
+        "pasien_terisi": null
+    },
+    {
+        "nomor": "K202",
+        "tipe": "Umum",
+        "status": "tersedia",
+        "pasien_terisi": null
+    },
+    {
+        "nomor": "UGD01",
+        "tipe": "UGD",
+        "status": "tersedia",
+        "pasien_terisi": null
+    }
+]
