@@ -38,5 +38,29 @@
         "layanan": "Rawat Jalan",
         "status": "terdaftar",
         "danger_score": 0
+    },
+    {
+        "nik": "3201010101010006",
+        "nama": "John Doe",
+        "umur": 40,
+        "layanan": "UGD",
+        "status": "terdaftar",
+        "danger_score": 10
+    },
+    {
+        "nik": "3201010101010006",
+        "nama": "John Doe",
+        "umur": 40,
+        "layanan": "UGD",
+        "status": "terdaftar",
+        "danger_score": 10
+    },
+    {
+        "nik": "22454267",
+        "nama": "fael",
+        "umur": 10,
+        "layanan": "hff",
+        "status": "terdaftar",
+        "danger_score": 0
     }
 ]
