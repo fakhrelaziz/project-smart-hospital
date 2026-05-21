@@ -1,53 +1,73 @@
-from utils.json_handler import load_json, save_json # memanggil fungsi load_json dan save_json dari path utils/json_handler.py
+from modules.info_kamar import lihat_kamar, tambah_kamar
+from modules.info_obat  import lihat_obat, tambah_obat
+from modules.info_pasien import lihat_pasien, tambah_pasien
 
 while True:
      print("\n=== SMART HOSPITAL ===")
-     print("1. Lihat Pasien")
-     print("2. Tambah Pasien")
-     print("3. Keluar")
+     print("1. Pasien")
+     print("2. Kamar")
+     print("3. Obat")
+     print("4. Keluar")
 
      pilihan = input("Pilih menu: ")
 
      if pilihan == "1":
+          while True:
+               print("\n=== INFO PASIEN ===")
+               print("1. Lihat Pasien")
+               print("2. Tambah Pasien")
+               print("3. Kembali")
 
-          data_pasien = load_json("data/pasien.json")
+               pilihan = input("Pilih menu: ")
 
-          for pasien in data_pasien:
-               print("-" * 40)
-               print("NIK          :", pasien["nik"])
-               print("Nama         :", pasien["nama"])
-               print("Umur         :", pasien["umur"])
-               print("Layanan      :", pasien["layanan"])
-               print("Status       :", pasien["status"])
-               print("Danger Score :", pasien["danger_score"])
-     
+               if pilihan == "1":
+                    lihat_pasien()
+
+               elif pilihan == "2":
+                    tambah_pasien()
+               
+               elif pilihan == "3":
+                    break
+
      elif pilihan == "2":
+          while True:
+               print("\n=== INFO KAMAR ===")
+               print("1. Lihat Kamar")
+               print("2. Tambah Kamar")
+               print("3. Kembali")
 
-          data_pasien = load_json("data/pasien.json")
+               pilihan = input("Pilih menu: ")
 
-          nik = input("Masukkan NIK: ")
-          nama = input("Masukkan Nama: ")
-          umur = int(input("Masukkan Umur: "))
-          layanan = input("Masukkan Layanan: ")
+               if pilihan == "1":
+                    lihat_kamar()
 
-          pasien_baru = {
-               "nik": nik,
-               "nama": nama,
-               "umur": umur,
-               "layanan": layanan,
-               "status": "terdaftar",
-               "danger_score": 0
-          }
+               elif pilihan == "2":
+                    tambah_kamar()
+               
+               elif pilihan == "3":
+                    break
 
-          data_pasien.append(pasien_baru)
 
-          save_json("data/pasien.json", data_pasien)
-
-          print("Pasien berhasil ditambahkan")
-     
      elif pilihan == "3":
-          print("Program selesai")
-          break
+          while True:
+               print("\n=== INFO OBAT ===")
+               print("1. Lihat Obat")
+               print("2. Tambah Obat")
+               print("3. Kembali")
+ 
+               pilihan = input("Pilih menu: ")
 
+               if pilihan == "1":
+                    lihat_obat()
+
+               elif pilihan == "2":
+                    tambah_obat( )
+               
+               elif pilihan == "3":
+                    break
+
+     elif pilihan == "4":
+               print("Program selesai")
+               break
      else:
           print("Pilihan tidak valid")
