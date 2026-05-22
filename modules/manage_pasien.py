@@ -1,3 +1,4 @@
+from models.pasien import Pasien
 from utils.json_handler import load_json, save_json
 
 def lihat_pasien():
@@ -28,23 +29,15 @@ def tambah_pasien():
 
     nama = input("Masukkan Nama: ")
     while True:
+        try:
+            umur = int(input("Masukkan umur: "))
+            break
 
-    try:
-        umur = int(input("Masukkan umur: "))
-        break
-
-    except ValueError:
-        print("Umur harus angka!")
+        except ValueError:
+            print("Umur harus angka!")
     layanan = input("Masukkan Layanan: ")
 
-    pasien_baru = {
-        "nik": nik,
-        "nama": nama,
-        "umur": umur,
-        "layanan": layanan,
-        "status": "terdaftar",
-        "danger_score": 0
-    }
+    pasien_baru = Pasien(nik, nama, umur, layanan)
 
     data_pasien.append(pasien_baru)
 

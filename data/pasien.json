@@ -46,5 +46,13 @@
         "layanan": "UGD",
         "status": "terdaftar",
         "danger_score": 10
+    },
+    {
+        "nik": 3201010101010007,
+        "nama": "Jhonccena",
+        "umur": 45,
+        "layanan": "Rawat Jalan",
+        "status": "terdaftar",
+        "danger_score": 0
     }
 ]

@@ -28,5 +28,11 @@
         "tipe": "UGD",
         "status": "tersedia",
         "pasien_terisi": null
+    },
+    {
+        "nomor": "K205",
+        "tipe": "Umum",
+        "status": "Tersedia",
+        "pasien_terisi": false
     }
 ]
