@@ -1,35 +1,27 @@
-import json
-import os
+class Pasien:
+    def __init__(self, nik, nama, umur, jenisLayanan):
+        self.nik = nik
+        self.nama = nama
+        self.umur = umur
+        self.jenisLayanan = jenisLayanan
+        self.riwayat = None
+        self.danger_score = 0
+        self.status = "Terdaftar"
 
-class pasien:
-    def __init__(self, nik, nama, umur, penyakit, danger_score):
-        pass
+    def dataPasien(self):
+        return (f"NIK: {self.nik}\nNama: {self.nama}\nUmur:{self.umur}")
 
-    def semua_pasien(self):
-        #untuk print semua data pasien
-        pass
+    def cekDangerScore(self):
+        return self.danger_score
 
-    def data_pasien(self):
-        #print data pasien yang spesifik
-        pass
+    def updateDangerScore(self, dangerScoreBaru):
+        self.danger_score = dangerScoreBaru
 
-    def simpan_data(self):
-        #masukin data pasien ke file pasien.json
-        pass
+    def updateStatus(self, statusBaru):
+        self.status = statusBaru
 
-    def daftar(self):
-        #mendaftarkan pasien
-        pass
+    def updateLayanan(self, layananBaru):
+        self.jenisLayanan = layananBaru
 
-    def dimana_pasien(self):
-        #mencari nomor kamar pasien
-        pass
-
-    def update_data(self):
-        #perbarui data pasien
-        pass
-
-    def danger_score(self):
-        #untuk di sort
-        pass
-
+    def setKamar(self, nomorKamarBaru):
+        self.kamar = nomorKamarBaru

@@ -21,10 +21,10 @@ def tambah_kamar():
      status = input("Masukkan status: ")
 
      kamar_baru = {
-          "nomor": nik,
-          "tipe": nama,
-          "status": umur,
-          "pasien_terisi": null
+          "nomor": nomor,
+          "tipe": tipe,
+          "status": status,
+          "pasien_terisi": False
      }
 
      data_kamar.append(kamar_baru)

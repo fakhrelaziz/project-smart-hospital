@@ -16,11 +16,11 @@ def tambah_obat():
 
      data_obat = load_json("data/obat.json")
 
-     kode = input("Masukkan nomor kamar: ")
-     nama = input("Masukkan tipe: ")
-     kategori = input("Masukkan status: ")
-     stok = input("Berapa stok?:  ")
-     harga = input("Harga: ")
+     kode = input("Masukkan kode obat: ")
+     nama = input("Masukkan nama: ")
+     kategori = input("Masukkan kategori: ")
+     stok = int(input("Berapa stok?:  "))
+     harga = int(input("Harga: "))
      
      obat_baru = {
           "kode": kode,
@@ -35,4 +35,3 @@ def tambah_obat():
      save_json("data/obat.json", data_obat)
 
      print("Obat berhasil ditambahkan")
-               
