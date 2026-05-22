@@ -20,7 +20,7 @@ def tambah_pasien():
 
     data_pasien = load_json("data/pasien.json")
 
-    nik = int(input("Masukkan NIK: "))
+    nik = input("Masukkan NIK: ")
 
     for pasien in data_pasien:
         if pasien["nik"] == nik:
