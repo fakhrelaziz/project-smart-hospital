@@ -3,7 +3,7 @@
         "nomor": "K101",
         "tipe": "VIP",
         "status": "tersedia",
-        "pasien_terisi": null
+        "pasien_terisi": false
     },
     {
         "nomor": "K102",
@@ -15,19 +15,19 @@
         "nomor": "K201",
         "tipe": "Umum",
         "status": "tersedia",
-        "pasien_terisi": null
+        "pasien_terisi": false
     },
     {
         "nomor": "K202",
         "tipe": "Umum",
         "status": "tersedia",
-        "pasien_terisi": null
+        "pasien_terisi": false
     },
     {
         "nomor": "UGD01",
         "tipe": "UGD",
         "status": "tersedia",
-        "pasien_terisi": null
+        "pasien_terisi": false
     },
     {
         "nomor": "K205",

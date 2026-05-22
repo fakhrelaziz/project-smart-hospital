@@ -25,6 +25,8 @@ class Kamar:
     def __init__(self, nomor, kelas):
         self.nomor = nomor
         self.kelas = kelas
+        self.status = "Tersedia"
+        self.pasien_terisi = False
         kasurPerRuangan = {
             "VIP": 1,
             "Kelas 1": 2,
