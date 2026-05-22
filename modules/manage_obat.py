@@ -1,3 +1,4 @@
+from models.obat import Obat
 from utils.json_handler import load_json, save_json
 
 def lihat_obat():
@@ -22,13 +23,7 @@ def tambah_obat():
      stok = int(input("Berapa stok?:  "))
      harga = int(input("Harga: "))
      
-     obat_baru = {
-          "kode": kode,
-          "nama": nama,
-          "kategori": kategori,
-          "stok": stok,
-          "harga": harga
-     }
+     obat_baru = Obat(kode, nama, kategori, stok, harga)
 
      data_obat.append(obat_baru)
 

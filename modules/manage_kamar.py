@@ -1,3 +1,4 @@
+from models.kamar import Kamar
 from utils.json_handler import load_json, save_json
 
 def lihat_kamar():
@@ -18,14 +19,8 @@ def tambah_kamar():
 
      nomor = input("Masukkan nomor kamar: ")
      tipe = input("Masukkan tipe: ")
-     status = input("Masukkan status: ")
 
-     kamar_baru = {
-          "nomor": nomor,
-          "tipe": tipe,
-          "status": status,
-          "pasien_terisi": False
-     }
+     kamar_baru = Kamar(nomor, tipe)
 
      data_kamar.append(kamar_baru)
 
