@@ -5,7 +5,9 @@
         "umur": 35,
         "layanan": "UGD",
         "status": "terdaftar",
-        "danger_score": 0
+        "danger_score": 0,
+        "nomor_kamar": null,
+        "rekam_medis": []
     },
     {
         "nik": "3201010101010002",
@@ -13,7 +15,9 @@
         "umur": 28,
         "layanan": "Rawat Jalan",
         "status": "terdaftar",
-        "danger_score": 0
+        "danger_score": 0,
+        "nomor_kamar": null,
+        "rekam_medis": []
     },
     {
         "nik": "3201010101010003",
@@ -21,7 +25,20 @@
         "umur": 45,
         "layanan": "Rawat Inap",
         "status": "terdaftar",
-        "danger_score": 0
+        "danger_score": 0,
+        "nomor_kamar": "K102",
+        "rekam_medis": [
+            {
+                "tanggal": "2025-01-10",
+                "diagnosis": "Hipertensi",
+                "resep": "OBT001"
+            },
+            {
+                "tanggal": "2025-01-15",
+                "diagnosis": "Kontrol rutin",
+                "resep": "OBT003"
+            }
+        ]
     },
     {
         "nik": "3201010101010004",
@@ -29,7 +46,9 @@
         "umur": 35,
         "layanan": "UGD",
         "status": "terdaftar",
-        "danger_score": 5
+        "danger_score": 5,
+        "nomor_kamar": null,
+        "rekam_medis": []
     },
     {
         "nik": "3201010101010005",
@@ -37,7 +56,9 @@
         "umur": 22,
         "layanan": "Rawat Jalan",
         "status": "terdaftar",
-        "danger_score": 0
+        "danger_score": 0,
+        "nomor_kamar": null,
+        "rekam_medis": []
     },
     {
         "nik": "3201010101010006",
@@ -46,6 +67,8 @@
         "layanan": "UGD",
         "status": "terdaftar",
         "danger_score": 10
+        "nomor_kamar": null,
+        "rekam_medis": []
     },
     {
         "nik": 3201010101010007,
@@ -54,5 +77,13 @@
         "layanan": "Rawat Jalan",
         "status": "terdaftar",
         "danger_score": 0
+        "nomor_kamar": null,
+        "rekam_medis": []
     }
 ]
+
+// tambah nomor_kamar untuk Double Linked List kamar 
+// perlu tahu pasien mana yang ada di kamar mana
+// tambah rekam_medis karena ada fungsi rekam medi yaitu Single Linked List rekam medis
+// List kosong = pasien baru belum pernah berobat.
+// List berisi = riwayat kunjungan sebelumnya.
