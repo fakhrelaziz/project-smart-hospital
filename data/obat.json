@@ -4,34 +4,42 @@
         "nama": "Paracetamol 500mg",
         "kategori": "Obat Dalam",
         "stok": 50,
-        "harga": 5000
+        "harga": 5000,
+        "dosis_harian": 3
     },
     {
         "kode": "OBT002",
         "nama": "Amoxicillin 500mg",
         "kategori": "Antibiotik",
         "stok": 30,
-        "harga": 12000
+        "harga": 12000,
+        "dosis_harian": 2
     },
     {
         "kode": "OBT003",
         "nama": "Antasida",
         "kategori": "Obat Dalam",
         "stok": 100,
-        "harga": 3500
+        "harga": 3500,
+        "dosis_harian": 3
     },
     {
         "kode": "OBT004",
         "nama": "Ibuprofen 400mg",
         "kategori": "Analgesik",
         "stok": 45,
-        "harga": 8000
+        "harga": 8000,
+        "dosis_harian": 2
     },
     {
         "kode": "OBT005",
         "nama": "Ranitidin 150mg",
         "kategori": "Antasida",
         "stok": 20,
-        "harga": 6500
+        "harga": 6500,
+        "dosis_harian": 2
     }
 ]
+
+
+    // butuh bagian dosis_harian ini untuk menghitung estimasi hari stok habis pakai fungsi rekursif.
