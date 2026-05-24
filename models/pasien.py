@@ -4,9 +4,10 @@ class Pasien:
         self.nama = nama
         self.umur = umur
         self.jenis_layanan = layanan
-        self.status = "Terdaftar"
-        self.rekam_medis = None
+        self.status = "terdaftar"
+        self.rekam_medis = []
         self.danger_score = 0
+        self.kamar = None
         
     
     def objek_ke_dict(self):
@@ -32,7 +33,12 @@ class Pasien:
         self.rekam_medis = data.get("rekam_medis", [])
         
     def data_pasien(self):
-        return (f"NIK: {self.nik}\nNama: {self.nama}\nUmur:{self.umur}")
+        return (f"NIK          : {self.nik}\n"
+                f"Nama         : {self.nama}\n"
+                f"Umur         : {self.umur}\n"
+                f"Layanan      : {self.jenis_layanan}\n"
+                f"Status       : {self.status}\n"
+                f"Danger Score : {self.danger_score}")
 
     def cek_danger_score(self):
         return self.danger_score
