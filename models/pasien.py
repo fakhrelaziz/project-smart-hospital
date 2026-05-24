@@ -1,27 +1,50 @@
 class Pasien:
-    def __init__(self, nik, nama, umur, jenisLayanan):
+    def __init__(self, nik, nama, umur, layanan):
         self.nik = nik
         self.nama = nama
         self.umur = umur
-        self.jenisLayanan = jenisLayanan
-        self.riwayat = None
-        self.danger_score = 0
+        self.jenis_layanan = layanan
         self.status = "Terdaftar"
-
-    def dataPasien(self):
+        self.rekam_medis = None
+        self.danger_score = 0
+        
+    
+    def objek_ke_dict(self):
+        return {
+            "nik"         : self.nik,
+            "nama"        : self.nama,
+            "umur"        : self.umur,
+            "layanan"     : self.jenis_layanan,  # sesuaikan key-nya
+            "status"      : self.status,
+            "danger_score": self.danger_score,
+            "nomor_kamar" : self.kamar if hasattr(self, 'kamar') else None,
+            "rekam_medis" : []
+        }
+    
+    def dict_ke_objek(self, data):
+        self.nik = data.get("nik")
+        self.nama = data.get("nama")
+        self.umur = data.get("umur")
+        self.jenis_layanan = data.get("layanan")
+        self.status = data.get("status")
+        self.danger_score = data.get("danger_score")
+        self.kamar = data.get("nomor_kamar")
+        self.rekam_medis = data.get("rekam_medis", [])
+        
+    def data_pasien(self):
         return (f"NIK: {self.nik}\nNama: {self.nama}\nUmur:{self.umur}")
 
-    def cekDangerScore(self):
+    def cek_danger_score(self):
         return self.danger_score
 
-    def updateDangerScore(self, dangerScoreBaru):
-        self.danger_score = dangerScoreBaru
+    def update_danger_score(self, danger_score_baru):
+        self.danger_score = danger_score_baru
 
-    def updateStatus(self, statusBaru):
-        self.status = statusBaru
+    def update_status(self, status_baru):
+        self.status = status_baru
 
-    def updateLayanan(self, layananBaru):
-        self.jenisLayanan = layananBaru
+    def update_layanan(self, layanan_baru):
+        self.jenis_layanan = layanan_baru
 
-    def setKamar(self, nomorKamarBaru):
-        self.kamar = nomorKamarBaru
+    def set_kamar(self, nomor_kamar_baru):
+        self.kamar = nomor_kamar_baru

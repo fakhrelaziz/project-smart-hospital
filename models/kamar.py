@@ -1,68 +1,89 @@
-class DLL:
-    def __init__(self):
-        self.head = None
-        self.tail = None
-
-    def tambah_kamar(self, kamar_baru):
-        if self.head is None:
-            self.head = kamar_baru
-            self.tail = kamar_baru
-        else:
-            self.tail.next = kamar_baru
-            kamar_baru.prev = self.tail
-            self.tail = kamar_baru
-
-    def cari_kamar_kosong(self):
-        kamar_tersedia = []
-        current = self.head
-        while current is not None:
-            if current.status == "Kosong":
-                kamar_tersedia.append(current)
-            current = current.next  
-        return kamar_tersedia
-
 class Kamar:
-    def __init__(self, nomor, kelas):
+    def __init__(self, nomor, tipe, status="tersedia", pasien_terisi=None, kapasitas_kasur=1):
         self.nomor = nomor
-        self.kelas = kelas
-        self.status = "Tersedia"
-        self.pasien_terisi = False
-        kasurPerRuangan = {
-            "VIP": 1,
-            "Kelas 1": 2,
-            "Kelas 2": 3,
-            "Kelas 3": 5
+        self.tipe = tipe
+        self.status = status          
+        self.kapasitas_kasur = kapasitas_kasur 
+        
+        # Mengecek dari data yang masuk apakah pasien_terisi berupa list (multipple) atau false/NIK (single)
+        if pasien_terisi is False or pasien_terisi is None:
+            self.pasien_terisi = []
+        elif isinstance(pasien_terisi, list):
+            self.pasien_terisi = pasien_terisi
+        else:
+            # Jika isinya berupa 1 string NIK, konversikan ke dalam list
+            self.pasien_terisi = [pasien_terisi]
+
+    def data_kamar(self):
+        daftar_pasien = ", ".join(self.pasien_terisi) if self.pasien_terisi else "Kosong"
+        return f"[Kamar {self.nomor}] Tipe: {self.tipe} | Status: {self.status} | Terisi: {daftar_pasien}"
+
+    def to_dict(self):
+        # Format sesuai dengan kamar.json di mana pasien_terisi False jika kosong
+        pt_export = False
+        if len(self.pasien_terisi) > 0:
+            if self.kapasitas_kasur == 1:
+                pt_export = self.pasien_terisi[0]
+            else:
+                pt_export = self.pasien_terisi
+                
+        return {
+            "nomor": self.nomor,
+            "tipe": self.tipe,
+            "status": self.status,
+            "pasien_terisi": pt_export
         }
 
-        self.kapasitasKasur = kasurPerRuangan.get(kelas, 1)
-
-        self.pasienTerisi = []
-
-        self.next = None
-        self.prev = None
-
-    def statusKamar(self):
-        jumlahPasien = len(self.pasienTerisi)
+    @classmethod
+    def from_dict(cls, data):
+        # Karena di kamar.json tidak ada 'kapasitas_kasur', kita bisa otomatiskan berdasarkan tipe
+        kapasitas = 1
+        if data.get("tipe") == "Umum":
+            kapasitas = 2
+        elif data.get("tipe") == "UGD":
+            kapasitas = 4
+            
+        return cls(
+            nomor=data.get("nomor"),
+            tipe=data.get("tipe"),
+            status=data.get("status", "tersedia"),
+            pasien_terisi=data.get("pasien_terisi", False),
+            kapasitas_kasur=kapasitas
+        )
         
-        if jumlahPasien == 0:
+    def status_kamar(self):
+        jumlah_pasien = len(self.pasien_terisi)
+
+        if jumlah_pasien == 0:
             return "Kosong"
-        elif jumlahPasien < self.kapasitasKasur:
-            kasurSisa = self.kapasitasKasur - jumlahPasien
-            return f"Ada {kasurSisa} kasur kosong)"
+        elif jumlah_pasien < self.kapasitas_kasur:
+            kasur_sisa = self.kapasitas_kasur - jumlah_pasien
+            return f"Ada {kasur_sisa} kasur kosong"
         else:
             return "Penuh"
 
-    def pasienMasuk(self, pasien):
-        if len(self.pasienTerisi) < self.kapasitasKasur:
-            self.pasienTerisi.append(pasien)
+    def pasien_masuk(self, pasien):
+        if len(self.pasien_terisi) < self.kapasitas_kasur:
+            self.pasien_terisi.append(pasien)
+            
+            # Update status jika setelah pasien masuk, kamar menjadi penuh
+            if len(self.pasien_terisi) >= self.kapasitas_kasur:
+                self.status = "terisi"
+            
             return True
         else:
             print(f"Kamar {self.nomor} sudah penuh!")
             return False
 
-    def pasienKeluar(self, pasien):
-        if pasien in self.pasienTerisi:
-            self.pasienTerisi.remove(pasien)
+    def pasien_keluar(self, pasien):
+        if pasien in self.pasien_terisi:
+            self.pasien_terisi.remove(pasien)
             print(f"Pasien keluar dari Kamar {self.nomor}")
+            
+            # Update status kamar jika setelah pasien keluar, kapasitas tidak penuh
+            if len(self.pasien_terisi) < self.kapasitas_kasur:
+                self.status = "tersedia"
         else:
             print("Pasien tidak ditemukan di kamar ini.")
+
+    
