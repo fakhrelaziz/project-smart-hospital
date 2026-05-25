@@ -40,17 +40,31 @@ class Pasien:
                 f"Status       : {self.status}\n"
                 f"Danger Score : {self.danger_score}")
 
+    #fungsi untuk cek danger score pasien, bisa digunakan untuk menentukan prioritas perawatan atau tindakan medis
     def cek_danger_score(self):
         return self.danger_score
 
+    #fungsi untuk update danger score pasien, misalnya setelah dilakukan pemeriksaan atau perawatan
     def update_danger_score(self, danger_score_baru):
         self.danger_score = danger_score_baru
 
+    #fungsi untuk update status pasien, misalnya dari terdaftar ke dirawat atau sembuh
     def update_status(self, status_baru):
         self.status = status_baru
 
+    #fungsi untuk update jenis layanan pasien, misalnya dari rawat jalan ke rawat inap
     def update_layanan(self, layanan_baru):
         self.jenis_layanan = layanan_baru
 
+    #fungsi menyimpan informasi kamar yang ditempati pasien
     def set_kamar(self, nomor_kamar_baru):
         self.kamar = nomor_kamar_baru
+
+    def tambah_rekam_medis(self, tanggal, diagnosis, resep):
+        # Saat ini menggunakan list, nantinya bisa diintegrasikan dengan modul SLL
+        rekam_baru = {
+            "tanggal": tanggal,
+            "diagnosis": diagnosis,
+            "resep": resep
+        }
+        self.rekam_medis.append(rekam_baru)
