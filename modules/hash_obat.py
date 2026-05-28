@@ -15,6 +15,7 @@ Struktur slot setelah insert:
    }
 '''
 
+
 class HashObat:
     def __init__(self, ukuran: int = 20): #disini ukuran default kita buat 20, bisa diubah sesuai kebutuhan
         #1. Menentukan ukuran slot lemari apotek
@@ -51,7 +52,6 @@ class HashObat:
         Jika kode sudah ada → data diperbarui (update).
         Jika belum ada → data baru ditambahkan.
         detail_obat minimal berisi: nama, kategori, stok, harga
-        Mengembalikan True jika berhasil.
     '''
     def insert(self, kode_obat: str, detail_obat: dict):
         #5. Memasukkan atau memperbarui data obat lama langsung ke slot yang ditentukan oleh fungsi hash
@@ -60,10 +60,13 @@ class HashObat:
         #cek dulu, kalau kodenya belum pernah ada di slot ini, berarti statusnya obat baru
         if kode_obat not in self._tabel[index]:
             self._total_obat += 1
+            status_aksi = "menambahkan obat baru"
+        else:
+            status_aksi = "memperbarui data obat"
             
         #langsung simpan/timpa ke dalam dictionary slot tujuan
         self._tabel[index][kode_obat] = detail_obat
-        print(f"[Apotek] Sukses menyimpan '{kode_obat}' di slot {index}.")
+        print(f"[SISTEM] Sukses {status_aksi} '{kode_obat}' di slot {index}.")
 
 
     '''
@@ -136,10 +139,10 @@ class HashObat:
             #hapus datanya langsung dari dictionary menggunakan perintah 'del' bawaan Python
             del self._tabel[index][kode_obat]
             self._total_obat -= 1 #kurangi catatan total obat di lemari
-            print(f"[Apotek] Sukses menghapus obat '{kode_obat}' dari slot {index}.")
+            print(f"[SISTEM] Sukses menghapus obat '{kode_obat}' dari slot {index}.")
             return True
             
-        print(f"[Apotek] Gagal menghapus, obat '{kode_obat}' tidak ditemukan!")
+        print(f"[SISTEM] Gagal menghapus, obat '{kode_obat}' tidak ditemukan!")
         return False
     
 
@@ -267,7 +270,7 @@ if __name__ == "__main__":
 
     detail = ht.get("OBT999")   #kita coba cari kode yang tidak terdaftar
     print(f"Hasil pencarian 'OBT999': ", end="")
-    ht.cetak_obat  (detail)
+    ht.cetak_obat(detail)
 
     detail = ht.get("OBT003")
     print(f"Hasil pencarian 'OBT003': ", end="")
