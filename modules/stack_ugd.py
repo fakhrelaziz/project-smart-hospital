@@ -17,7 +17,7 @@ class Stack_UGD:
     def __init__(self, batas_undo = 20): #disini ukuran default kita buat 20, bisa diubah sesuai kebutuhan
         '''
         batas_undo : jumlah aksi maksimal yang bisa disimpan di dalam tumpukan.
-        jadi, akksi terlama otomatis dihapus saat batas tercapai.
+        jadi, akksi terlama otomatis dihapus saat batas tercapai. biar memori gapenuh dari data yang lama
         '''
 
         #ini buat memastikan batas tidak diisi angka minus atau nol oleh pengguna
