@@ -1,77 +1,111 @@
+"""
+File       : modules/manage_pasien.py
+Deskripsi  : Antarmuka CLI untuk manajemen antrian dan daftar pasien Smart Hospital.
+Tujuan     : Menyediakan operasi interaktif terminal untuk pasien yang dikombinasikan dengan antrean pendaftaran.
+Catatan    : 
+             - Menggunakan struktur data Queue manual (QueuePendaftaran) untuk alur pasien 'antri'.
+             - Fitur SLL, Tree, dll di-stubbing terlebih dahulu menunggu pengerjaan tim.
+Relasi     :
+             - models.pasien.Pasien
+             - utils.json_handler
+             - modules.queue_pendaftaran.QueuePendaftaran
+"""
 from models.pasien import Pasien
 from utils.json_handler import load_json, save_json
+from modules.queue_pendaftaran import QueuePendaftaran
 
-def lihat_pasien():
+# Instansiasi objek struktur data secara global per eksekusi modul
+global_queue = QueuePendaftaran()
 
+def _load_data_ke_queue(data_pasien: list):
+    """Helper untuk memuat ulang pasien yang statusnya 'antri' ke dalam struktur Queue."""
+    global_queue._items.clear()
+    antrian = [p for p in data_pasien if p.get("status") == "antri"]
+    global_queue.from_list(antrian)
+
+def daftar_pasien_baru():
+    """Mendaftar pasien secara FIFO (masuk ke antrean belakang)."""
+    data_pasien = load_json("data/pasien.json")
+    _load_data_ke_queue(data_pasien)
+
+    nik = input("Masukkan NIK: ").strip()
+
+    # Validasi mencegah duplikasi
+    for pasien in data_pasien:
+        if pasien["nik"] == nik:
+            print("[INFO] NIK ini sudah ada di dalam sistem!")
+            return
+
+    nama = input("Masukkan Nama: ").strip()
+    while True:
+        try:
+            umur = int(input("Masukkan Umur: ").strip())
+            break
+        except ValueError:
+            print("[ERROR] Umur harus berupa angka (integer)!")
+            
+    layanan = input("Masukkan Layanan (UGD/Rawat Inap/Rawat Jalan): ").strip()
+    if not layanan:
+        layanan = "Umum"
+
+    # Bikin Objek Models
+    pasien_baru = Pasien(nik, nama, umur, layanan)
+    # Tetapkan statis saat daftar defaultnya masuk ke dalam antrean pendaftaran
+    pasien_baru.status = "antri"
+    
+    # Parsing Dict
+    p_dict = pasien_baru.objek_ke_dict()
+
+    # Eksekusi Queue Pendaftaran Enqueue
+    berhasil = global_queue.enqueue(p_dict)
+    
+    if berhasil:
+        data_pasien.append(p_dict)
+        save_json("data/pasien.json", data_pasien)
+
+def proses_antrian_pendaftaran():
+    """Mengeksekusi Queue Dequeue pada pasien paling depan, status dari 'antri' otomatis berubah 'terdaftar'."""
+    data_pasien = load_json("data/pasien.json")
+    _load_data_ke_queue(data_pasien)
+
+    pasien_diproses = global_queue.dequeue()
+    
+    if pasien_diproses:
+        # Refleksikan status baru ke master data list
+        for master_p in data_pasien:
+            if master_p["nik"] == pasien_diproses["nik"]:
+                master_p["status"] = "terdaftar"
+                break
+        
+        save_json("data/pasien.json", data_pasien)
+
+def lihat_antrian_pendaftaran():
+    """Menampilkan line up Queue Pendaftaran di layar tanpa memanipulasi datanya."""
+    data_pasien = load_json("data/pasien.json")
+    _load_data_ke_queue(data_pasien)
+    
+    global_queue.tampilkan_antrian()
+
+def undo_pendaftaran_terakhir():
+    """Stub / Menunggu Modul Stack UGD/Lainnya yang akan membalikkan Undo (Pop)."""
+    print("\n[INFO] Fitur Undo Pendaftaran Terakhir akan memakai struktur STACK.")
+    print("       (Menunggu implementasi stack yang fix).")
+
+def lihat_semua_pasien():
+    """Menampilkan histori atau status semua pasien di database rumah sakit."""
     data_pasien_dict = load_json("data/pasien.json")
 
-    # Mengubah data mentah (dict) menjadi barisan Objek Pasien
     daftar_objek_pasien = []
     for data in data_pasien_dict:
         pasien_obj = Pasien("", "", 0, "")
         pasien_obj.dict_ke_objek(data)
         daftar_objek_pasien.append(pasien_obj)
 
-    # Menampilkan data menggunakan fungsi dari class Pasien
-    print("\n--- DAFTAR PASIEN RUMAH SAKIT ---")
-    for pasien in daftar_objek_pasien:
-        print("-" * 40)
-        print(pasien.data_pasien())
+    print("\n--- DAFTAR KESELURUHAN PASIEN RUMAH SAKIT ---")
+    if not daftar_objek_pasien:
+        print("Sistem belum memiliki catatan riwayat pasien satupun.")
+    else:
+        for pasien in daftar_objek_pasien:
+            print("-" * 40)
+            print(pasien.data_pasien())
     print("-" * 40)
-
-# fungsi untuk menambah pasien baru ke data JSON
-def tambah_pasien():
-    data_pasien = load_json("data/pasien.json")
-
-    nik = input("Masukkan NIK: ")
-
-    # validasi NIK
-    for pasien in data_pasien:
-        if pasien["nik"] == nik:
-            print("NIK sudah terdaftar")
-            return
-
-    nama = input("Masukkan Nama: ")
-    # error handling untuk input umur, memastikan hanya angka yang diterima
-    while True:
-        try:
-            umur = int(input("Masukkan umur: "))
-            break
-
-        except ValueError:
-            print("Umur harus angka!")
-    layanan = input("Masukkan Layanan: ")
-    
-    # membuat objek pasien baru dengan data yang di input user
-    pasien_baru = Pasien(nik, nama, umur, layanan)
-
-    data_pasien.append(pasien_baru.objek_ke_dict())
-    
-    # menyimpan data pasien yang sudah diperbarui ke file JSON
-    save_json("data/pasien.json", data_pasien)
-
-    print("Pasien berhasil ditambahkan")
-
-
-def sub_menu_pendaftaran(queue_pendaftaran, stack_undo, set_nik, dict_pasien):
-    while True:
-        print("\n=== PENDAFTARAN PASIEN ===")
-        print("  [1] Daftar Pasien Baru")
-        print("  [2] Proses Antrian Loket")
-        print("  [3] Lihat Antrian Saat Ini")
-        print("  [4] Undo Pendaftaran Terakhir")
-        print("  [0] Kembali ke Menu Utama")
-        pilihan = input(">>> Pilih menu: ")
-
-        if pilihan == "1":
-            daftar_pasien_baru(queue_pendaftaran, stack_undo, set_nik, dict_pasien)
-        elif pilihan == "2":
-            proses_antrian(queue_pendaftaran, dict_pasien)
-        elif pilihan == "3":
-            lihat_antrian(queue_pendaftaran)
-        elif pilihan == "4":
-            undo_pendaftaran(queue_pendaftaran, stack_undo, set_nik, dict_pasien)
-        elif pilihan == "0":
-            break
-        else:
-            print("[ERROR] Pilihan tidak valid.")

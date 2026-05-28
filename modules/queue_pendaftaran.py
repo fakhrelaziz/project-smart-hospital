@@ -1,23 +1,9 @@
-'''
-Konsep nya tu FIFO (First In, First Out):
-  Pasien yang datang pertama -> dilayani pertama.
-  enqueue() -> masuk dari belakang (append ke akhir list)
-  dequeue() -> keluar dari depan (pop index 0)
-Data pasien dalam antrean disimpan sebagai dictionary ringkas
-'''
-
-
 class QueuePendaftaran:
     def __init__(self):  
         self._items: list = []  #kita buat list kosong untuk menyimpan data pasien yang masuk antrean
 
 
     def enqueue(self, pasien: dict):
-        '''
-        menambahkan pasien ke belakang antrean.
-        mengembalikan True jika berhasil, False jika data tidak valid.
-        '''
-
         #validasi 1: memastikan data yang dikirim wajib berbentuk Dictionary {}
         if not isinstance(pasien, dict):
             print("[SISTEM] ERROR: pasien harus berupa dictionary.")
@@ -101,41 +87,3 @@ class QueuePendaftaran:
 
 
 
-#Coba Demo mandiri — jalankan: python modules/queue_pendaftaran.py
-if __name__ == "__main__":
-    print("=== Demo modules/queue_pendaftaran.py ===\n")
-
-    q = QueuePendaftaran()
-
-    # Cek antrean kosong
-    print(f"Antrean kosong? {q.cek_antrian_kosong()}")
-    q.tampilkan_antrian()
-    print()
-
-    # Enqueue beberapa pasien
-    q.enqueue({"nik": "3201010101010001", "nama": "Budi Santoso",  "layanan": "UGD"})
-    q.enqueue({"nik": "3201010101010003", "nama": "Ahmad Fauzi",   "layanan": "Rawat Inap"})
-    q.enqueue({"nik": "3201010101010099", "nama": "Dewi Lestari",  "layanan": "Spesialis"})
-    print()
-
-    q.tampilkan_antrian ()
-    print()
-
-    #lihat pasien — pasien pertama tidak berubah
-    pertama = q.lihat_pasien()
-    print(f"Lihat pasien (tidak dihapus): {pertama['nama']}")
-    print(f"Jumlah pasien      : {q.jmlh_antrian_pasien()}")
-    print()
-
-    #Dequeue satu per satu — urutan HARUS sesuai urutan masuk
-    print("--- Proses dequeue (FIFO) ---")
-    for _ in range(q.jmlh_antrian_pasien() + 1):   #+1 untuk uji kondisi kosong
-        dilayani = q.dequeue()
-        if dilayani:
-            print(f"  Dilayani: {dilayani['nama']}")
-    print()
-
-    #kita uji input tidak valid
-    print("--- Uji data tidak valid ---")
-    q.enqueue("bukan dictionary")
-    q.enqueue({"nama": "Tanpa NIK", "layanan": "UGD"})
