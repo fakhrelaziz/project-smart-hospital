@@ -1,4 +1,5 @@
 '''
+
 Konsep dasar yang digunakan adalah STACK / TUMPUKAN (LIFO - Last In, First Out):
   - Aksi yang terakhir dilakukan -> akan pertama kali dibatalkan (Undo).
   - tambah_aksi() [Push] -> memasukkan riwayat perubahan skor ke atas tumpukan.
@@ -6,39 +7,25 @@ Konsep dasar yang digunakan adalah STACK / TUMPUKAN (LIFO - Last In, First Out):
   - intip_aksi_terakhir() [Peek] -> melihat catatan perubahan terakhir tanpa membatalkannya.
 '''
 '''
-disini tu nnanti ada pakai istilah "triase", itu arti proses penentuan tingkat bahaya pasien di UGD 
+disini tu nnanti ada pakai istilah "triase", itu arti proses penentuan tingkat bahaya pasien di UGD
 berdasarkan gejala yang dialami. Skor triase ini penting untuk menentukan prioritas penanganan pasien.
 '''
 
-from datetime import datetime
-#pakai ini buat catat kapan aksi perubahan skor itu terjadi, jadi kita bisa tahu riwayatnya dengan lebih jelas
 
 class Stack_UGD:
-    def __init__(self, batas_undo = 20): #disini ukuran default kita buat 20, bisa diubah sesuai kebutuhan
-        '''
-        batas_undo : jumlah aksi maksimal yang bisa disimpan di dalam tumpukan.
-        jadi, akksi terlama otomatis dihapus saat batas tercapai. biar memori gapenuh dari data yang lama
-        '''
 
-        #ini buat memastikan batas tidak diisi angka minus atau nol oleh pengguna
-        if batas_undo < 1:
-            print("[SISTEM] PERINGATAN: Batas undo tidak valid. Nilai diatur ke default (20).")
-            self._batas = 20
-        else:
-            self._batas = batas_undo
+    def __init__(self):
+        #kita buat list kosong untuk menyimpan riwayat aksi/perubahan skor bahaya
+        self._riwayat_aksi: list = []
 
-        self._riwayat_aksi = []  #kita buat list kosong untuk menyimpan riwayat aksi/perubahan skor bahaya
-        
-
-
-    def tambah_aksi(self, aksi: dict):
+    def tambah_aksi(self, aksi: dict) -> bool:
         '''
         menyimpan aksi/perubahan skor terakhir ke dalam stack (Push).
         mengembalikan True jika berhasil, False jika data tidak valid.
         '''
         #validasi 1: memastikan data riwayat berbentuk Dictionary {}
         if not isinstance(aksi, dict):
-            print("[SISTEM] ERROR: Data aksi harus berupa dictionary.")
+            print("[STACK-UGD] ERROR: Data aksi harus berupa dictionary.")
             return False
 
         #validasi 2: memastikan kunci-kunci penting (nik, skor_lama, skor_baru) ada di dalam data
@@ -47,21 +34,6 @@ class Stack_UGD:
             if kunci not in aksi:
                 print(f"[SISTEM] ERROR: Data aksi tidak lengkap! Kurang key '{kunci}'.")
                 return False
-            
-
-        #otomatis 1: Isi waktu otomatis jika tidak disertakan oleh admin 
-        if "waktu" not in aksi:
-            aksi["waktu"] = datetime.now().strftime("%Y-%m-%d %H:%M:%S")  #ini mkanya pakai import datetime di awal, untuk catat kapan aksi itu terjadi
-
-        #otomatis 2: Isi keterangan default jika tidak disertakan oleh admin (
-        if "keterangan" not in aksi:
-            aksi["keterangan"] = "ubah skor triase"
-
-        #buang aksi terlama (indeks 0) jika sudah menyentuh batas maksimal
-        if len(self._riwayat_aksi) >= self._batas:
-            dibuang = self._riwayat_aksi.pop(0)
-            print(f"[SISTEM] Batas {self._batas} aksi tercapai. "
-                  f"Aksi terlama NIK '{dibuang['nik']}' dihapus dari memori.")
 
         #memasukkan data aksi ke urutan paling akhir (paling atas di dalam tumpukan)
         self._riwayat_aksi.append(aksi)
@@ -69,7 +41,7 @@ class Stack_UGD:
         return True
 
 
-    def batalkan_aksi(self):
+    def batalkan_aksi(self) -> dict:
         '''
         mengambil dan menghapus aksi terakhir untuk proses UNDO (Pop).
         Mengembalikan dict aksi untuk memulihkan skor lama, atau None jika stack kosong.
@@ -79,6 +51,7 @@ class Stack_UGD:
             print("[SISTEM] INFO: Tidak ada aksi yang bisa dibatalkan (Tumpukan kosong).")
             return None
 
+
         # .pop() tanpa indeks otomatis mengambil dan menghapus data PALING AKHIR (paling atas)
         aksi_terakhir = self._riwayat_aksi.pop()
         print(f"[SISTEM] UNDO: Membatalkan perubahan skor NIK {aksi_terakhir['nik']}. "
@@ -86,25 +59,26 @@ class Stack_UGD:
         return aksi_terakhir
 
 
-    def intip_aksi_terakhir(self):
+    def intip_aksi_terakhir(self) -> dict:
         '''
         melihat catatan aksi teratas TANPA menghapusnya dari tumpukan (Peek).
         '''
         if self.apakah_kosong():
             return None
-            
+
+           
         #menggunakan indeks [-1] untuk melihat elemen terakhir/teratas di Python
         return self._riwayat_aksi[-1]
 
 
-    def apakah_kosong(self):
+    def apakah_kosong(self) -> bool:
         '''
         memeriksa apakah tumpukan riwayat sedang kosong atau tidak.
         '''
         return len(self._riwayat_aksi) == 0
 
 
-    def total_riwayat(self):
+    def total_riwayat(self) -> int:
         '''
         Mmenghitung jumlah total aksi yang tersimpan di dalam tumpukan.
         '''
@@ -113,33 +87,19 @@ class Stack_UGD:
 
     def tampilkan_tumpukan(self):
         '''
-        menampilkan seluruh isi tumpukan riwayat dari yang terbaru/teratas
+        menampilkan seluruh isi tumpukan riwayat dari yang terbaru/teratas (untuk keperluan demo).
         '''
         if self.apakah_kosong():
             print("[SISTEM] Tumpukan riwayat undo saat ini kosong.")
             return
-
         
+
+        print(f"[SISTEM] Daftar Riwayat Perubahan (Total: {self.total_riwayat()} aksi) - Urutan Atas ke Bawah:")
         #reversed() digunakan agar kita membaca list dari belakang (data paling baru dulu)
-        print(f"[SISTEM] Daftar Riwayat Perubahan (Total: {self.total_riwayat()} entri) — Urutan Atas ke Bawah:")
         for nomor, aksi in enumerate(reversed(self._riwayat_aksi), start=1):
             print(f"  {nomor}. NIK: {aksi['nik']} | "
-                  f"Skor: {aksi['skor_lama']} → {aksi['skor_baru']} | "
-                  f"Ket: {aksi.get('keterangan','-')} | Waktu: {aksi.get('waktu','-')}")
-    
-    def to_list(self):
-        '''
-        mengomvers objek tumpukan menjadi list mentah biasa agar bisa disimpan ke format JSON.
-        '''
-        return list(self._riwayat_aksi)
-
-
-    def from_list(self, data: list):
-        '''
-        memuat ulang isi tumpukan dari data list mentah (hasil baca dari file JSON).
-        '''
-        self._riwayat_aksi = [item for item in data if isinstance(item, dict)]
-
+                  f"Skor: {aksi['skor_lama']} -> {aksi['skor_baru']} | "
+                  f"Ket: {aksi.get('keterangan', 'Input skor triase')}")
 
 
 #Coba Demo mandiri — jalankan: python modules/stack_ugd.py
@@ -149,39 +109,59 @@ if __name__ == "__main__":
     #buat objek stack untuk fitur undo UGD
     fitur_undo = Stack_UGD()
 
-    #cek kondisi awal
-    print(f"Apakah tumpukan kosong? {fitur_undo.apakah_kosong()}")
-    fitur_undo.tampilkan_tumpukan()
-    print()
-
-    #1. Jalankan fungsi penambahan aksi (Push)
+    #1. Simulasi Admin UGD melakukan input salah dan melakukan perubahan skor (Push)
     print("--- 1. PROSES INPUT & PERUBAHAN SKOR (PUSH) ---")
-    fitur_undo.tambah_aksi({"nik": "3201010101010001", "skor_lama": 0, "skor_baru": 5, "keterangan": "triase awal"})
-    fitur_undo.tambah_aksi({"nik": "3201010101010003", "skor_lama": 0, "skor_baru": 9, "keterangan": "kondisi kritis"})
-    
-    #push ketiga ni coba sengaja ga mengisi waktu dan keterangan (akan diisi otomatis oleh program)
-    fitur_undo.tambah_aksi({"nik": "3201010101010005", "skor_lama": 2, "skor_baru": 7})
+
+   
+    #aksi 1: Input awal pasien pertama
+    aksi1 = {
+        "nik": "1234567890",
+        "skor_lama": 0,
+        "skor_baru": 3,
+        "keterangan": "Input awal skor triase Budi"
+    }
+    fitur_undo.tambah_aksi(aksi1)
+
+
+    #aksi 2: Admin salah input skor untuk pasien pertama (Budi), harusnya 5 tapi terketik 8
+    aksi2 = {
+        "nik": "1234567890",
+        "skor_lama": 3,
+        "skor_baru": 8,
+        "keterangan": "Salah input skor bahaya UGD"
+    }
+    fitur_undo.tambah_aksi(aksi2)
+
+    #aksi 3: Input skor untuk pasien kedua (Siti)
+    aksi3 = {
+        "nik": "9876543210",
+        "skor_lama": 0,
+        "skor_baru": 5,
+        "keterangan": "Input triase Siti"
+    }
+    fitur_undo.tambah_aksi(aksi3)
     print()
 
-    #tampilkan isi tumpukan setelah diisi 
+    #tampilkan isi tumpukan saat ini
     fitur_undo.tampilkan_tumpukan()
     print()
 
-    #2. Jalankan fungsi intip data teratas (Peek)
-    terakhir = fitur_undo.intip_aksi_terakhir()
-    if terakhir:
-        print(f"Intip Aksi Teratas: NIK {terakhir['nik']} | Skor {terakhir['skor_lama']} -> {terakhir['skor_baru']}")
-    print(f"Total ukuran tumpukan saat ini: {fitur_undo.total_riwayat()}")
+    #2. Simulasi Admin menekan tombol UNDO (Pop) karena sadar ada yang salah
+    print("--- 2. PROSES UNDO PERTAMA (Membatalkan Aksi Terakhir) ---")
+
+    #aksi terakhir yang masuk adalah milik Siti (Aksi 3), maka ini yang keluar duluan
+    data_pulih1 = fitur_undo.batalkan_aksi()
+    if data_pulih1:
+        print(f"  -> LOG: Sistem harus memulihkan NIK {data_pulih1['nik']} ke skor lama: {data_pulih1['skor_lama']}")
     print()
 
-    #3. Jalankan fungsi pembatalan aksi (Pop / Undo)
-    print("--- 2. PROSES UNDO AKSI TERAKHIR ---")
-    dibatalkan = fitur_undo.batalkan_aksi()
-    if dibatalkan:
-        print(f"  -> LOG: Sistem berhasil memicu pengembalian skor NIK '{dibatalkan['nik']}' ke nilai lama: {dibatalkan['skor_lama']}")
+    print("--- 3. PROSES UNDO KEDUA (Membatalkan Salah Input Budi) ---")
+    #sekarang posisi teratas adalah Aksi 2 (Salah input Budi). Ini yang di-undo
+    data_pulih2 = fitur_undo.batalkan_aksi()
+    if data_pulih2:
+        print(f"  -> LOG: Sistem sukses memulihkan NIK {data_pulih2['nik']} ke skor lama: {data_pulih2['skor_lama']}")
     print()
 
-    #4. Kosongkan sisa tumpukan dan uji kondisi kosong
-    print("--- 3. MENGOSONGKAN TUMPUKAN ---")
-    fitur_undo.batalkan_aksi()  #hpus data sisa terakhir
-    fitur_undo.batalkan_aksi()  #ini akan memicu pesan stack kosong
+    #tampilkan sisa tumpukan setelah 2 kali di-undo
+    print("--- 4. SISA TUMPUKAN SEKARANG ---")
+    fitur_undo.tampilkan_tumpukan()
