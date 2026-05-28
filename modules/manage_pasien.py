@@ -51,3 +51,27 @@ def tambah_pasien():
     save_json("data/pasien.json", data_pasien)
 
     print("Pasien berhasil ditambahkan")
+
+
+def sub_menu_pendaftaran(queue_pendaftaran, stack_undo, set_nik, dict_pasien):
+    while True:
+        print("\n=== PENDAFTARAN PASIEN ===")
+        print("  [1] Daftar Pasien Baru")
+        print("  [2] Proses Antrian Loket")
+        print("  [3] Lihat Antrian Saat Ini")
+        print("  [4] Undo Pendaftaran Terakhir")
+        print("  [0] Kembali ke Menu Utama")
+        pilihan = input(">>> Pilih menu: ")
+
+        if pilihan == "1":
+            daftar_pasien_baru(queue_pendaftaran, stack_undo, set_nik, dict_pasien)
+        elif pilihan == "2":
+            proses_antrian(queue_pendaftaran, dict_pasien)
+        elif pilihan == "3":
+            lihat_antrian(queue_pendaftaran)
+        elif pilihan == "4":
+            undo_pendaftaran(queue_pendaftaran, stack_undo, set_nik, dict_pasien)
+        elif pilihan == "0":
+            break
+        else:
+            print("[ERROR] Pilihan tidak valid.")
