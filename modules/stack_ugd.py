@@ -142,8 +142,6 @@ class Stack_UGD:
 
 
 
-
-
 #Coba Demo mandiri — jalankan: python modules/stack_ugd.py
 if __name__ == "__main__":
     print("=== Demo modules/stack_ugd.py ===\n")
