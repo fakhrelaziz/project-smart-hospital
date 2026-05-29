@@ -17,7 +17,7 @@ Struktur slot setelah insert:
 
 
 class HashObat:
-    def __init__(self, ukuran: int = 20): #disini ukuran default kita buat 20, bisa diubah sesuai kebutuhan
+    def __init__(self, ukuran = 20): #disini ukuran default kita buat 20, bisa diubah sesuai kebutuhan
         #1. Menentukan ukuran slot lemari apotek
         self._ukuran = ukuran
         
@@ -36,7 +36,7 @@ class HashObat:
       total = 374  →  374 % 20 = 14  →  slot 14
     '''
 
-    def _fungsi_hash_manual(self, kode_obat: str) -> int:
+    def _fungsi_hash_manual(self, kode_obat):
         #4. Rumus standar: jumlah ASCII huruf di-modulo ukuran lemari
         total_ascii = 0
         
@@ -53,7 +53,7 @@ class HashObat:
         Jika belum ada → data baru ditambahkan.
         detail_obat minimal berisi: nama, kategori, stok, harga
     '''
-    def insert(self, kode_obat: str, detail_obat: dict):
+    def insert(self, kode_obat, detail_obat):
         #5. Memasukkan atau memperbarui data obat lama langsung ke slot yang ditentukan oleh fungsi hash
         index = self._fungsi_hash_manual(kode_obat)  #kita cari lokasi slotnya dulu
         
@@ -75,7 +75,7 @@ class HashObat:
     Langsung menuju slot yang ditentukan oleh fungsi hash.
     Mengembalikan detail obat jika ditemukan, atau None jika tidak ada.
     '''
-    def get(self, kode_obat: str):
+    def get(self, kode_obat):
         #6. Mencari detail obat secara cepat dengan langsung menuju slot yang ditentukan oleh fungsi hash
         index = self._fungsi_hash_manual(kode_obat)  #cari langsung lokasi slotnya
         
@@ -106,7 +106,7 @@ class HashObat:
     Memperbarui jumlah stok obat berdasarkan kode.
     Mengembalikan True jika berhasil, False jika gagal.
     '''
-    def update_stok(self, kode_obat: str, stok_baru: int) -> bool:
+    def update_stok(self, kode_obat, stok_baru):
         #7. Memperbarui angka stok kalau ada transaksi obat terjual atau obat datang
         if stok_baru <= 0:
             print("[Sistem] ERROR: Jumlah stok obat tidak boleh nol atau minus!")
@@ -129,7 +129,7 @@ class HashObat:
     Menghapus data obat dari dalam slot.
     Mengembalikan True jika berhasil dihapus, False jika kode tidak ditemukan.
     '''
-    def delete(self, kode_obat: str) -> bool:
+    def delete(self, kode_obat):
         #8. Menghapus data obat dari dalam slot lemari berdasarkan kode obatnya
         #cari lokasi slot lemarinya dulu lewat fungsi hash
         index = self._fungsi_hash_manual(kode_obat)
@@ -183,7 +183,7 @@ class HashObat:
     to_list — Mengonversi Hash Table menjadi List biasa
     berguna buat dikirim ke file JSON biar data obat gak hilang saat aplikasi ditutup.
     '''
-    def to_list(self) -> list:
+    def to_list(self):
         kumpulan_obat = []
         
         #bongkar seluruh slot lemari satu per satu
@@ -207,7 +207,7 @@ class HashObat:
     from_list — Memasukkan kembali kumpulan data List ke dalam Hash Table
     Dipakai saat aplikasi baru dibuka, buat nge-load data lama dari file JSON.
     '''
-    def from_list(self, list_data: list):
+    def from_list(self, list_data):
         if not list_data:
             return
             

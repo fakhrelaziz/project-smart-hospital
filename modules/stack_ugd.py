@@ -1,5 +1,4 @@
 '''
-
 Konsep dasar yang digunakan adalah STACK / TUMPUKAN (LIFO - Last In, First Out):
   - Aksi yang terakhir dilakukan -> akan pertama kali dibatalkan (Undo).
   - tambah_aksi() [Push] -> memasukkan riwayat perubahan skor ke atas tumpukan.
@@ -66,7 +65,6 @@ class Stack_UGD:
         if self.apakah_kosong():
             return None
 
-           
         #menggunakan indeks [-1] untuk melihat elemen terakhir/teratas di Python
         return self._riwayat_aksi[-1]
 
