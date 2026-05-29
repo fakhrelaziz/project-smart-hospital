@@ -1,14 +1,18 @@
-'''
-Konsep dasar yang digunakan adalah STACK / TUMPUKAN (LIFO - Last In, First Out):
-  - Aksi yang terakhir dilakukan -> akan pertama kali dibatalkan (Undo).
-  - tambah_aksi() [Push] -> memasukkan riwayat perubahan skor ke atas tumpukan.
-  - batalkan_aksi() [Pop] -> mengambil dan menghapus aksi paling atas untuk memulihkan data.
-  - intip_aksi_terakhir() [Peek] -> melihat catatan perubahan terakhir tanpa membatalkannya.
-'''
-'''
-disini tu nnanti ada pakai istilah "triase", itu arti proses penentuan tingkat bahaya pasien di UGD
-berdasarkan gejala yang dialami. Skor triase ini penting untuk menentukan prioritas penanganan pasien.
-'''
+"""
+File    : modules/stack_ugd.py
+Materi  : Stack — Tumpukan LIFO (Last In First Out)
+Deskripsi:
+    Mengimplementasikan struktur data Stack secara manual untuk menyimpan
+    riwayat aksi (triase & pendaftaran) demi keperluan fitur Undo.
+    Aksi yang terakhir dilakukan adalah yang pertama kali dibatalkan (LIFO).
+Catatan :
+    - tambah_aksi()       [Push] — menyimpan aksi ke atas tumpukan.
+    - batalkan_aksi()     [Pop]  — mengambil dan menghapus aksi teratas untuk Undo.
+    - intip_aksi_terakhir() [Peek] — melihat aksi teratas tanpa menghapus.
+    - Mendukung dua tipe aksi: 'triase' dan 'pendaftaran'.
+Relasi  :
+    - Digunakan oleh modules/manage_pasien.py dan modules/sorting_triase.py.
+"""
 
 
 class Stack_UGD:
@@ -27,8 +31,15 @@ class Stack_UGD:
             print("[STACK-UGD] ERROR: Data aksi harus berupa dictionary.")
             return False
 
-        #validasi 2: memastikan kunci-kunci penting (nik, skor_lama, skor_baru) ada di dalam data
-        kunci_wajib = ["nik", "skor_lama", "skor_baru"]
+        #validasi 2: memastikan kunci-kunci penting sesuai dengan tipe aksinya
+        tipe = aksi.get("tipe_aksi", "triase")
+        if tipe == "triase":
+            kunci_wajib = ["nik", "skor_lama", "skor_baru"]
+        elif tipe == "pendaftaran":
+            kunci_wajib = ["nik"]
+        else:
+            kunci_wajib = ["nik"]
+
         for kunci in kunci_wajib:
             if kunci not in aksi:
                 print(f"[SISTEM] ERROR: Data aksi tidak lengkap! Kurang key '{kunci}'.")
@@ -36,7 +47,7 @@ class Stack_UGD:
 
         #memasukkan data aksi ke urutan paling akhir (paling atas di dalam tumpukan)
         self._riwayat_aksi.append(aksi)
-        print(f"[SISTEM] BERHASIL: Aksi perubahan skor untuk NIK {aksi['nik']} disimpan ke tumpukan.")
+        print(f"[SISTEM] BERHASIL: Aksi '{tipe}' untuk NIK {aksi['nik']} disimpan ke tumpukan.")
         return True
 
 
@@ -53,8 +64,12 @@ class Stack_UGD:
 
         # .pop() tanpa indeks otomatis mengambil dan menghapus data PALING AKHIR (paling atas)
         aksi_terakhir = self._riwayat_aksi.pop()
-        print(f"[SISTEM] UNDO: Membatalkan perubahan skor NIK {aksi_terakhir['nik']}. "
-              f"Mengembalikan skor ke {aksi_terakhir['skor_lama']}.")
+        tipe = aksi_terakhir.get("tipe_aksi", "triase")
+        if tipe == "triase":
+            print(f"[SISTEM] UNDO: Membatalkan perubahan skor NIK {aksi_terakhir['nik']}. "
+                  f"Mengembalikan skor ke {aksi_terakhir['skor_lama']}.")
+        elif tipe == "pendaftaran":
+            print(f"[SISTEM] UNDO: Membatalkan pendaftaran NIK {aksi_terakhir['nik']}.")
         return aksi_terakhir
 
 
@@ -95,9 +110,12 @@ class Stack_UGD:
         print(f"[SISTEM] Daftar Riwayat Perubahan (Total: {self.total_riwayat()} aksi) - Urutan Atas ke Bawah:")
         #reversed() digunakan agar kita membaca list dari belakang (data paling baru dulu)
         for nomor, aksi in enumerate(reversed(self._riwayat_aksi), start=1):
-            print(f"  {nomor}. NIK: {aksi['nik']} | "
-                  f"Skor: {aksi['skor_lama']} -> {aksi['skor_baru']} | "
-                  f"Ket: {aksi.get('keterangan', 'Input skor triase')}")
+            tipe = aksi.get('tipe_aksi', 'triase')
+            if tipe == 'triase':
+                info = f"Skor: {aksi.get('skor_lama')} -> {aksi.get('skor_baru')}"
+            else:
+                info = f"Aksi: {tipe}"
+            print(f"  {nomor}. NIK: {aksi['nik']} | {info} | Ket: {aksi.get('keterangan', '-')}")
 
 
 #Coba Demo mandiri — jalankan: python modules/stack_ugd.py

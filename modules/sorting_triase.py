@@ -15,6 +15,7 @@ Relasi  :
 
 from models.pasien import Pasien
 from utils.json_handler import load_json, save_json
+from modules.manage_pasien import global_stack
 
 
 # ── LABEL KEGAWATAN ───────────────────────────────────────────────────────────
@@ -198,9 +199,52 @@ def update_danger_score():
     score_lama = data_semua[pasien_index]["danger_score"]
     data_semua[pasien_index]["danger_score"] = score_baru
     save_json("data/pasien.json", data_semua)
+    
+    # Simpan ke histori Stack untuk keperluan Undo
+    global_stack.tambah_aksi({
+        "tipe_aksi": "triase",
+        "nik": nik,
+        "skor_lama": score_lama,
+        "skor_baru": score_baru,
+        "keterangan": "Update danger score triase UGD"
+    })
 
     print(f"[OK] Danger score {pasien_data['nama']} diperbarui: {score_lama} → {score_baru}")
     print(f"     Status kegawatan: {label_kegawatan(score_baru)}")
+
+
+# ── Batal Skor Triase Terakhir (Undo) ────────────────────────────────────────────────
+def undo_skor_triase_terakhir():
+    """Membatalkan (Undo) proses update skor triase menggunakan Stack LIFO."""
+    aksi = global_stack.batalkan_aksi()
+    
+    if not aksi:
+        return
+
+    # Validasi hanya memproses undo tipe triase dari menu ini
+    if aksi.get("tipe_aksi") != "triase":
+        print(f"[ERROR] Aksi terakhir bukan triase (Melainkan: {aksi.get('tipe_aksi')}). Harus di-undo dari modul yang sesuai.")
+        # Kembalikan lagi ke stack
+        global_stack.tambah_aksi(aksi)
+        return
+
+    nik_target = aksi["nik"]
+    skor_lama = aksi["skor_lama"]
+    data_semua = load_json("data/pasien.json")
+    
+    # Cari dan pulihkan
+    pasien_ditemukan = False
+    for data in data_semua:
+        if data.get("nik") == nik_target:
+            data["danger_score"] = skor_lama
+            pasien_ditemukan = True
+            break
+            
+    if pasien_ditemukan:
+        save_json("data/pasien.json", data_semua)
+        print(f"[SUCCESS] Danger score NIK {nik_target} berhasil di-restore ke nilai awal: {skor_lama}.")
+    else:
+        print(f"[ERROR] Data pasien NIK {nik_target} tidak ditemukan, gagal undo.")
 
 
 # ── LIHAT ANTRIAN UGD (ENTRY POINT UTAMA) ────────────────────────────────────
