@@ -40,18 +40,17 @@ class Obat:
         self.stok = data.get("stok")
         self.harga = data.get("harga")
         self.dosis_harian = data.get("dosis_harian", 0)
-        
 
     def tambah_stok(self, tambah):
         """Menambah stok obat sesuai jumlah yang diberikan."""
         self.stok += tambah
-        return f"Stok ditambahkan\n Stok {self.nama} sekarang: {self.stok}"
+        return f"Stok ditambahkan\nStok {self.nama} sekarang: {self.stok}"
 
     def kurang_stok(self, kurang):
         """Mengurangi stok obat jika mencukupi."""
         if self.stok >= kurang:
             self.stok -= kurang
-            return f"Stok dikurangi\n Stok {self.nama} sekarang: {self.stok}"
+            return f"Stok dikurangi\nStok {self.nama} sekarang: {self.stok}"
         else:
             return f"Stok obat kurang"
 
