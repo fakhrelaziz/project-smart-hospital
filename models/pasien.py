@@ -29,7 +29,7 @@ class Pasien:
         
     
     def objek_ke_dict(self):
-        """Mengubah objek Pasien menjadi dictionary untuk serialisasi ke JSON."""
+        """Mengubah objek Pasien menjadi dictionary agar bisa si simpan ke JSON."""
         return {
             "nik"         : self.nik,
             "nama"        : self.nama,
@@ -43,7 +43,7 @@ class Pasien:
     
 
     def dict_ke_objek(self, data):
-        """Memuat atribut objek Pasien dari dictionary hasil baca JSON."""
+        """mengubah dictionary yg di json tu ke dalam bentuk atribut objek Pasien."""
         self.nik = data.get("nik")
         self.nama = data.get("nama")
         self.umur = data.get("umur")
@@ -54,6 +54,7 @@ class Pasien:
         self.rekam_medis = data.get("rekam_medis", [])
 
     def data_pasien(self):
+        """ini untuk tampilkan atau ngeprint data pasien """
         return (f"NIK          : {self.nik}\n"
                 f"Nama         : {self.nama}\n"
                 f"Umur         : {self.umur}\n"
@@ -82,7 +83,7 @@ class Pasien:
         self.kamar = nomor_kamar_baru
 
     def tambah_rekam_medis(self, tanggal, diagnosis, resep):
-        """Saat ini menggunakan list, nantinya bisa diintegrasikan dengan modul SLL"""
+        """tambah rekam medis pasien """
         rekam_baru = {
             "tanggal": tanggal,
             "diagnosis": diagnosis,

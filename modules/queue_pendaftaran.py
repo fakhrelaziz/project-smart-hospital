@@ -17,9 +17,9 @@ Relasi  :
 
 class QueuePendaftaran:
     def __init__(self):
-        self._items: list = []
+        self.items = []
 
-    def enqueue(self, pasien: dict):
+    def enqueue(self, pasien):
         """Menambahkan pasien ke bagian belakang antrian (FIFO).
 
         Melakukan validasi bahwa data yang masuk adalah dict dan memiliki key 'nik'.
@@ -27,17 +27,13 @@ class QueuePendaftaran:
         Returns:
             bool: True jika berhasil, False jika data tidak valid.
         """
-        if not isinstance(pasien, dict):
-            print("[SISTEM] ERROR: pasien harus berupa dictionary.")
-            return False
-
         if not pasien.get("nik"):
             print("[SISTEM] ERROR: data pasien harus memiliki key 'nik'.")
             return False
 
-        self._items.append(pasien)
+        self.items.append(pasien)
         print(f"[SISTEM] '{pasien.get('nama', pasien['nik'])}' "
-              f"masuk antrean. Posisi: {len(self._items)}")
+              f"masuk antrean. Posisi: {len(self.items)}")
         return True
 
     def dequeue(self):
@@ -50,7 +46,7 @@ class QueuePendaftaran:
             print("[SISTEM] Antrean kosong. Tidak ada pasien untuk diproses.")
             return None
 
-        pasien = self._items.pop(0)
+        pasien = self.items.pop(0)
         print(f"[SISTEM] '{pasien.get('nama', pasien['nik'])}' "
               f"keluar dari antrean untuk dilayani.")
         return pasien
@@ -63,32 +59,39 @@ class QueuePendaftaran:
         """
         if self.cek_antrian_kosong():
             return None
-        return self._items[0]
+        return self.items[0]
 
     def cek_antrian_kosong(self):
         """Mengecek apakah antrian sedang kosong."""
-        return len(self._items) == 0
+        return len(self.items) == 0
 
     def jmlh_antrian_pasien(self):
         """Mengembalikan jumlah pasien yang sedang dalam antrian."""
-        return len(self._items)
+        return len(self.items)
 
     def tampilkan_antrian(self):
-        """Menampilkan seluruh isi antrian ke terminal secara terurut dari depan."""
+        """Menampilkan seluruh isi antrian secara terurut dari depan."""
         if self.cek_antrian_kosong():
             print("[SISTEM] Antrean saat ini kosong.")
             return
         print(f"[SISTEM] Isi antrean ({self.jmlh_antrian_pasien()} pasien) — urutan dari depan:")
 
-        for i, p in enumerate(self._items, start=1):
-            print(f"  {i}. NIK: {p.get('nik')} | "
-                  f"Nama: {p.get('nama', '-')} | "
-                  f"Layanan: {p.get('layanan', '-')}")
+        # Menampilkan nomor urut, NIK, nama, dan layanan pasien dalam antrian
+        nomor_urut = 1
+        for p in self.items:
+            nik_pasien = p["nik"] if "nik" in p else "-"
+            nama_pasien = p["nama"] if "nama" in p and p["nama"] else "-"
+            layanan_pasien = p["layanan"] if "layanan" in p and p["layanan"] else "-"
+            
+            print(f"  {nomor_urut}. NIK: {nik_pasien} | "
+                  f"Nama: {nama_pasien} | "
+                  f"Layanan: {layanan_pasien}")
+            nomor_urut += 1
 
-    def to_list(self) -> list:
+    def to_list(self):
         """Mengekspor isi antrian sebagai list biasa untuk disimpan ke JSON."""
-        return list(self._items)
+        return list(self.items)
 
-    def from_list(self, data: list):
+    def from_list(self, data):
         """Mengisi ulang antrian dari list yang dimuat dari JSON."""
-        self._items = [item for item in data if isinstance(item, dict)]
+        self.items = list(data)

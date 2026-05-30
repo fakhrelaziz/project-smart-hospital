@@ -40,13 +40,12 @@ from modules.manage_pasien import (
     proses_antrian_pendaftaran,
     undo_pendaftaran_terakhir,
     lihat_rekam_medis_pasien,
-    tambah_catatan_rekam_medis
+    tambah_rekam_medis_pasien
 )
 from modules.sorting_triase import (
-    tampilkan_antrian_ugd,
     lihat_antrian_ugd,
     update_danger_score,
-    undo_skor_triase_terakhir
+    undo_danger_score
 )
 from modules.graph_rujukan import (
     lihat_peta_rujukan,
@@ -73,7 +72,7 @@ while True:
     print("  [4] Sistem Farmasi & Apotek")
     print("  [5] Sistem Rujukan Lintas RS")
     print("  [6] Pencarian Data")
-    print("  [7] Keluar")
+    print("  [0] Keluar")
     print("=" * 42)
 
     pilihan = input("Pilih menu: ").strip()
@@ -81,7 +80,7 @@ while True:
     # ── [1] PENDAFTARAN PASIEN 
     if pilihan == "1":
         while True:
-            print("\n=== MANAJEMEN PASIEN ===")
+            print("\n=== LAYANAN PASIEN ===")
             print("  [1] Lihat Keseluruhan Pasien")
             print("  [2] Daftar Pasien Baru (Antri)")
             print("  [3] Lihat Antrean Pendaftaran")
@@ -89,7 +88,7 @@ while True:
             print("  [5] Undo Pendaftaran Terakhir")
             print("  [6] Lihat Rekam Medis Pasien (SLL)")
             print("  [7] Tambah Catatan Rekam Medis")
-            print("  [8] Kembali")
+            print("  [0] Kembali")
 
             pilihan = input("Pilih menu: ").strip()
 
@@ -106,8 +105,8 @@ while True:
             elif pilihan == "6":
                 lihat_rekam_medis_pasien()
             elif pilihan == "7":
-                tambah_catatan_rekam_medis()
-            elif pilihan == "8":
+                tambah_rekam_medis_pasien()
+            elif pilihan == "0":
                 break
             else:
                 print("[INFO] Pilihan tidak valid.")
@@ -119,7 +118,7 @@ while True:
             print("  [1] Lihat Antrean UGD (Sorted by Danger Score)")
             print("  [2] Update Skor Triase Pasien")
             print("  [3] Undo Update Skor Triase Terakhir")
-            print("  [4] Kembali")
+            print("  [0] Kembali")
 
             pilihan = input("Pilih menu: ").strip()
 
@@ -128,8 +127,8 @@ while True:
             elif pilihan == "2":
                 update_danger_score()
             elif pilihan == "3":
-                undo_skor_triase_terakhir()
-            elif pilihan == "4":
+                undo_danger_score()
+            elif pilihan == "0":
                 break
             else:
                 print("[INFO] Pilihan tidak valid.")
@@ -137,7 +136,7 @@ while True:
     # ── [3] RAWAT INAP & NAVIGASI KAMAR ──────────────────────────────────────
     elif pilihan == "3":
         while True:
-            print("\n=== RAWAT INAP & NAVIGASI KAMAR  ===")
+            print("\n===  RAWAT INAP & NAVIGASI KAMAR  ===")
             print("  [1] Lihat Semua Kamar")
             print("  [2] Lihat Kamar Tersedia")
             print("  [3] Assign Pasien ke Kamar")
@@ -146,7 +145,7 @@ while True:
             print("  [6] Lihat Lorong Kamar (Mundur — DLL)")
             print("  [7] Cari Kamar Kosong Terdekat (DLL)")
             print("  [8] Lihat Jadwal Minum Obat Pasien (CLL)")
-            print("  [9] Kembali")
+            print("  [0] Kembali")
 
             pilihan = input("Pilih menu: ").strip()
 
@@ -166,7 +165,7 @@ while True:
                 cari_kamar_kosong_terdekat()
             elif pilihan == "8":
                 lihat_jadwal_obat_pasien()
-            elif pilihan == "9":
+            elif pilihan == "0":
                 break
             else:
                 print("[INFO] Pilihan tidak valid.")
@@ -174,7 +173,7 @@ while True:
     # ── [4] SISTEM FARMASI & APOTEK ───────────────────────────────────────────
     elif pilihan == "4":
         while True:
-            print("\n=== INFO OBAT ===")
+            print("\n===  SISTEM FARMASI & APOTEK  ===")
             print("  [1] Lihat Daftar Obat")
             print("  [2] Tambah Obat")
             print("  [3] Ubah Stok Obat")
@@ -182,7 +181,7 @@ while True:
             print("  [5] Cari Obat via Kode (Hash Table O(1))")
             print("  [6] Prediksi Sisa Hari Stok Obat (Rekursif)")
             print("  [7] Lihat Direktori Katalog Obat (Tree)")
-            print("  [8] Kembali")
+            print("  [0] Kembali")
 
             pilihan = input("Pilih menu: ").strip()
 
@@ -200,7 +199,7 @@ while True:
                 prediksi_stok_habis()
             elif pilihan == "7":
                 tampilkan_katalog_obat()
-            elif pilihan == "8":
+            elif pilihan == "0":
                 break
             else:
                 print("[INFO] Pilihan tidak valid.")
@@ -208,11 +207,11 @@ while True:
     # ── [5] SISTEM RUJUKAN LINTAS RS ──────────────────────────────────────────
     elif pilihan == "5":
         while True:
-            print("\n=== HUB JARINGAN RUJUKAN RS (GRAPH) ===")
+            print("\n=== SISTEM RUJUKAN LINTAS RS ===")
             print("  [1] Lihat Peta Visual Jaringan RS")
             print("  [2] Cari RS Rujukan Terdekat (BFS)")
             print("  [3] Ubah Ketersediaan / Status RS")
-            print("  [4] Kembali")
+            print("  [0] Kembali")
 
             pilihan = input("Pilih menu: ").strip()
 
@@ -222,7 +221,7 @@ while True:
                 cari_rs_rujukan()
             elif pilihan == "3":
                 ubah_status_rs()
-            elif pilihan == "4":
+            elif pilihan == "0":
                 break
             else:
                 print("[INFO] Pilihan tidak valid.")
@@ -234,7 +233,7 @@ while True:
             print("  [1] Cari Pasien by Nama  (Linear Search)")
             print("  [2] Cari Pasien by NIK   (Binary Search)")
             print("  [3] Filter Pasien by Layanan")
-            print("  [4] Kembali")
+            print("  [0] Kembali")
 
             pilihan = input("Pilih menu: ").strip()
 
@@ -244,13 +243,13 @@ while True:
                 cari_pasien_nik()
             elif pilihan == "3":
                 cari_pasien_layanan()
-            elif pilihan == "4":
+            elif pilihan == "0":
                 break
             else:
                 print("[INFO] Pilihan tidak valid.")
 
     # ── [7] KELUAR ────────────────────────────────────────────────────────────
-    elif pilihan == "7":
+    elif pilihan == "0":
         print("\n[INFO] Data sudah tersimpan secara otomatis setiap operasi.")
         print("Terima kasih telah menggunakan Smart Hospital System. Sampai jumpa!")
         break

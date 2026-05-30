@@ -13,7 +13,7 @@ Relasi  :
 """
 
 
-class NodeRiwayat:
+class Node:
     def __init__(self, data):
         self.data = data  
         self.next = None  
@@ -22,8 +22,8 @@ class SingleLinkedListRekamMedis:
     def __init__(self):
         self.head = None  
 
-    def tambah_riwayat(self, catatan):
-        node_baru = NodeRiwayat(catatan)
+    def tambah_rekam_medis(self, data):
+        node_baru = Node(data)
         if self.head is None:
             self.head = node_baru
             return
@@ -32,7 +32,7 @@ class SingleLinkedListRekamMedis:
             saat_ini = saat_ini.next
         saat_ini.next = node_baru
 
-    def lihat_riwayat(self):
+    def lihat_rekam_medis(self):
         if self.head is None:
             print("Belum ada riwayat rekam medis.")
             return
@@ -45,7 +45,7 @@ class SingleLinkedListRekamMedis:
             nomor += 1
 
     def to_list(self):
-        """Membongkar SLL menjadi list biasa agar bisa masuk JSON"""
+        """Mengubah output SLL menjadi list biasa agar bisa disimpan JSON"""
         hasil = []
         saat_ini = self.head
         while saat_ini is not None:
@@ -56,4 +56,4 @@ class SingleLinkedListRekamMedis:
     def from_list(self, data_list):
         """Merakit ulang SLL dari data list JSON"""
         for catatan in data_list:
-            self.tambah_riwayat(catatan)
+            self.tambah_rekam_medis(catatan)

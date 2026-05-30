@@ -12,38 +12,35 @@ Relasi  :
     - models.pasien.Pasien
     - utils.json_handler.load_json / save_json
     - modules.queue_pendaftaran.QueuePendaftaran
-    - modules.stack_ugd.Stack_UGD
+    - modules.undo_stack.UndoStack
     - modules.sll_rekammedis.SingleLinkedListRekamMedis
 """
 
 from models.pasien import Pasien
 from utils.json_handler import load_json, save_json
 from modules.queue_pendaftaran import QueuePendaftaran
-from modules.stack_ugd import Stack_UGD
+from modules.undo_stack import UndoStack
 from modules.sll_rekammedis import SingleLinkedListRekamMedis
 
-# Instansiasi objek struktur data secara global per eksekusi modul
-global_queue = QueuePendaftaran()
-global_stack = Stack_UGD()
+# variabel lokal untuk menampung undo khusus pendaftaran
+stack_pendaftaran = UndoStack()
 
 
-# ── HELPER INTERNAL ───────────────────────────────────────────────────────────
-
-def _load_data_ke_queue(data_pasien: list):
-    """Helper untuk memuat ulang pasien yang statusnya 'antri' ke dalam struktur Queue."""
-    global_queue._items.clear()
-    antrian = [p for p in data_pasien if p.get("status") == "antri"]
-    global_queue.from_list(antrian)
-
-
-# ── DAFTAR PASIEN BARU ────────────────────────────────────────────────────────
+# DAFTAR PASIEN BARU 
 
 def daftar_pasien_baru():
     """Mendaftar pasien secara FIFO (masuk ke antrean belakang)."""
     data_pasien = load_json("data/pasien.json")
-    _load_data_ke_queue(data_pasien)
 
-    nik = input("Masukkan NIK: ").strip()
+    antrean = QueuePendaftaran()
+    pasien_antri = [p for p in data_pasien if p.get("status") == "antri"]
+    antrean.from_list(pasien_antri)
+
+    while True:
+        nik = input("Masukkan NIK (Maks 16 Angka): ").strip()
+        if nik.isdigit() and len(nik) <= 16:
+            break
+        print("[ERROR] NIK harus berupa angka dan maksimal 16 digit.")
 
     # Validasi: cegah duplikasi NIK
     for pasien in data_pasien:
@@ -59,87 +56,111 @@ def daftar_pasien_baru():
         except ValueError:
             print("[ERROR] Umur harus berupa angka.")
 
-    layanan = input("Masukkan Layanan (UGD / Rawat Inap / Rawat Jalan): ").strip()
-    if not layanan:
-        layanan = "Umum"
+    while True:
+        print(" Pilih Layanan:")
+        print("    [1] UGD")
+        print("    [2] Rawat Inap")
+        print("    [3] Rawat Jalan")
+        pilihan_layanan = input(" Pilih: ").strip()
+
+        if pilihan_layanan == "1":
+            layanan = "UGD"
+            break
+        elif pilihan_layanan == "2":
+            layanan = "Rawat Inap"
+            break
+        elif pilihan_layanan == "3":
+            layanan = "Rawat Jalan"
+            break
+        else:
+            print("[ERROR] Masukkan pilihan 1-3")
+            
 
     # Buat objek Pasien dan masukkan ke antrian
     pasien_baru = Pasien(nik, nama, umur, layanan)
     pasien_baru.status = "antri"
     p_dict = pasien_baru.objek_ke_dict()
 
-    berhasil = global_queue.enqueue(p_dict)
+    berhasil = antrean.enqueue(p_dict)
 
     if berhasil:
         data_pasien.append(p_dict)
         save_json("data/pasien.json", data_pasien)
 
-        # Simpan ke histori Stack untuk keperluan Undo
-        global_stack.tambah_aksi({
-            "tipe_aksi": "pendaftaran",
+        # Simpan ke data pasien baru Stack untuk keperluan Undo
+        stack_pendaftaran.append({
             "nik": nik,
-            "keterangan": "Pendaftaran pasien baru"
+            "nama": nama
         })
 
 
-# ── PROSES ANTRIAN PENDAFTARAN ────────────────────────────────────────────────
+# ── PROSES ANTRIAN PENDAFTARAN     
 
 def proses_antrian_pendaftaran():
-    """Mengeksekusi Queue Dequeue pada pasien paling depan, status berubah 'terdaftar'."""
+    """Mengeksekusi Queue Dequeue pasien pertama daftar pertama yang di layani
+      pada pasien paling depan, status berubah selesai."""
     data_pasien = load_json("data/pasien.json")
-    _load_data_ke_queue(data_pasien)
 
-    pasien_diproses = global_queue.dequeue()
+    # Inisialisasi antrean lokal
+    antrean = QueuePendaftaran()
+    pasien_antri = [p for p in data_pasien if p.get("status") == "antri"]
+    antrean.from_list(pasien_antri)
+
+    pasien_diproses = antrean.dequeue()
 
     if pasien_diproses:
         # Refleksikan status baru ke master data
         for master_p in data_pasien:
             if master_p["nik"] == pasien_diproses["nik"]:
-                master_p["status"] = "terdaftar"
+                master_p["status"] = "selesai"
                 break
 
         save_json("data/pasien.json", data_pasien)
 
 
-# ── LIHAT ANTRIAN PENDAFTARAN ─────────────────────────────────────────────────
+# ── LIHAT ANTRIAN PENDAFTARAN 
 
 def lihat_antrian_pendaftaran():
     """Menampilkan line up Queue Pendaftaran di layar tanpa memanipulasi datanya."""
     data_pasien = load_json("data/pasien.json")
-    _load_data_ke_queue(data_pasien)
-    global_queue.tampilkan_antrian()
+
+    # Inisialisasi antrean lokal
+    antrean = QueuePendaftaran()
+    pasien_antri = [p for p in data_pasien if p.get("status") == "antri"]
+    antrean.from_list(pasien_antri)
+
+    print("\n--- ANTRIAN PENDAFTARAN LOKET ---")
+    antrean.tampilkan_antrian()
+    print("-" * 33)
 
 
-# ── UNDO PENDAFTARAN ──────────────────────────────────────────────────────────
+# ── UNDO PENDAFTARAN
 
 def undo_pendaftaran_terakhir():
+
+    if stack_pendaftaran.is_empty():
+        print("[INFO] Tidak ada riwayat pendaftaran yang bisa dibatalkan.")
+        return
+    
     """Membatalkan (Undo) proses pendaftaran terakhir menggunakan Stack LIFO."""
-    aksi = global_stack.batalkan_aksi()
+    aksi_terakhir = stack_pendaftaran.pop()
 
-    if not aksi:
-        return
+    #mengambil nik dari pasien yang daftar terakhir untuk dihapus dari data pasien
+    nik_batal = aksi_terakhir["nik"]
+    daftar_pasien = load_json("data/pasien.json")
+    
+    #
+    jumlah_pasien_awal = len(daftar_pasien)
+    daftar_pasien = [p for p in daftar_pasien if p["nik"] != nik_batal]
 
-    # Validasi: hanya proses undo tipe pendaftaran
-    if aksi.get("tipe_aksi") != "pendaftaran":
-        print(f"[ERROR] Aksi terakhir bukan pendaftaran ('{aksi.get('tipe_aksi')}'). Harus di-undo dari modul yang sesuai.")
-        global_stack.tambah_aksi(aksi)
-        return
-
-    nik_target = aksi["nik"]
-    data_pasien = load_json("data/pasien.json")
-
-    data_awal_len = len(data_pasien)
-    data_pasien = [p for p in data_pasien if p["nik"] != nik_target]
-
-    if len(data_pasien) < data_awal_len:
-        save_json("data/pasien.json", data_pasien)
-        _load_data_ke_queue(data_pasien)
-        print(f"[SUCCESS] Pendaftaran NIK {nik_target} berhasil dibatalkan.")
+    if len(daftar_pasien) < jumlah_pasien_awal:
+        save_json("data/pasien.json", daftar_pasien)
+        print(f"[SUCCESS] Pendaftaran NIK {nik_batal} berhasil dibatalkan.")
     else:
-        print(f"[ERROR] NIK {nik_target} tidak ditemukan, gagal undo.")
+        print(f"[ERROR] NIK {nik_batal} tidak ditemukan, gagal undo.")
 
 
-# ── LIHAT SEMUA PASIEN ────────────────────────────────────────────────────────
+# ── LIHAT SEMUA PASIEN 
 
 def lihat_semua_pasien():
     """Menampilkan histori atau status semua pasien di database rumah sakit."""
@@ -161,7 +182,7 @@ def lihat_semua_pasien():
     print("-" * 40)
 
 
-# ── REKAM MEDIS — LIHAT ───────────────────────────────────────────────────────
+# ── LIHAT REKAM MEDIS
 
 def lihat_rekam_medis_pasien():
     """Melihat rekam medis pasien menggunakan Single Linked List (SLL)."""
@@ -187,26 +208,21 @@ def lihat_rekam_medis_pasien():
         print("  Belum ada catatan rekam medis.")
         return
 
-    # Tampilkan setiap entri secara rapi
+    # ngeprint rekam medis dengan format yang rapi
     saat_ini = sll.head
     nomor = 1
     while saat_ini is not None:
         catatan = saat_ini.data
-        if isinstance(catatan, dict):
-            print(f"  [{nomor}] Tanggal  : {catatan.get('tanggal', '-')}")
-            print(f"       Diagnosis : {catatan.get('diagnosis', '-')}")
-            print(f"       Resep     : {catatan.get('resep', '-')}")
-        else:
-            # Fallback untuk data lama yang masih berupa string
-            print(f"  [{nomor}] {catatan}")
+        print(f"  [{nomor}] Tanggal  : {catatan.get('tanggal', '-')}")
+        print(f"       Diagnosis : {catatan.get('diagnosis', '-')}")
+        print(f"       Resep     : {catatan.get('resep', '-')}")
         print("  " + "-" * 38)
         saat_ini = saat_ini.next
         nomor += 1
 
 
-# ── REKAM MEDIS — TAMBAH ──────────────────────────────────────────────────────
-
-def tambah_catatan_rekam_medis():
+# TAMBAH REKAM MEDIS
+def tambah_rekam_medis_pasien():
     """Menambah catatan rekam medis terstruktur menggunakan Single Linked List (SLL)."""
     data_pasien = load_json("data/pasien.json")
     nik = input("Masukkan NIK pasien: ").strip()
@@ -221,22 +237,28 @@ def tambah_catatan_rekam_medis():
         print("[ERROR] Pasien tidak ditemukan.")
         return
 
-    sll = SingleLinkedListRekamMedis()
-    sll.from_list(pasien_target.get("rekam_medis", []))
+    # Pilihan 2: Menggunakan objek Pasien dari models
+    pasien_obj = Pasien("", "", 0, "")
+    pasien_obj.dict_ke_objek(pasien_target)
 
     # Input terstruktur sesuai desain rekam medis
-    print(f"\n--- TAMBAH CATATAN REKAM MEDIS: {pasien_target['nama']} ---")
-    tanggal   = input("  Tanggal (DD-MM-YYYY) : ").strip()
+    print(f"\n--- TAMBAH CATATAN REKAM MEDIS: {pasien_obj.nama} ---")
+    while True:
+        tanggal = input("  Tanggal (YYYY-MM-DD) : ").strip()
+        parts = tanggal.split("-")
+        if len(parts) == 3 and parts[0].isdigit() and parts[1].isdigit() and parts[2].isdigit():
+            if len(parts[0]) == 4 and len(parts[1]) == 2 and len(parts[2]) == 2:
+                break
+        print("  [ERROR] Format tanggal harus berupa YYYY-MM-DD (Contoh: 2024-12-01).")
     diagnosis = input("  Diagnosis            : ").strip()
     resep     = input("  Resep / Obat         : ").strip()
 
-    catatan_baru = {
-        "tanggal"  : tanggal,
-        "diagnosis": diagnosis,
-        "resep"    : resep
-    }
+    # Menggunakan method tingkat model Pasien
+    pasien_obj.tambah_rekam_medis(tanggal, diagnosis, resep)
 
-    sll.tambah_riwayat(catatan_baru)
+    # Muat ke dalam SLL untuk memenuhi syarat struktur data
+    sll = SingleLinkedListRekamMedis()
+    sll.from_list(pasien_obj.rekam_medis)
 
     # Simpan kembali ke JSON
     pasien_target["rekam_medis"] = sll.to_list()
