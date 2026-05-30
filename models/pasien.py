@@ -1,3 +1,20 @@
+"""
+File    : models/pasien.py
+Materi  : OOP — Class Model Pasien
+Deskripsi:
+    Mendefinisikan class Pasien sebagai representasi objek data pasien
+    dalam sistem Smart Hospital. Menyimpan semua atribut dan method
+    manipulasi data pasien.
+Catatan :
+    - Rekam medis disimpan sebagai list dict dan dikelola oleh sll_rekammedis.py.
+    - Method objek_ke_dict() digunakan untuk serialisasi ke JSON.
+    - Method dict_ke_objek() digunakan untuk deserialisasi dari JSON.
+Relasi  :
+    - Digunakan oleh modules/manage_pasien.py, modules/sorting_triase.py,
+      modules/searching.py, dan modules/graph_rujukan.py.
+"""
+
+
 class Pasien:
     def __init__(self, nik, nama, umur, layanan):
         self.nik = nik
@@ -12,6 +29,7 @@ class Pasien:
         
     
     def objek_ke_dict(self):
+        """Mengubah objek Pasien menjadi dictionary agar bisa si simpan ke JSON."""
         return {
             "nik"         : self.nik,
             "nama"        : self.nama,
@@ -25,6 +43,7 @@ class Pasien:
     
 
     def dict_ke_objek(self, data):
+        """mengubah dictionary yg di json tu ke dalam bentuk atribut objek Pasien."""
         self.nik = data.get("nik")
         self.nama = data.get("nama")
         self.umur = data.get("umur")
@@ -35,6 +54,7 @@ class Pasien:
         self.rekam_medis = data.get("rekam_medis", [])
 
     def data_pasien(self):
+        """ini untuk tampilkan atau ngeprint data pasien """
         return (f"NIK          : {self.nik}\n"
                 f"Nama         : {self.nama}\n"
                 f"Umur         : {self.umur}\n"
@@ -42,28 +62,28 @@ class Pasien:
                 f"Status       : {self.status}\n"
                 f"Danger Score : {self.danger_score}")
 
-    """fungsi untuk cek danger score pasien, bisa digunakan untuk menentukan prioritas perawatan atau tindakan medis"""
     def cek_danger_score(self):
+        """Mengembalikan nilai danger_score pasien."""
         return self.danger_score
 
-    """fungsi untuk update danger score pasien, misalnya setelah dilakukan pemeriksaan atau perawatan"""
     def update_danger_score(self, danger_score_baru):
+        """Memperbarui nilai danger_score pasien setelah pemeriksaan atau perawatan."""
         self.danger_score = danger_score_baru
 
-    """fungsi untuk update status pasien, misalnya dari terdaftar ke dirawat atau sembuh"""
     def update_status(self, status_baru):
+        """Memperbarui status pasien, misalnya dari 'terdaftar' ke 'dirawat' atau 'sembuh'."""
         self.status = status_baru
 
-    """fungsi untuk update jenis layanan pasien, misalnya dari rawat jalan ke rawat inap"""
     def update_layanan(self, layanan_baru):
+        """Memperbarui jenis layanan pasien, misalnya dari rawat jalan ke rawat inap."""
         self.jenis_layanan = layanan_baru
 
-    """fungsi menyimpan informasi kamar yang ditempati pasien"""
     def set_kamar(self, nomor_kamar_baru):
+        """Menyimpan nomor kamar yang ditempati pasien."""
         self.kamar = nomor_kamar_baru
 
     def tambah_rekam_medis(self, tanggal, diagnosis, resep):
-        """Saat ini menggunakan list, nantinya bisa diintegrasikan dengan modul SLL"""
+        """tambah rekam medis pasien """
         rekam_baru = {
             "tanggal": tanggal,
             "diagnosis": diagnosis,

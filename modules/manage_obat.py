@@ -8,6 +8,9 @@ Relasi: Menggunakan models.obat.Obat dan utils.json_handler untuk load/save JSON
 
 from models.obat import Obat
 from utils.json_handler import load_json, save_json
+from modules.hash_obat import HashObat
+from modules.tree_katalog import tampilkan_katalog, cari_obat_di_katalog, lihat_obat_per_kategori
+from modules.recursive_stok import prediksi_satu_obat, prediksi_semua_obat
 
 def lihat_obat():
     """Menampilkan seluruh data obat dari file JSON."""
@@ -112,16 +115,64 @@ def ubah_harga_obat():
 
 
 def cari_obat_kode():
-    """Placeholder hingga modul hash_obat selesai."""
-    pass
+    """Mencari obat menggunakan Hash Table (Algoritma Pencarian Cepat O(1))."""
+    data_obat = load_json("data/obat.json")
+    
+    # Inisialisasi Hash Table dan populasi data dari JSON terkini
+    hash_tabel = HashObat()
+    for item in data_obat:
+        hash_tabel.insert(item['kode'], item)
+        
+    print("\n--- PENCARIAN OBAT (HASH TABLE) ---")
+    kode_cari = input("Masukkan Kode Obat secara spesifik (Contoh: OBT001): ").strip()
+    
+    hasil = hash_tabel.get(kode_cari)
+    if hasil:
+        print("\n[SUCCESS] Obat ditemukan dengan sangat cepat!")
+        hash_tabel.cetak_obat(hasil)
+    else:
+        print(f"\n[ERROR] Obat dengan kode '{kode_cari}' tidak ditemukan di tabel hash.")
 
 
 def prediksi_stok_habis():
-    """Placeholder hingga modul recursive_stok selesai."""
-    pass
+    """Prediksi masa pakai stok menggunakan Algoritma Rekursif."""
+    while True:
+        print("\n--- PREDIKSI STOK OBAT (REKURSIF) ---")
+        print("1. Prediksi Berapa Hari Semua Stok Obat Akan Habis")
+        print("2. Prediksi 1 Obat Secara Spesifik")
+        print("3. Kembali")
+        
+        pilihan = input("Pilih model komputasi: ")
+        
+        if pilihan == "1":
+            prediksi_semua_obat()
+        elif pilihan == "2":
+            prediksi_satu_obat()
+        elif pilihan == "3":
+            break
+        else:
+            print("Pilihan invalid.")
 
 
 def tampilkan_katalog_obat():
-    """Placeholder hingga modul tree_katalog selesai."""
-    pass
+    """Menilik struktur hirarkis obat kategori -> sub -> item via Tree."""
+    while True:
+        print("\n--- KATALOG OBAT (DIREKTORI TREE) ---")
+        print("1. Lihat Keseluruhan Pohon Direktori (Tree)")
+        print("2. Cari Item Berdasarkan Level Terdalam (Tree Search DFS)")
+        print("3. Filter Kategori Spesifik Saja")
+        print("4. Kembali")
+        
+        pilihan = input("Pilih menu tree: ")
+        
+        if pilihan == "1":
+            tampilkan_katalog()
+        elif pilihan == "2":
+            cari_obat_di_katalog()
+        elif pilihan == "3":
+            lihat_obat_per_kategori()
+        elif pilihan == "4":
+            break
+        else:
+            print("Pilihan invalid.")
 

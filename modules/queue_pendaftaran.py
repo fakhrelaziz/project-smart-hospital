@@ -1,141 +1,97 @@
-'''
-Konsep nya tu FIFO (First In, First Out):
-  Pasien yang datang pertama -> dilayani pertama.
-  enqueue() -> masuk dari belakang (append ke akhir list)
-  dequeue() -> keluar dari depan (pop index 0)
-Data pasien dalam antrean disimpan sebagai dictionary ringkas
-'''
+"""
+File    : modules/queue_pendaftaran.py
+Materi  : Queue — Antrian FIFO (First In First Out)
+Deskripsi:
+    Mengimplementasikan struktur data Queue secara manual untuk mengelola
+    antrian pendaftaran pasien. Pasien yang datang lebih dulu dilayani
+    lebih dulu (FIFO).
+Catatan :
+    - Queue diimplementasikan menggunakan list Python dengan:
+        enqueue() = append ke belakang list
+        dequeue()  = pop(0) dari depan list
+    - Tidak menggunakan collections.deque agar implementasi terlihat eksplisit.
+Relasi  :
+    - Digunakan oleh modules/manage_pasien.py sebagai antrian loket pendaftaran.
+"""
 
 
 class QueuePendaftaran:
-    def __init__(self):  
-        self._items: list = []  #kita buat list kosong untuk menyimpan data pasien yang masuk antrean
+    def __init__(self):
+        self.items = []
 
+    def enqueue(self, pasien):
+        """Menambahkan pasien ke bagian belakang antrian (FIFO).
 
-    def enqueue(self, pasien: dict):
-        '''
-        menambahkan pasien ke belakang antrean.
-        mengembalikan True jika berhasil, False jika data tidak valid.
-        '''
+        Melakukan validasi bahwa data yang masuk adalah dict dan memiliki key 'nik'.
 
-        #validasi 1: memastikan data yang dikirim wajib berbentuk Dictionary {}
-        if not isinstance(pasien, dict):
-            print("[SISTEM] ERROR: pasien harus berupa dictionary.")
-            return False
-        
-        #validasi 2: memastikan di dalam dictionary wajib ada kunci (key) 'nik'
+        Returns:
+            bool: True jika berhasil, False jika data tidak valid.
+        """
         if not pasien.get("nik"):
             print("[SISTEM] ERROR: data pasien harus memiliki key 'nik'.")
             return False
 
-        #masukkan pasien ke antrean (append ke akhir list)
-        self._items.append(pasien)
-
-        #print notifikasi masuk antrean dengan nama pasien (jika ada) atau NIK sebagai fallback
+        self.items.append(pasien)
         print(f"[SISTEM] '{pasien.get('nama', pasien['nik'])}' "
-              f"masuk antrean. Posisi: {len(self._items)}")
+              f"masuk antrean. Posisi: {len(self.items)}")
         return True
 
-
     def dequeue(self):
-        '''
-        mengambil dan menghapus pasien paling depan.
-        mengembalikan dict pasien, atau None jika antrean kosong.
-        '''
+        """Mengambil dan menghapus pasien paling depan antrian (FIFO).
 
-        #cek dulu apakah antrean kosong sebelum melakukan penghapusan
+        Returns:
+            dict | None: Dict pasien yang dilayani, atau None jika antrian kosong.
+        """
         if self.cek_antrian_kosong():
             print("[SISTEM] Antrean kosong. Tidak ada pasien untuk diproses.")
             return None
 
-        # .pop(0) ini untuk mengambil sekaligus menghapus elemen di indeks ke-0 (paling depan)
-        pasien = self._items.pop(0)
-
+        pasien = self.items.pop(0)
         print(f"[SISTEM] '{pasien.get('nama', pasien['nik'])}' "
               f"keluar dari antrean untuk dilayani.")
         return pasien
 
-
     def lihat_pasien(self):
-        '''
-        mengintip siapa pasien yang ada di urutan paling depan TANPA menghapus data dari antrean (Peek).
-    
-        '''
+        """Mengembalikan pasien paling depan tanpa menghapusnya dari antrian (Peek).
+
+        Returns:
+            dict | None: Dict pasien terdepan, atau None jika antrian kosong.
+        """
         if self.cek_antrian_kosong():
             return None
-        return self._items[0]
+        return self.items[0]
 
-
-    #cek_antrian_kosong — kita mengecek apakah antrean kosong
     def cek_antrian_kosong(self):
-        return len(self._items) == 0  #klau panjang list sama dengan 0, berarti bernilai True (kosong)
+        """Mengecek apakah antrian sedang kosong."""
+        return len(self.items) == 0
 
-    
-    #jmlh_antrian_pasien — jumlah pasien dalam antrean
     def jmlh_antrian_pasien(self):
-        return len(self._items)   #pakai len() untuk menghitung total elemen di dalam list
+        """Mengembalikan jumlah pasien yang sedang dalam antrian."""
+        return len(self.items)
 
-    
-    #tampilkan_antrian — menampilkan seluruh isi antrean (untuk debug/demo)
     def tampilkan_antrian(self):
+        """Menampilkan seluruh isi antrian secara terurut dari depan."""
         if self.cek_antrian_kosong():
             print("[SISTEM] Antrean saat ini kosong.")
             return
         print(f"[SISTEM] Isi antrean ({self.jmlh_antrian_pasien()} pasien) — urutan dari depan:")
 
-        for i, p in enumerate(self._items, start=1): 
-            #enumerate() untuk dapatkan indeks(i) dan data pasien(p) secara bersamaan, mulai dari 1
-            print(f"  {i}. NIK: {p.get('nik')} | "
-                  f"Nama: {p.get('nama', '-')} | "
-                  f"Layanan: {p.get('layanan', '-')}")
+        # Menampilkan nomor urut, NIK, nama, dan layanan pasien dalam antrian
+        nomor_urut = 1
+        for p in self.items:
+            nik_pasien = p["nik"] if "nik" in p else "-"
+            nama_pasien = p["nama"] if "nama" in p and p["nama"] else "-"
+            layanan_pasien = p["layanan"] if "layanan" in p and p["layanan"] else "-"
+            
+            print(f"  {nomor_urut}. NIK: {nik_pasien} | "
+                  f"Nama: {nama_pasien} | "
+                  f"Layanan: {layanan_pasien}")
+            nomor_urut += 1
 
-    
-    #to_list — mengekspor isi antrean sebagai list (untuk save ke JSON)
-    def to_list(self) -> list:
-        return list(self._items)
+    def to_list(self):
+        """Mengekspor isi antrian sebagai list biasa untuk disimpan ke JSON."""
+        return list(self.items)
 
-    
-    #from_list — mengisi ulang antrean dari list (untuk load dari JSON)
-    def from_list(self, data: list):
-        self._items = [item for item in data if isinstance(item, dict)] #hanya ambil item yang valid (dictionary)
-
-
-
-#Coba Demo mandiri — jalankan: python modules/queue_pendaftaran.py
-if __name__ == "__main__":
-    print("=== Demo modules/queue_pendaftaran.py ===\n")
-
-    q = QueuePendaftaran()
-
-    # Cek antrean kosong
-    print(f"Antrean kosong? {q.cek_antrian_kosong()}")
-    q.tampilkan_antrian()
-    print()
-
-    # Enqueue beberapa pasien
-    q.enqueue({"nik": "3201010101010001", "nama": "Budi Santoso",  "layanan": "UGD"})
-    q.enqueue({"nik": "3201010101010003", "nama": "Ahmad Fauzi",   "layanan": "Rawat Inap"})
-    q.enqueue({"nik": "3201010101010099", "nama": "Dewi Lestari",  "layanan": "Spesialis"})
-    print()
-
-    q.tampilkan_antrian ()
-    print()
-
-    #lihat pasien — pasien pertama tidak berubah
-    pertama = q.lihat_pasien()
-    print(f"Lihat pasien (tidak dihapus): {pertama['nama']}")
-    print(f"Jumlah pasien      : {q.jmlh_antrian_pasien()}")
-    print()
-
-    #Dequeue satu per satu — urutan HARUS sesuai urutan masuk
-    print("--- Proses dequeue (FIFO) ---")
-    for _ in range(q.jmlh_antrian_pasien() + 1):   #+1 untuk uji kondisi kosong
-        dilayani = q.dequeue()
-        if dilayani:
-            print(f"  Dilayani: {dilayani['nama']}")
-    print()
-
-    #kita uji input tidak valid
-    print("--- Uji data tidak valid ---")
-    q.enqueue("bukan dictionary")
-    q.enqueue({"nama": "Tanpa NIK", "layanan": "UGD"})
+    def from_list(self, data):
+        """Mengisi ulang antrian dari list yang dimuat dari JSON."""
+        self.items = list(data)

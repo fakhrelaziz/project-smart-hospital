@@ -15,6 +15,10 @@ Relasi  :
 
 from models.pasien import Pasien
 from utils.json_handler import load_json, save_json
+from modules.undo_stack import UndoStack
+
+# variabel lokal untuk menampung undo khusus triase
+stack_triase = UndoStack()
 
 
 # ── LABEL KEGAWATAN ───────────────────────────────────────────────────────────
@@ -155,7 +159,7 @@ def update_danger_score():
         3. Input nilai danger_score baru (1-10)
         4. Simpan perubahan ke JSON
     """
-    # Tampilkan antrian dulu agar petugas tahu siapa saja yang ada
+    # Tampilkan antrian dulu agar tahu siapa saja yang ada
     lihat_antrian_ugd()
 
     data_semua = load_json("data/pasien.json")
@@ -198,9 +202,43 @@ def update_danger_score():
     score_lama = data_semua[pasien_index]["danger_score"]
     data_semua[pasien_index]["danger_score"] = score_baru
     save_json("data/pasien.json", data_semua)
+    
+    # Simpan ke histori Stack untuk keperluan Undo
+    stack_triase.append({
+        "nik": nik,
+        "skor_lama": score_lama
+    })
 
     print(f"[OK] Danger score {pasien_data['nama']} diperbarui: {score_lama} → {score_baru}")
     print(f"     Status kegawatan: {label_kegawatan(score_baru)}")
+
+
+# ── Batal Skor Triase Terakhir (Undo) ────────────────────────────────────────────────
+def undo_danger_score():
+    if stack_triase.is_empty():
+        print("[INFO] Tidak ada riwayat triase yang bisa dibatalkan.")
+        return
+
+    """Membatalkan (Undo) proses update skor triase menggunakan Stack LIFO."""
+    aksi_terakhir = stack_triase.pop()
+    
+    nik_batal = aksi_terakhir["nik"]
+    skor_lama = aksi_terakhir["skor_lama"]
+    data_semua = load_json("data/pasien.json")
+    
+    # Cari dan pulihkan
+    pasien_ditemukan = False
+    for data in data_semua:
+        if data.get("nik") == nik_batal:
+            data["danger_score"] = skor_lama
+            pasien_ditemukan = True
+            break
+            
+    if pasien_ditemukan:
+        save_json("data/pasien.json", data_semua)
+        print(f"[SUCCESS] Danger score NIK {nik_batal} berhasil di-restore ke nilai awal: {skor_lama}.")
+    else:
+        print(f"[ERROR] Data pasien NIK {nik_batal} tidak ditemukan, gagal undo.")
 
 
 # ── LIHAT ANTRIAN UGD (ENTRY POINT UTAMA) ────────────────────────────────────
@@ -214,90 +252,3 @@ def lihat_antrian_ugd():
     daftar_ugd = ambil_pasien_ugd()
     daftar_terurut = bubble_sort_ugd(daftar_ugd)
     tampilkan_antrian_ugd(daftar_terurut)
-
-
-# ── TEST MANDIRI ──────────────────────────────────────────────────────────────
-
-if __name__ == "__main__":
-    print("=" * 50)
-    print("  TEST MANDIRI — modules/sorting_triase.py")
-    print("=" * 50)
-
-    # ── Test 1: Bubble Sort dengan data dummy ─────────────────────────────
-    print("\n[TEST 1] Bubble Sort manual dengan data dummy")
-    print("─" * 50)
-
-    # Buat list pasien dummy dengan danger_score acak
-    data_dummy = [
-        {"nik": "0001", "nama": "Pasien A", "umur": 30,
-         "layanan": "UGD", "status": "terdaftar", "danger_score": 3,
-         "nomor_kamar": None, "rekam_medis": []},
-        {"nik": "0002", "nama": "Pasien B", "umur": 25,
-         "layanan": "UGD", "status": "terdaftar", "danger_score": 9,
-         "nomor_kamar": None, "rekam_medis": []},
-        {"nik": "0003", "nama": "Pasien C", "umur": 50,
-         "layanan": "UGD", "status": "terdaftar", "danger_score": 1,
-         "nomor_kamar": None, "rekam_medis": []},
-        {"nik": "0004", "nama": "Pasien D", "umur": 40,
-         "layanan": "UGD", "status": "terdaftar", "danger_score": 7,
-         "nomor_kamar": None, "rekam_medis": []},
-        {"nik": "0005", "nama": "Pasien E", "umur": 60,
-         "layanan": "UGD", "status": "terdaftar", "danger_score": 10,
-         "nomor_kamar": None, "rekam_medis": []},
-    ]
-
-    # Konversi ke objek Pasien
-    daftar_test = []
-    for d in data_dummy:
-        p = Pasien("", "", 0, "")
-        p.dict_ke_objek(d)
-        daftar_test.append(p)
-
-    # Tampilkan sebelum sorting
-    print("Sebelum sorting:")
-    for p in daftar_test:
-        print(f"  {p.nama} — danger_score: {p.danger_score}")
-
-    # Jalankan Bubble Sort
-    bubble_sort_ugd(daftar_test)
-
-    # Tampilkan setelah sorting
-    print("\nSetelah Bubble Sort (descending):")
-    for p in daftar_test:
-        print(f"  {p.nama} — danger_score: {p.danger_score} {label_kegawatan(p.danger_score)}")
-
-    # Verifikasi urutan benar
-    scores = [p.danger_score for p in daftar_test]
-    assert scores == sorted(scores, reverse=True), "GAGAL: Urutan tidak descending!"
-    print("\n✅ Bubble Sort menghasilkan urutan yang benar (descending).")
-
-    # ── Test 2: List kosong ───────────────────────────────────────────────
-    print("\n[TEST 2] Bubble Sort dengan list kosong")
-    print("─" * 50)
-    hasil_kosong = bubble_sort_ugd([])
-    assert hasil_kosong == [], "GAGAL: List kosong harus tetap kosong!"
-    print("  Hasil: [] ✅ Tidak error.")
-
-    # ── Test 3: List 1 elemen ─────────────────────────────────────────────
-    print("\n[TEST 3] Bubble Sort dengan 1 pasien")
-    print("─" * 50)
-    satu = Pasien("", "", 0, "")
-    satu.dict_ke_objek(data_dummy[0])
-    hasil_satu = bubble_sort_ugd([satu])
-    assert len(hasil_satu) == 1
-    print(f"  Hasil: [{hasil_satu[0].nama}] ✅ Tidak error.")
-
-    # ── Test 4: Data nyata dari JSON ──────────────────────────────────────
-    print("\n[TEST 4] Ambil dan tampilkan data nyata dari pasien.json")
-    print("─" * 50)
-    lihat_antrian_ugd()
-
-    # ── Test 5: Label kegawatan ───────────────────────────────────────────
-    print("\n[TEST 5] Label kegawatan")
-    print("─" * 50)
-    for score in [0, 1, 4, 5, 7, 8, 10]:
-        print(f"  Score {score:>2} → {label_kegawatan(score)}")
-
-    print("\n" + "=" * 50)
-    print("  SEMUA TEST SELESAI ✅")
-    print("=" * 50)

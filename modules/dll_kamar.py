@@ -1,3 +1,19 @@
+"""
+File    : modules/dll_kamar.py
+Materi  : Double Linked List (DLL)
+Deskripsi:
+    Mengimplementasikan Double Linked List untuk navigasi kamar rawat inap.
+    Setiap node merepresentasikan satu kamar dengan pointer ke kamar
+    berikutnya (next) dan sebelumnya (prev).
+Catatan :
+    - Navigasi maju  : lihat_kamar_maju()  — dari head ke tail.
+    - Navigasi mundur: lihat_kamar_mundur() — dari tail ke head.
+    - cari_kamar_kosong() mengembalikan kamar pertama yang belum penuh.
+Relasi  :
+    - Digunakan oleh modules/manage_kamar.py untuk navigasi dan pencarian kamar.
+"""
+
+
 class NodeKamar:
     def __init__(self, data_kamar):
         self.data = data_kamar
@@ -47,6 +63,6 @@ class NavigasiKamar:
         hasil = []
         saat_ini = self.head
         while saat_ini is not None:
-            hasil.append(saat_ini.data.to_dict())
+            hasil.append(saat_ini.data.objek_ke_dict())
             saat_ini = saat_ini.next
         return hasil

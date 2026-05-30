@@ -1,52 +1,79 @@
 """
-File: modules/manage_kamar.py
+File    : modules/manage_kamar.py
 Deskripsi: Handler CLI untuk menampilkan data kamar dan mengelola keterisian kamar.
-Tujuan: Menyediakan fungsi melihat kamar, melihat ketersediaan, serta sinkronisasi pasien-kamar.
-Catatan penting: Perubahan disimpan langsung ke data/kamar.json dan data/pasien.json.
-Relasi: Menggunakan models.kamar.Kamar dan utils.json_handler untuk load/save JSON.
+Tujuan  : Menyediakan fungsi melihat kamar, ketersediaan, navigasi DLL,
+           serta sinkronisasi data pasien-kamar.
+Catatan :
+    - Perubahan disimpan langsung ke data/kamar.json dan data/pasien.json (per-operasi).
+    - Konversi dict → Kamar menggunakan pola: buat objek kosong, lalu dict_ke_objek().
+    - Jadwal minum obat pasien ditampilkan dengan Circular Linked List (cll_obat.py).
+Relasi  :
+    - models.kamar.Kamar
+    - modules.dll_kamar.NavigasiKamar
+    - modules.cll_obat.CircularLinkedList
+    - utils.json_handler.load_json / save_json
 """
 
 from models.kamar import Kamar
 from utils.json_handler import load_json, save_json
+from modules.dll_kamar import NavigasiKamar
+from modules.cll_obat import CircularLinkedList
+
+
+# ── HELPER INTERNAL ───────────────────────────────────────────────────────────
+
+def _dict_ke_kamar(data: dict) -> Kamar:
+    """Mengkonversi satu dict kamar menjadi objek Kamar."""
+    kamar_obj = Kamar("", "", "tersedia", None)
+    kamar_obj.dict_ke_objek(data)
+    return kamar_obj
+
+
+# ── LIHAT KAMAR ───────────────────────────────────────────────────────────────
 
 def lihat_kamar():
     """Menampilkan seluruh data kamar dari file JSON."""
     data_kamar_dict = load_json("data/kamar.json")
-    
-    # Mengubah data mentah (dict) menjadi barisan Objek Kamar
+
     daftar_objek_kamar = []
     for data in data_kamar_dict:
-        kamar_obj = Kamar.from_dict(data)
+        kamar_obj = _dict_ke_kamar(data)
         daftar_objek_kamar.append(kamar_obj)
 
-    # Menampilkan data menggunakan fungsi dari class Kamar
     print("\n--- DAFTAR KAMAR RUMAH SAKIT ---")
     for kamar in daftar_objek_kamar:
         print(kamar.data_kamar())
     print("-" * 32)
 
 
+# ── LIHAT KAMAR TERSEDIA ──────────────────────────────────────────────────────
+
 def lihat_kamar_tersedia():
-    """Menampilkan daftar kamar yang masih memiliki kapasitas kosong."""
+    """Menampilkan daftar kamar yang masih memiliki kapasitas kosong via DLL."""
     data_kamar_dict = load_json("data/kamar.json")
 
-    daftar_objek_kamar = []
+    dll = NavigasiKamar()
     for data in data_kamar_dict:
-        kamar_obj = Kamar.from_dict(data)
-        daftar_objek_kamar.append(kamar_obj)
+        kamar_obj = _dict_ke_kamar(data)
+        dll.tambah_kamar(kamar_obj)
 
     print("\n--- KAMAR TERSEDIA ---")
     ditemukan = False
-    for kamar in daftar_objek_kamar:
+    saat_ini = dll.head
+    while saat_ini is not None:
+        kamar = saat_ini.data
         if kamar.status_kamar() != "Penuh":
             print(kamar.data_kamar())
             ditemukan = True
+        saat_ini = saat_ini.next
 
     if not ditemukan:
         print("Tidak ada kamar tersedia.")
 
     print("-" * 32)
 
+
+# ── ASSIGN PASIEN KE KAMAR ────────────────────────────────────────────────────
 
 def assign_pasien_ke_kamar():
     """Menempatkan pasien ke kamar dan memperbarui data JSON."""
@@ -56,6 +83,7 @@ def assign_pasien_ke_kamar():
     nik = input("Masukkan NIK pasien: ").strip()
     nomor_kamar = input("Masukkan nomor kamar: ").strip()
 
+    # Cari data pasien
     pasien_data = None
     for pasien in data_pasien:
         if pasien.get("nik") == nik:
@@ -63,16 +91,17 @@ def assign_pasien_ke_kamar():
             break
 
     if pasien_data is None:
-        print("Pasien tidak ditemukan.")
+        print("[ERROR] Pasien tidak ditemukan.")
         return
 
     if pasien_data.get("nomor_kamar"):
         if pasien_data.get("nomor_kamar") == nomor_kamar:
-            print("Pasien sudah berada di kamar tersebut.")
+            print("[INFO] Pasien sudah berada di kamar tersebut.")
         else:
-            print(f"Pasien sudah terdaftar di kamar {pasien_data.get('nomor_kamar')}.")
+            print(f"[INFO] Pasien sudah terdaftar di kamar {pasien_data.get('nomor_kamar')}.")
         return
 
+    # Cari data kamar
     kamar_data = None
     for kamar in data_kamar:
         if kamar.get("nomor") == nomor_kamar:
@@ -80,26 +109,31 @@ def assign_pasien_ke_kamar():
             break
 
     if kamar_data is None:
-        print("Kamar tidak ditemukan.")
+        print("[ERROR] Kamar tidak ditemukan.")
         return
 
-    kamar_obj = Kamar.from_dict(kamar_data)
+    # Konversi dict → objek Kamar
+    kamar_obj = _dict_ke_kamar(kamar_data)
     if nik in kamar_obj.pasien_terisi:
-        print("Pasien sudah tercatat di kamar ini.")
+        print("[INFO] Pasien sudah tercatat di kamar ini.")
         return
 
     if not kamar_obj.pasien_masuk(nik):
         return
 
+    # Update data pasien
     pasien_data["nomor_kamar"] = nomor_kamar
     pasien_data["status"] = "dirawat"
 
-    kamar_data.update(kamar_obj.to_dict())
+    # Sync dict kamar dari objek yang sudah diperbarui
+    kamar_data.update(kamar_obj.objek_ke_dict())
     save_json("data/kamar.json", data_kamar)
     save_json("data/pasien.json", data_pasien)
 
-    print(f"Pasien {nik} berhasil ditempatkan ke kamar {nomor_kamar}.")
+    print(f"[OK] Pasien {nik} berhasil ditempatkan ke kamar {nomor_kamar}.")
 
+
+# ── PASIEN KELUAR KAMAR ───────────────────────────────────────────────────────
 
 def pasien_keluar_kamar():
     """Mengeluarkan pasien dari kamar dan memperbarui data JSON."""
@@ -108,6 +142,7 @@ def pasien_keluar_kamar():
 
     nik = input("Masukkan NIK pasien: ").strip()
 
+    # Cari data pasien
     pasien_data = None
     for pasien in data_pasien:
         if pasien.get("nik") == nik:
@@ -115,14 +150,15 @@ def pasien_keluar_kamar():
             break
 
     if pasien_data is None:
-        print("Pasien tidak ditemukan.")
+        print("[ERROR] Pasien tidak ditemukan.")
         return
 
     nomor_kamar = pasien_data.get("nomor_kamar")
     if not nomor_kamar:
-        print("Pasien tidak tercatat di kamar.")
+        print("[INFO] Pasien tidak tercatat di kamar manapun.")
         return
 
+    # Cari data kamar
     kamar_data = None
     for kamar in data_kamar:
         if kamar.get("nomor") == nomor_kamar:
@@ -130,22 +166,109 @@ def pasien_keluar_kamar():
             break
 
     if kamar_data is None:
-        print("Kamar tidak ditemukan.")
+        print("[ERROR] Kamar tidak ditemukan.")
         return
 
-    kamar_obj = Kamar.from_dict(kamar_data)
+    # Konversi dict → objek Kamar
+    kamar_obj = _dict_ke_kamar(kamar_data)
     if nik not in kamar_obj.pasien_terisi:
-        print("Pasien tidak ditemukan di kamar ini.")
+        print("[ERROR] Pasien tidak ditemukan di kamar ini.")
         return
 
     kamar_obj.pasien_keluar(nik)
 
+    # Update data pasien
     pasien_data["nomor_kamar"] = None
     pasien_data["status"] = "terdaftar"
 
-    kamar_data.update(kamar_obj.to_dict())
+    # Sync dict kamar dari objek yang sudah diperbarui
+    kamar_data.update(kamar_obj.objek_ke_dict())
     save_json("data/kamar.json", data_kamar)
     save_json("data/pasien.json", data_pasien)
 
-    print(f"Pasien {nik} berhasil keluar dari kamar {nomor_kamar}.")
-    
+    print(f"[OK] Pasien {nik} berhasil keluar dari kamar {nomor_kamar}.")
+
+
+# ── NAVIGASI DLL ──────────────────────────────────────────────────────────────
+
+def _bangun_dll() -> NavigasiKamar:
+    """Helper internal: memuat kamar.json dan membangun DLL NavigasiKamar."""
+    data_kamar = load_json("data/kamar.json")
+    dll = NavigasiKamar()
+    for data in data_kamar:
+        kamar_obj = _dict_ke_kamar(data)
+        dll.tambah_kamar(kamar_obj)
+    return dll
+
+
+def lihat_kamar_maju():
+    """Menampilkan lorong kamar dari awal ke akhir menggunakan DLL."""
+    dll = _bangun_dll()
+    print("\n--- LORONG KAMAR (MAJU) ---")
+    dll.lihat_kamar_maju()
+    print("-" * 32)
+
+
+def lihat_kamar_mundur():
+    """Menampilkan lorong kamar dari akhir ke awal menggunakan DLL."""
+    dll = _bangun_dll()
+    print("\n--- LORONG KAMAR (MUNDUR) ---")
+    dll.lihat_kamar_mundur()
+    print("-" * 32)
+
+
+def cari_kamar_kosong_terdekat():
+    """Mencari kamar kosong terdekat menggunakan traverse DLL."""
+    dll = _bangun_dll()
+    kamar_kosong = dll.cari_kamar_kosong()
+
+    print("\n--- KAMAR KOSONG TERDEKAT ---")
+    if kamar_kosong:
+        for kamar in kamar_kosong:
+            print(kamar.data_kamar())
+    else:
+        print("Tidak ada kamar kosong yang tersedia saat ini.")
+    print("-" * 32)
+
+
+# ── CLL JADWAL MINUM OBAT ─────────────────────────────────────────────────────
+
+def lihat_jadwal_obat_pasien():
+    """
+    Menampilkan siklus jadwal minum obat pasien rawat inap menggunakan
+    Circular Linked List (Pagi → Siang → Malam → Pagi → ...).
+    """
+    data_pasien = load_json("data/pasien.json")
+
+    nik = input("Masukkan NIK pasien: ").strip()
+
+    # Cari pasien
+    pasien_data = None
+    for p in data_pasien:
+        if p.get("nik") == nik:
+            pasien_data = p
+            break
+
+    if pasien_data is None:
+        print("[ERROR] Pasien tidak ditemukan.")
+        return
+
+    if not pasien_data.get("nomor_kamar"):
+        print(f"[INFO] Pasien '{pasien_data['nama']}' belum dirawat inap (tidak memiliki kamar).")
+        return
+
+    # Bangun CLL jadwal default: Pagi → Siang → Malam
+    jadwal = CircularLinkedList()
+    jadwal.tambah_jadwal("PAGI   — 07.00 WIB")
+    jadwal.tambah_jadwal("SIANG  — 13.00 WIB")
+    jadwal.tambah_jadwal("MALAM  — 19.00 WIB")
+
+    print(f"\n=== JADWAL MINUM OBAT: {pasien_data['nama']} ===")
+    print(f"    Kamar    : {pasien_data['nomor_kamar']}")
+    print(f"    Layanan  : {pasien_data.get('layanan', '-')}")
+    print()
+    print("Siklus jadwal obat (tekan ENTER untuk lanjut, ketik 'q' untuk berhenti):")
+    print("-" * 44)
+
+    # Tampilkan siklus interaktif
+    jadwal.lihat_jadwal(jumlah_putaran=2)
