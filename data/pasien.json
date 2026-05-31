@@ -4,7 +4,7 @@
         "nama": "Albert Edison",
         "umur": 35,
         "layanan": "UGD",
-        "status": "terdaftar",
+        "status": "selesai",
         "danger_score": 0,
         "nomor_kamar": null,
         "rekam_medis": []
@@ -14,7 +14,7 @@
         "nama": "Olivia Rodriguez",
         "umur": 28,
         "layanan": "Rawat Jalan",
-        "status": "terdaftar",
+        "status": "selesai",
         "danger_score": 0,
         "nomor_kamar": null,
         "rekam_medis": []
@@ -24,7 +24,7 @@
         "nama": "Sabrina Carpenter",
         "umur": 45,
         "layanan": "Rawat Inap",
-        "status": "terdaftar",
+        "status": "selesai",
         "danger_score": 0,
         "nomor_kamar": "K102",
         "rekam_medis": [
@@ -45,7 +45,7 @@
         "nama": "Michael Johnson",
         "umur": 35,
         "layanan": "UGD",
-        "status": "terdaftar",
+        "status": "selesai",
         "danger_score": 5,
         "nomor_kamar": null,
         "rekam_medis": []
@@ -55,7 +55,7 @@
         "nama": "Emily Davis",
         "umur": 22,
         "layanan": "Rawat Jalan",
-        "status": "terdaftar",
+        "status": "selesai",
         "danger_score": 0,
         "nomor_kamar": null,
         "rekam_medis": []
@@ -65,7 +65,7 @@
         "nama": "John Doe",
         "umur": 40,
         "layanan": "UGD",
-        "status": "terdaftar",
+        "status": "selesai",
         "danger_score": 10,
         "nomor_kamar": null,
         "rekam_medis": []
@@ -75,11 +75,9 @@
         "nama": "Jhonccena",
         "umur": 45,
         "layanan": "Rawat Jalan",
-        "status": "terdaftar",
+        "status": "selesai",
         "danger_score": 0,
-        "nomor_kamar": null, 
+        "nomor_kamar": null,
         "rekam_medis": []
     }
 ]
-
-

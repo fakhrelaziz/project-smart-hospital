@@ -2,37 +2,45 @@
     {
         "nomor": "K101",
         "tipe": "VIP",
-        "status": "tersedia",
-        "pasien_terisi": false
+        "status": "Kosong",
+        "kapasitas_kasur": 1,
+        "pasien_terisi": []
     },
     {
         "nomor": "K102",
         "tipe": "VIP",
-        "status": "terisi",
-        "pasien_terisi": "3201010101010003"
+        "status": "Penuh",
+        "kapasitas_kasur": 1,
+        "pasien_terisi": [
+            "3201010101010003"
+        ]
     },
     {
         "nomor": "K201",
         "tipe": "Umum",
-        "status": "tersedia",
-        "pasien_terisi": false
+        "status": "Kosong",
+        "kapasitas_kasur": 2,
+        "pasien_terisi": []
     },
     {
         "nomor": "K202",
         "tipe": "Umum",
-        "status": "tersedia",
-        "pasien_terisi": false
+        "status": "Kosong",
+        "kapasitas_kasur": 2,
+        "pasien_terisi": []
     },
     {
         "nomor": "UGD01",
         "tipe": "UGD",
-        "status": "tersedia",
-        "pasien_terisi": false
+        "status": "Kosong",
+        "kapasitas_kasur": 4,
+        "pasien_terisi": []
     },
     {
         "nomor": "K205",
         "tipe": "Umum",
-        "status": "Tersedia",
-        "pasien_terisi": false
+        "status": "Kosong",
+        "kapasitas_kasur": 2,
+        "pasien_terisi": []
     }
 ]
