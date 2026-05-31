@@ -6,9 +6,6 @@ Deskripsi:
     Setiap node merepresentasikan satu kamar dengan pointer ke kamar
     berikutnya (next) dan sebelumnya (prev).
 Catatan :
-    - Navigasi maju  : lihat_kamar_maju()  — dari head ke tail.
-    - Navigasi mundur: lihat_kamar_mundur() — dari tail ke head.
-    - cari_kamar_kosong() mengembalikan kamar pertama yang belum penuh.
 Relasi  :
     - Digunakan oleh modules/manage_kamar.py untuk navigasi dan pencarian kamar.
 """
@@ -25,7 +22,8 @@ class NavigasiKamar:
         self.head = None
         self.tail = None
 
-    def tambah_kamar(self, data_kamar):
+    # fungsi lihat_kamar_tersedia di file manage_kamar melooping data kamar dan dimasukkan ke fungsi insert dari dll
+    def insert(self, data_kamar):
         node_baru = NodeKamar(data_kamar)
         
         if self.head is None:
@@ -37,32 +35,14 @@ class NavigasiKamar:
         node_baru.prev = self.tail
         self.tail = node_baru
 
-    def cari_kamar_kosong(self):
+    def traversal(self):
+        """Menyusuri DLL dan mengembalikan daftar kamar yang Kosong."""
+        kamar_tersedia = []
         saat_ini = self.head
         while saat_ini is not None:
-            kamar = saat_ini.data
-            # Ngecek apakah kasur di kamar ini masih ada yang kosong
-            if len(kamar.pasien_terisi) < kamar.kapasitas_kasur:
-                return [kamar]
+            # Pengecekan matematis lebih aman daripada string teks
+            if len(saat_ini.data.pasien_terisi) < saat_ini.data.kapasitas_kasur:
+                kamar_tersedia.append(saat_ini.data)
             saat_ini = saat_ini.next
-        return None
-
-    def lihat_kamar_maju(self):
-        saat_ini = self.head
-        while saat_ini is not None:
-            print(f"Kamar {saat_ini.data.nomor} - {saat_ini.data.tipe}")
-            saat_ini = saat_ini.next
-
-    def lihat_kamar_mundur(self):
-        saat_ini = self.tail
-        while saat_ini is not None:
-            print(f"Kamar {saat_ini.data.nomor} - {saat_ini.data.tipe}")
-            saat_ini = saat_ini.prev
-
-    def to_list(self):
-        hasil = []
-        saat_ini = self.head
-        while saat_ini is not None:
-            hasil.append(saat_ini.data.objek_ke_dict())
-            saat_ini = saat_ini.next
-        return hasil
+        return kamar_tersedia
+

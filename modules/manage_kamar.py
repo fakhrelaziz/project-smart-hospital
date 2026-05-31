@@ -19,55 +19,52 @@ from utils.json_handler import load_json, save_json
 from modules.dll_kamar import NavigasiKamar
 from modules.cll_obat import CircularLinkedList
 
-
 # ── HELPER INTERNAL ───────────────────────────────────────────────────────────
 
-def _dict_ke_kamar(data: dict) -> Kamar:
+def _cari_pasien(data, nik):
+    """Helper pencarian pasien dari list dict."""
+    for p in data:
+        if p.get("nik") == nik:
+            return p
+    return None
+
+def _cari_kamar(data, nomor):
+    """Helper pencarian kamar dari list dict."""
+    for k in data:
+        if k.get("nomor") == nomor:
+            return k
+    return None
+
+def _dict_ke_kamar(data):
     """Mengkonversi satu dict kamar menjadi objek Kamar."""
-    kamar_obj = Kamar("", "", "tersedia", None)
+    kamar_obj = Kamar("", "")
     kamar_obj.dict_ke_objek(data)
     return kamar_obj
 
-
-# ── LIHAT KAMAR ───────────────────────────────────────────────────────────────
-
-def lihat_kamar():
-    """Menampilkan seluruh data kamar dari file JSON."""
-    data_kamar_dict = load_json("data/kamar.json")
-
-    daftar_objek_kamar = []
-    for data in data_kamar_dict:
+def _bangun_dll():
+    """Helper internal: memuat kamar.json dan membangun DLL NavigasiKamar."""
+    data_kamar = load_json("data/kamar.json")
+    dll = NavigasiKamar()
+    for data in data_kamar:
         kamar_obj = _dict_ke_kamar(data)
-        daftar_objek_kamar.append(kamar_obj)
-
-    print("\n--- DAFTAR KAMAR RUMAH SAKIT ---")
-    for kamar in daftar_objek_kamar:
-        print(kamar.data_kamar())
-    print("-" * 32)
+        dll.insert(kamar_obj)
+    return dll
 
 
 # ── LIHAT KAMAR TERSEDIA ──────────────────────────────────────────────────────
 
 def lihat_kamar_tersedia():
     """Menampilkan daftar kamar yang masih memiliki kapasitas kosong via DLL."""
-    data_kamar_dict = load_json("data/kamar.json")
 
-    dll = NavigasiKamar()
-    for data in data_kamar_dict:
-        kamar_obj = _dict_ke_kamar(data)
-        dll.tambah_kamar(kamar_obj)
+    dll = _bangun_dll()  # Bangun DLL dari data kamar.json
 
     print("\n--- KAMAR TERSEDIA ---")
-    ditemukan = False
-    saat_ini = dll.head
-    while saat_ini is not None:
-        kamar = saat_ini.data
-        if kamar.status_kamar() != "Penuh":
+    daftar_kamar = dll.traversal()
+    
+    if daftar_kamar:
+        for kamar in daftar_kamar:
             print(kamar.data_kamar())
-            ditemukan = True
-        saat_ini = saat_ini.next
-
-    if not ditemukan:
+    else:
         print("Tidak ada kamar tersedia.")
 
     print("-" * 32)
@@ -83,12 +80,8 @@ def assign_pasien_ke_kamar():
     nik = input("Masukkan NIK pasien: ").strip()
     nomor_kamar = input("Masukkan nomor kamar: ").strip()
 
-    # Cari data pasien
-    pasien_data = None
-    for pasien in data_pasien:
-        if pasien.get("nik") == nik:
-            pasien_data = pasien
-            break
+    # Cari data pasien yang mau dimasukkan ke kamar
+    pasien_data = _cari_pasien(data_pasien, nik)
 
     if pasien_data is None:
         print("[ERROR] Pasien tidak ditemukan.")
@@ -101,12 +94,8 @@ def assign_pasien_ke_kamar():
             print(f"[INFO] Pasien sudah terdaftar di kamar {pasien_data.get('nomor_kamar')}.")
         return
 
-    # Cari data kamar
-    kamar_data = None
-    for kamar in data_kamar:
-        if kamar.get("nomor") == nomor_kamar:
-            kamar_data = kamar
-            break
+    # Cari data kamar 
+    kamar_data = _cari_kamar(data_kamar, nomor_kamar)
 
     if kamar_data is None:
         print("[ERROR] Kamar tidak ditemukan.")
@@ -143,11 +132,7 @@ def pasien_keluar_kamar():
     nik = input("Masukkan NIK pasien: ").strip()
 
     # Cari data pasien
-    pasien_data = None
-    for pasien in data_pasien:
-        if pasien.get("nik") == nik:
-            pasien_data = pasien
-            break
+    pasien_data = _cari_pasien(data_pasien, nik)
 
     if pasien_data is None:
         print("[ERROR] Pasien tidak ditemukan.")
@@ -159,11 +144,7 @@ def pasien_keluar_kamar():
         return
 
     # Cari data kamar
-    kamar_data = None
-    for kamar in data_kamar:
-        if kamar.get("nomor") == nomor_kamar:
-            kamar_data = kamar
-            break
+    kamar_data = _cari_kamar(data_kamar, nomor_kamar)
 
     if kamar_data is None:
         print("[ERROR] Kamar tidak ditemukan.")
@@ -179,7 +160,7 @@ def pasien_keluar_kamar():
 
     # Update data pasien
     pasien_data["nomor_kamar"] = None
-    pasien_data["status"] = "terdaftar"
+    pasien_data["status"] = "selesai"
 
     # Sync dict kamar dari objek yang sudah diperbarui
     kamar_data.update(kamar_obj.objek_ke_dict())
@@ -190,45 +171,38 @@ def pasien_keluar_kamar():
 
 
 # ── NAVIGASI DLL ──────────────────────────────────────────────────────────────
-
-def _bangun_dll() -> NavigasiKamar:
-    """Helper internal: memuat kamar.json dan membangun DLL NavigasiKamar."""
-    data_kamar = load_json("data/kamar.json")
-    dll = NavigasiKamar()
-    for data in data_kamar:
-        kamar_obj = _dict_ke_kamar(data)
-        dll.tambah_kamar(kamar_obj)
-    return dll
-
-
-def lihat_kamar_maju():
-    """Menampilkan lorong kamar dari awal ke akhir menggunakan DLL."""
+def navigasi_kamar():
+    """Menavigasi kamar satu per satu secara interaktif (Next/Prev) menggunakan DLL."""
     dll = _bangun_dll()
-    print("\n--- LORONG KAMAR (MAJU) ---")
-    dll.lihat_kamar_maju()
-    print("-" * 32)
+    
+    if dll.head is None:
+        print("\n[INFO] Belum ada data kamar.")
+        return
 
+    saat_ini = dll.head
 
-def lihat_kamar_mundur():
-    """Menampilkan lorong kamar dari akhir ke awal menggunakan DLL."""
-    dll = _bangun_dll()
-    print("\n--- LORONG KAMAR (MUNDUR) ---")
-    dll.lihat_kamar_mundur()
-    print("-" * 32)
+    while True:
+        
+        print("\n======= NAVIGASI KAMAR RAWAT INAP =======")
+        print(saat_ini.data.data_kamar())
+        print("\n  [N] Kamar Berikutnya  [P] Kamar Sebelumnya  [0] Kembali")
+        pilihan = input("  Pilih navigasi: ").strip().lower()
+        
+        if pilihan == '0':
+            break
+        elif pilihan == 'n':
+            if saat_ini.next is not None:
+                saat_ini = saat_ini.next
+            else:
+                print("  [INFO] Anda sudah berada di ujung lorong terakhir.")
+        elif pilihan == 'p':
+            if saat_ini.prev is not None:
+                saat_ini = saat_ini.prev
+            else:
+                print("  [INFO] Anda sudah berada di ujung lorong pertama.")
+        else:
+            print("  [ERROR] Pilihan tidak valid.")
 
-
-def cari_kamar_kosong_terdekat():
-    """Mencari kamar kosong terdekat menggunakan traverse DLL."""
-    dll = _bangun_dll()
-    kamar_kosong = dll.cari_kamar_kosong()
-
-    print("\n--- KAMAR KOSONG TERDEKAT ---")
-    if kamar_kosong:
-        for kamar in kamar_kosong:
-            print(kamar.data_kamar())
-    else:
-        print("Tidak ada kamar kosong yang tersedia saat ini.")
-    print("-" * 32)
 
 
 # ── CLL JADWAL MINUM OBAT ─────────────────────────────────────────────────────
@@ -243,11 +217,7 @@ def lihat_jadwal_obat_pasien():
     nik = input("Masukkan NIK pasien: ").strip()
 
     # Cari pasien
-    pasien_data = None
-    for p in data_pasien:
-        if p.get("nik") == nik:
-            pasien_data = p
-            break
+    pasien_data = _cari_pasien(data_pasien, nik)
 
     if pasien_data is None:
         print("[ERROR] Pasien tidak ditemukan.")
@@ -270,5 +240,5 @@ def lihat_jadwal_obat_pasien():
     print("Siklus jadwal obat (tekan ENTER untuk lanjut, ketik 'q' untuk berhenti):")
     print("-" * 44)
 
-    # Tampilkan siklus interaktif
+    # Tampilkan siklus jadwal minum obat
     jadwal.lihat_jadwal(jumlah_putaran=2)

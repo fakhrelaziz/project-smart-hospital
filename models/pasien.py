@@ -21,7 +21,7 @@ class Pasien:
         self.nama = nama
         self.umur = umur
         self.jenis_layanan = layanan
-        self.status = "terdaftar"
+        self.status = "antri"
         #rekam medis digunakan di sll_rekammedis.py
         self.rekam_medis = []
         self.danger_score = 0
@@ -58,9 +58,9 @@ class Pasien:
         return (f"NIK          : {self.nik}\n"
                 f"Nama         : {self.nama}\n"
                 f"Umur         : {self.umur}\n"
-                f"Layanan      : {self.jenis_layanan}\n"
+                f"Jenis Layanan: {self.jenis_layanan}\n"
                 f"Status       : {self.status}\n"
-                f"Danger Score : {self.danger_score}")
+                f"Kamar        : {self.kamar if self.kamar else '-'}")
 
     def cek_danger_score(self):
         """Mengembalikan nilai danger_score pasien."""
@@ -71,7 +71,7 @@ class Pasien:
         self.danger_score = danger_score_baru
 
     def update_status(self, status_baru):
-        """Memperbarui status pasien, misalnya dari 'terdaftar' ke 'dirawat' atau 'sembuh'."""
+        """Memperbarui status pasien, misalnya dari 'antri' ke 'selesai'."""
         self.status = status_baru
 
     def update_layanan(self, layanan_baru):

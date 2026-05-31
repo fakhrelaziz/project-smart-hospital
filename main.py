@@ -16,12 +16,9 @@ Relasi  :
 
 from modules.manage_kamar import (
     assign_pasien_ke_kamar,
-    lihat_kamar,
     lihat_kamar_tersedia,
     pasien_keluar_kamar,
-    lihat_kamar_maju,
-    lihat_kamar_mundur,
-    cari_kamar_kosong_terdekat,
+    navigasi_kamar,
     lihat_jadwal_obat_pasien
 )
 from modules.manage_obat import (
@@ -137,20 +134,17 @@ while True:
     elif pilihan == "3":
         while True:
             print("\n===  RAWAT INAP & NAVIGASI KAMAR  ===")
-            print("  [1] Lihat Semua Kamar")
+            print("  [1] Navigasi Lorong Kamar (next-prev — DLL)")
             print("  [2] Lihat Kamar Tersedia")
             print("  [3] Assign Pasien ke Kamar")
             print("  [4] Pasien Keluar Kamar")
-            print("  [5] Lihat Lorong Kamar (Maju — DLL)")
-            print("  [6] Lihat Lorong Kamar (Mundur — DLL)")
-            print("  [7] Cari Kamar Kosong Terdekat (DLL)")
-            print("  [8] Lihat Jadwal Minum Obat Pasien (CLL)")
+            print("  [5] Lihat Jadwal Minum Obat Pasien (CLL)")
             print("  [0] Kembali")
 
             pilihan = input("Pilih menu: ").strip()
 
             if pilihan == "1":
-                lihat_kamar()
+                navigasi_kamar()
             elif pilihan == "2":
                 lihat_kamar_tersedia()
             elif pilihan == "3":
@@ -158,12 +152,6 @@ while True:
             elif pilihan == "4":
                 pasien_keluar_kamar()
             elif pilihan == "5":
-                lihat_kamar_maju()
-            elif pilihan == "6":
-                lihat_kamar_mundur()
-            elif pilihan == "7":
-                cari_kamar_kosong_terdekat()
-            elif pilihan == "8":
                 lihat_jadwal_obat_pasien()
             elif pilihan == "0":
                 break
