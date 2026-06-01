@@ -8,18 +8,19 @@ Relasi: Digunakan oleh modules/manage_obat.py dan modul farmasi lainnya.
 
 
 class Obat:
-    def __init__(self, kode, nama, kategori, stok, harga, dosis_harian=0):
+    def __init__(self, kode, nama, kategori, bentuk, stok, harga, pemakaian_harian=0):
         """Inisialisasi objek obat dengan atribut utama."""
         self.kode = kode
         self.nama = nama
         self.kategori = kategori
+        self.bentuk = bentuk
         self.stok = stok
         self.harga = harga
-        self.dosis_harian = dosis_harian
+        self.pemakaian_harian = pemakaian_harian
 
     def data_obat(self):
         """Mengembalikan ringkasan data obat dalam format string."""
-        return f"Kode: {self.kode}\nNama obat: {self.nama}\nKategori: {self.kategori}\nStok: {self.stok}\nHarga: {self.harga}\nDosis: {self.dosis_harian}"
+        return f"Kode: {self.kode}\nNama obat: {self.nama}\nKategori: {self.kategori}\nBentuk: {self.bentuk}\nStok: {self.stok}\nHarga: {self.harga}\nPemakaian Harian RS: {self.pemakaian_harian}"
 
     def objek_ke_dict(self):
         """Mengubah objek obat menjadi dictionary untuk penyimpanan JSON."""
@@ -27,9 +28,10 @@ class Obat:
             "kode": self.kode,
             "nama": self.nama,
             "kategori": self.kategori,
+            "bentuk": self.bentuk,
             "stok": self.stok,
             "harga": self.harga,
-            "dosis_harian": self.dosis_harian
+            "pemakaian_harian": self.pemakaian_harian
         }
 
     def dict_ke_objek(self, data):
@@ -37,9 +39,10 @@ class Obat:
         self.kode = data.get("kode")
         self.nama = data.get("nama")
         self.kategori = data.get("kategori")
+        self.bentuk = data.get("bentuk", "Tidak Diketahui")
         self.stok = data.get("stok")
         self.harga = data.get("harga")
-        self.dosis_harian = data.get("dosis_harian", 0)
+        self.pemakaian_harian = data.get("pemakaian_harian", 0)
 
     def tambah_stok(self, tambah):
         """Menambah stok obat sesuai jumlah yang diberikan."""
@@ -58,3 +61,4 @@ class Obat:
         """Mengubah harga obat ke nilai baru."""
         self.harga = harga_baru
         return f"harga {self.nama} sekarang adalah {self.harga}"
+

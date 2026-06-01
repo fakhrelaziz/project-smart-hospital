@@ -3,41 +3,90 @@
         "kode": "OBT001",
         "nama": "Paracetamol 500mg",
         "kategori": "Obat Dalam",
-        "stok": 50,
+        "bentuk": "Tablet",
+        "stok": 60,
         "harga": 5000,
-        "dosis_harian": 3
+        "pemakaian_harian": 3
     },
     {
         "kode": "OBT002",
         "nama": "Amoxicillin 500mg",
         "kategori": "Antibiotik",
-        "stok": 30,
+        "bentuk": "Kapsul",
+        "stok": 40,
         "harga": 12000,
-        "dosis_harian": 2
+        "pemakaian_harian": 2
     },
     {
         "kode": "OBT003",
-        "nama": "Antasida",
-        "kategori": "Obat Dalam",
+        "nama": "Antasida Doen",
+        "kategori": "Antasida",
+        "bentuk": "Tablet",
         "stok": 100,
         "harga": 3500,
-        "dosis_harian": 3
+        "pemakaian_harian": 3
     },
     {
         "kode": "OBT004",
         "nama": "Ibuprofen 400mg",
         "kategori": "Analgesik",
+        "bentuk": "Tablet",
         "stok": 45,
         "harga": 8000,
-        "dosis_harian": 2
+        "pemakaian_harian": 2
     },
     {
         "kode": "OBT005",
         "nama": "Ranitidin 150mg",
         "kategori": "Antasida",
+        "bentuk": "Tablet",
         "stok": 20,
         "harga": 6500,
-        "dosis_harian": 2
+        "pemakaian_harian": 2
+    },
+    {
+        "kode": "OBT006",
+        "nama": "Paracetamol Sirup Anak",
+        "kategori": "Obat Dalam",
+        "bentuk": "Sirup",
+        "stok": 30,
+        "harga": 15000,
+        "pemakaian_harian": 1
+    },
+    {
+        "kode": "OBT007",
+        "nama": "Amoxicillin Sirup Kering",
+        "kategori": "Antibiotik",
+        "bentuk": "Sirup",
+        "stok": 25,
+        "harga": 22000,
+        "pemakaian_harian": 1
+    },
+    {
+        "kode": "OBT008",
+        "nama": "Ketoconazole Krim 2%",
+        "kategori": "Obat Luar",
+        "bentuk": "Salep",
+        "stok": 15,
+        "harga": 14000,
+        "pemakaian_harian": 1
+    },
+    {
+        "kode": "OBT009",
+        "nama": "Hydrocortisone 1%",
+        "kategori": "Obat Luar",
+        "bentuk": "Salep",
+        "stok": 20,
+        "harga": 11000,
+        "pemakaian_harian": 1
+    },
+    {
+        "kode": "OBT010",
+        "nama": "Neurobion Forte",
+        "kategori": "Vitamin",
+        "bentuk": "Tablet",
+        "stok": 80,
+        "harga": 35000,
+        "pemakaian_harian": 1
     }
 ]
-

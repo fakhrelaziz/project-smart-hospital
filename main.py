@@ -24,12 +24,10 @@ from modules.manage_kamar import (
 from modules.manage_obat import (
     lihat_obat,
     tambah_obat,
-    ubah_harga_obat,
-    ubah_stok_obat,
     cari_obat_kode,
-    prediksi_stok_habis,
-    tampilkan_katalog_obat
+    tampilkan_katalog
 )
+from modules.recursive_stok import prediksi_semua_obat
 from modules.manage_pasien import (
     lihat_semua_pasien,
     daftar_pasien_baru,
@@ -44,7 +42,7 @@ from modules.sorting_triase import (
     update_danger_score,
     undo_danger_score
 )
-from modules.graph_rujukan import (
+from modules.manage_rujukan import (
     lihat_peta_rujukan,
     cari_rs_rujukan,
     ubah_status_rs
@@ -164,11 +162,9 @@ while True:
             print("\n===  SISTEM FARMASI & APOTEK  ===")
             print("  [1] Lihat Daftar Obat")
             print("  [2] Tambah Obat")
-            print("  [3] Ubah Stok Obat")
-            print("  [4] Ubah Harga Obat")
-            print("  [5] Cari Obat via Kode (Hash Table O(1))")
-            print("  [6] Prediksi Sisa Hari Stok Obat (Rekursif)")
-            print("  [7] Lihat Direktori Katalog Obat (Tree)")
+            print("  [3] Cari obat -> ubah stok & harga")
+            print("  [4] Laporan Prediksi Seluruh Stok Obat (Rekursif)")
+            print("  [5] Lihat Direktori Katalog Obat (Tree)")
             print("  [0] Kembali")
 
             pilihan = input("Pilih menu: ").strip()
@@ -178,15 +174,11 @@ while True:
             elif pilihan == "2":
                 tambah_obat()
             elif pilihan == "3":
-                ubah_stok_obat()
-            elif pilihan == "4":
-                ubah_harga_obat()
-            elif pilihan == "5":
                 cari_obat_kode()
-            elif pilihan == "6":
-                prediksi_stok_habis()
-            elif pilihan == "7":
-                tampilkan_katalog_obat()
+            elif pilihan == "4":
+                prediksi_semua_obat()
+            elif pilihan == "5":
+                tampilkan_katalog()
             elif pilihan == "0":
                 break
             else:
