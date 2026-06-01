@@ -10,6 +10,7 @@ from models.obat import Obat
 from utils.json_handler import load_json, save_json
 from modules.hash_obat import HashObat
 from modules.recursive_stok import prediksi_stok_obat, tampilkan_hasil_prediksi
+from modules.tree_katalog import NodeTree
 
 def _input_angka(prompt):
     """Meminta input angka dari user secara aman tanpa memicu crash (ValueError)."""
@@ -125,23 +126,22 @@ def cari_obat_kode():
             for item in data_obat:
                 if item['kode'] == kode_cari:
                     item['harga'] = obat_obj.harga
-                    break
-            save_json("data/obat.json", data_obat)
-            
-        elif pilihan == "3":
-            hasil_prediksi = prediksi_stok_obat(obat_obj.nama, obat_obj.stok, obat_obj.pemakaian_harian)
-            tampilkan_hasil_prediksi(hasil_prediksi)
-            
-        elif pilihan == "0":
-            return
-        else:
-            print("Pilihan tidak valid.")
-    else:
-        print("Obat tidak ditemukan dalam database!")
 
+# ══════════════════════════════════════════════════════════════════════════════
+# MENU KATALOG (FARMASI)
+# ══════════════════════════════════════════════════════════════════════════════
 
-
-
-
-
-
+def tampilkan_katalog():
+    """
+    Entry point CLI untuk menampilkan katalog obat 
+    dalam bentuk struktur tree.
+    """
+    print("\n" + "=" * 52)
+    print("             KATALOG OBAT FARMASI")
+    print("          Struktur Data: General Tree")
+    print("=" * 52)
+    
+    from modules.tree_katalog import KatalogObat
+    katalog = KatalogObat()
+    katalog.tampilkan()
+    print("=" * 52)

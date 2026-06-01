@@ -24,9 +24,9 @@ from modules.manage_kamar import (
 from modules.manage_obat import (
     lihat_obat,
     tambah_obat,
-    cari_obat_kode
+    cari_obat_kode,
+    tampilkan_katalog
 )
-from modules.tree_katalog import tampilkan_katalog
 from modules.recursive_stok import prediksi_semua_obat
 from modules.manage_pasien import (
     lihat_semua_pasien,
@@ -42,7 +42,7 @@ from modules.sorting_triase import (
     update_danger_score,
     undo_danger_score
 )
-from modules.graph_rujukan import (
+from modules.manage_rujukan import (
     lihat_peta_rujukan,
     cari_rs_rujukan,
     ubah_status_rs

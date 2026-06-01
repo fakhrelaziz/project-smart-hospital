@@ -1,33 +1,12 @@
 """
 File    : modules/tree_katalog.py
-Materi  : Tree (Materi Tambahan)
+Materi  : Tree (Data Structure)
 Deskripsi:
-    Mengimplementasikan struktur Tree untuk hierarki katalog farmasi.
-    Tree bersifat STATIS (hardcoded) — kategori tidak bertambah/berkurang
-    saat program berjalan. Obat-obat dari obat.json diletakkan di node
-    daun sesuai kategorinya.
-Struktur Tree (4-Level):
-    Farmasi (root)
-    ├── Obat Dalam (kategori)
-    │   ├── Tablet (bentuk)
-    │   │   └── Paracetamol 500mg  [OBT001]
-    │   └── Sirup (bentuk)
-    │       └── Paracetamol Sirup  [OBT006]
-    └── Obat Luar (kategori)
-        └── Salep (bentuk)
-            └── Ketoconazole Krim  [OBT008]
+    Mengimplementasikan struktur Tree murni untuk node hierarki katalog farmasi.
 Catatan :
-    - Node kategori & bentuk : kode_obat = None
-    - Node obat (daun): kode_obat diisi kode obat
-    - Fungsi tampilkan() menggunakan rekursif
-    - Tidak ada fitur tambah/hapus node dinamis
-Relasi  :
-    - Membaca data dari data/obat.json via utils.json_handler
-    - Kategori node dicocokkan dengan field "kategori" dan "bentuk" di obat.json
+    - Class ini hanya mendefinisikan struktur data.
+    - Algoritma pembangunan Tree dan CLI dipindahkan ke manage_obat.py.
 """
-
-from utils.json_handler import load_json
-
 
 # ══════════════════════════════════════════════════════════════════════════════
 # CLASS NODE TREE
@@ -57,9 +36,8 @@ class NodeTree:
         self.children.append(node_anak)
         return node_anak             # return agar bisa chaining
 
-
 # ══════════════════════════════════════════════════════════════════════════════
-# CLASS KATALOG OBAT (TREE)
+# CLASS KATALOG OBAT (TREE DATA STRUCTURE & ALGORITHM)
 # ══════════════════════════════════════════════════════════════════════════════
 
 class KatalogObat:
@@ -86,6 +64,7 @@ class KatalogObat:
         Membaca obat.json dan membangun hierarki tree secara otomatis
         berdasarkan field "kategori" dan "bentuk" tiap obat.
         """
+        from utils.json_handler import load_json
         data_obat = load_json("data/obat.json")
 
         for obat in data_obat:
@@ -116,59 +95,18 @@ class KatalogObat:
     def tampilkan(self, node=None, level=0):
         """
         Menampilkan seluruh hierarki tree ke terminal secara REKURSIF.
-
-        Menampilkan seluruh hierarki tree ke terminal secara REKURSIF.
-
-        Cara kerja rekursif:
-            tampilkan(root, 0)
-                → cetak "Farmasi"
-                → untuk setiap anak root: tampilkan(anak, 1)
-                    → cetak "  Obat Dalam"
-                    → untuk setiap anak: tampilkan(anak, 2)
-                        → cetak "    Paracetamol [OBT001]"
-                        → tidak ada anak lagi → kembali (base case)
-
-        BASE CASE    : Node tidak punya anak (node daun) → tidak rekursif lagi.
-        RECURSIVE CASE: Node punya anak → panggil tampilkan() untuk setiap anak.
-
-        Args:
-            node  (NodeTree | None): Node yang sedang ditampilkan.
-                                     Default None → mulai dari root.
-            level (int)            : Kedalaman node, menentukan indentasi.
         """
-        # Jika dipanggil tanpa argumen, mulai dari root
         if node is None:
             node = self.root
 
-        # Tentukan indentasi dan simbol berdasarkan level
         indent = "  " * level
 
         if level == 0:
-            # Root — tanpa simbol
             print(f"{indent}{node.nama}")
-
         elif node.kode_obat:
-            # Node daun (obat) — tampilkan dengan kode
             print(f"{indent}└─ {node.nama}  [{node.kode_obat}]")
-
         else:
-            # Node kategori/bentuk — tampilkan dengan simbol folder
             print(f"{indent}├─ {node.nama}")
 
-        # RECURSIVE CASE
-        # Panggil tampilkan() untuk setiap node anak
         for anak in node.children:
             self.tampilkan(anak, level + 1)
-
-
-# FUNGSI CLI — DIPANGGIL DARI main.py
-
-def tampilkan_katalog():
-    """Entry point CLI: tampilkan seluruh hierarki katalog obat."""
-    print("\n" + "=" * 48)
-    print("         KATALOG FARMASI — HIERARKI OBAT")
-    print("         Struktur Data: Tree (4-Level)")
-    print("=" * 48)
-    katalog = KatalogObat()
-    katalog.tampilkan()
-    print("=" * 48)
