@@ -8,12 +8,6 @@ Catatan :
     - Menggunakan Stack manual (Stack_UGD) untuk keperluan Undo pendaftaran.
     - Rekam medis disimpan menggunakan Single Linked List (sll_rekammedis.py).
     - Data disimpan per-operasi langsung ke data/pasien.json.
-Relasi  :
-    - models.pasien.Pasien
-    - utils.json_handler.load_json / save_json
-    - modules.queue_pendaftaran.QueuePendaftaran
-    - modules.undo_stack.UndoStack
-    - modules.sll_rekammedis.SingleLinkedListRekamMedis
 """
 
 from models.pasien import Pasien
@@ -25,11 +19,9 @@ from modules.sll_rekammedis import SingleLinkedListRekamMedis
 # variabel lokal untuk menampung undo khusus pendaftaran
 stack_pendaftaran = UndoStack()
 
-
 # DAFTAR PASIEN BARU 
-
 def daftar_pasien_baru():
-    """Mendaftar pasien secara FIFO (masuk ke antrean belakang)."""
+    """Fungsi untuk mendaftar pasien secara baru kemudian masuk ke antrian"""
     data_pasien = load_json("data/pasien.json")
 
     antrean = QueuePendaftaran()
@@ -37,10 +29,10 @@ def daftar_pasien_baru():
     antrean.from_list(pasien_antri)
 
     while True:
-        nik = input("Masukkan NIK (Maks 16 Angka): ").strip()
-        if nik.isdigit() and len(nik) <= 16:
+        nik = input("Masukkan NIK (Wajib 6 Angka): ").strip()
+        if nik.isdigit() and len(nik) == 6:
             break
-        print("[ERROR] NIK harus berupa angka dan maksimal 16 digit.")
+        print("[ERROR] NIK harus berupa angka dan tepat 6 digit.")
 
     # Validasi: cegah duplikasi NIK
     for pasien in data_pasien:

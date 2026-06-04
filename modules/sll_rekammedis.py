@@ -8,8 +8,6 @@ Deskripsi:
 Catatan :
     - Setiap node menyimpan satu catatan rekam medis (dict: tanggal, diagnosis, resep).
     - to_list() dan from_list() digunakan untuk serialisasi/deserialisasi JSON.
-Relasi  :
-    - Digunakan oleh modules/manage_pasien.py untuk lihat dan tambah rekam medis.
 """
 
 

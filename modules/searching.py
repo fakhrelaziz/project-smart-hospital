@@ -145,7 +145,7 @@ def binary_search_nik(daftar_pasien, target_nik):
 
     Args:
         daftar_pasien (list): List objek Pasien (belum harus terurut).
-        target_nik    (str) : NIK pasien yang dicari (16 digit).
+        target_nik    (str) : NIK pasien yang dicari (6 digit).
 
     Returns:
         Pasien | None: Objek Pasien jika ditemukan, None jika tidak ada.
@@ -244,7 +244,7 @@ def cari_pasien_nik():
     print("     Algoritma: Binary Search O(log n)")
     print("=" * 44)
 
-    nik = input("  Masukkan NIK (16 digit): ").strip()
+    nik = input("  Masukkan NIK (6 digit): ").strip()
     if not nik:
         print("  [ERROR] NIK tidak boleh kosong.")
         return

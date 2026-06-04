@@ -17,11 +17,9 @@ from models.pasien import Pasien
 from utils.json_handler import load_json, save_json
 from modules.undo_stack import UndoStack
 
-# variabel lokal untuk menampung undo khusus triase
+# variabel untuk menampung undo khusus update danger score
 stack_triase = UndoStack()
 
-
-# ── LABEL KEGAWATAN ───────────────────────────────────────────────────────────
 
 def label_kegawatan(danger_score):
     """
@@ -43,8 +41,6 @@ def label_kegawatan(danger_score):
     else:
         return "[Belum dinilai]"
 
-
-# ── BUBBLE SORT MANUAL ────────────────────────────────────────────────────────
 
 def bubble_sort_ugd(daftar_pasien):
     """
@@ -89,8 +85,6 @@ def bubble_sort_ugd(daftar_pasien):
     return daftar_pasien
 
 
-# ── AMBIL PASIEN UGD ─────────────────────────────────────────────────────────
-
 def ambil_pasien_ugd():
     """
     Membaca data pasien dari JSON, filter hanya yang layanan == "UGD",
@@ -111,8 +105,6 @@ def ambil_pasien_ugd():
 
     return daftar_ugd
 
-
-# ── TAMPILKAN ANTRIAN UGD ────────────────────────────────────────────────────
 
 def tampilkan_antrian_ugd(daftar_pasien_terurut):
     """
@@ -145,8 +137,6 @@ def tampilkan_antrian_ugd(daftar_pasien_terurut):
     print("=" * 68)
     print(f"  Total pasien UGD: {len(daftar_pasien_terurut)} orang")
 
-
-# ── UPDATE DANGER SCORE ───────────────────────────────────────────────────────
 
 def update_danger_score():
     """
@@ -213,7 +203,6 @@ def update_danger_score():
     print(f"     Status kegawatan: {label_kegawatan(score_baru)}")
 
 
-# ── Batal Skor Triase Terakhir (Undo) ────────────────────────────────────────────────
 def undo_danger_score():
     if stack_triase.is_empty():
         print("[INFO] Tidak ada riwayat triase yang bisa dibatalkan.")
@@ -240,8 +229,6 @@ def undo_danger_score():
     else:
         print(f"[ERROR] Data pasien NIK {nik_batal} tidak ditemukan, gagal undo.")
 
-
-# ── LIHAT ANTRIAN UGD (ENTRY POINT UTAMA) ────────────────────────────────────
 
 def lihat_antrian_ugd():
     """

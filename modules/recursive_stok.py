@@ -15,15 +15,11 @@ Cara kerja rekursif:
 Catatan :
     - Fungsi utama: hitung_sisa_hari() — WAJIB rekursif, bukan loop
     - Kompleksitas : O(stok / pemakaian_harian) panggilan rekursif
-Relasi  :
-    - Membaca data dari data/obat.json via utils.json_handler
-    - Menggunakan models.obat.Obat untuk konversi dict → objek
 """
 
 from models.obat import Obat
 from utils.json_handler import load_json
 
-# ── FUNGSI REKURSIF UTAMA ────────────────────────────────────────────────────
 
 def hitung_sisa_hari(stok, pemakaian_harian, hari=0):
     """
@@ -52,17 +48,13 @@ def hitung_sisa_hari(stok, pemakaian_harian, hari=0):
         int: Estimasi jumlah hari sampai stok habis.
     """
 
-    # ── BASE CASE ──────────────────────────────────────────────────────────
-    # Kondisi berhenti: stok sudah habis (atau minus)
+    # base case
     if stok <= 0:
         return hari
 
-    # ── RECURSIVE CASE ────────────────────────────────────────────────────
-    # Kurangi stok 1 hari, tambah penghitung hari, panggil diri sendiri
+    # recursive case
     return hitung_sisa_hari(stok - pemakaian_harian, pemakaian_harian, hari + 1)
 
-
-# ── FUNGSI PREDIKSI (GABUNGAN LOGIKA + VALIDASI) ─────────────────────────────
 
 def prediksi_stok_obat(nama_obat, stok, pemakaian_harian):
     """
@@ -113,8 +105,6 @@ def prediksi_stok_obat(nama_obat, stok, pemakaian_harian):
     }
 
 
-# ── TAMPILKAN HASIL PREDIKSI ─────────────────────────────────────────────────
-
 def tampilkan_hasil_prediksi(hasil):
     """
     fungsi di pakai saat cari obat --> ubah stok & harga (main.py menu Farmasi)
@@ -138,7 +128,6 @@ def tampilkan_hasil_prediksi(hasil):
         print(f"\n  ⚠  {hasil['peringatan']}")
 
     print("=" * 48)
-
 
 
 def prediksi_semua_obat():

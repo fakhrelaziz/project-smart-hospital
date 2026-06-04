@@ -10,10 +10,13 @@ from models.obat import Obat
 from utils.json_handler import load_json, save_json
 from modules.hash_obat import HashObat
 from modules.recursive_stok import prediksi_stok_obat, tampilkan_hasil_prediksi
-from modules.tree_katalog import NodeTree
+from modules.tree_katalog import KatalogObat
+
 
 def _input_angka(prompt):
-    """Meminta input angka dari user secara aman tanpa memicu crash (ValueError)."""
+    """Fungsi yang sering dipakai oleh function lain ketika ingin minta input
+     dari pada setiap input harus menginisialisai code input terus, lebih baik di jadikan function 
+    input angka dari user dengan Error Handling."""
     while True:
         try:
             nilai = int(input(prompt))
@@ -116,7 +119,6 @@ def cari_obat_kode():
                 if item['kode'] == kode_cari:
                     item['stok'] = obat_obj.stok
                     break
-            save_json("data/obat.json", data_obat)
 
         elif pilihan == "2":
             harga_baru = _input_angka("Harga baru: ")
@@ -126,11 +128,18 @@ def cari_obat_kode():
             for item in data_obat:
                 if item['kode'] == kode_cari:
                     item['harga'] = obat_obj.harga
+                    break
+                
+        elif pilihan == "3":
+            hasil_prediksi = prediksi_stok_obat(obat_obj.nama, obat_obj.stok, obat_obj.pemakaian_harian)
+            tampilkan_hasil_prediksi(hasil_prediksi)
+            
+        else:
+            print(f"Obat dengan kode '{kode_cari}' tidak ditemukan.")
+    
+    save_json("data/obat.json", data_obat)
 
-# ══════════════════════════════════════════════════════════════════════════════
 # MENU KATALOG (FARMASI)
-# ══════════════════════════════════════════════════════════════════════════════
-
 def tampilkan_katalog():
     """
     Entry point CLI untuk menampilkan katalog obat 
@@ -140,8 +149,7 @@ def tampilkan_katalog():
     print("             KATALOG OBAT FARMASI")
     print("          Struktur Data: General Tree")
     print("=" * 52)
-    
-    from modules.tree_katalog import KatalogObat
+
     katalog = KatalogObat()
     katalog.tampilkan()
     print("=" * 52)

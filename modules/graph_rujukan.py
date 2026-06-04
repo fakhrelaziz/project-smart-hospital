@@ -49,10 +49,12 @@ class GraphRujukan:
         """
         Mencari RS rujukan terdekat yang statusnya "Tersedia"
         menggunakan algoritma Breadth-First Search (BFS).
+        
+        Returns dictionary yang berisi rs_tujuan, rute, hop, dan history pemeriksaan.
         """
         from collections import deque
         if rs_asal not in self.graph:
-            return {"rs_tujuan": None, "rute": [], "hop": 0}
+            return {"rs_tujuan": None, "rute": [], "hop": 0, "history": []}
 
         queue = deque()
         visited = set()
@@ -60,14 +62,22 @@ class GraphRujukan:
         queue.append((rs_asal, [rs_asal]))
         visited.add(rs_asal)
 
+        history = []
+
         while queue:
             rs_sekarang, rute = queue.popleft()
+            status_rs = self.status.get(rs_sekarang, "?")
 
-            if rs_sekarang != rs_asal and self.status.get(rs_sekarang) == "Tersedia":
+            # Catat riwayat pemeriksaan untuk keperluan UI/Demo (selain RS asal)
+            if rs_sekarang != rs_asal:
+                history.append((rs_sekarang, status_rs))
+
+            if rs_sekarang != rs_asal and status_rs == "Tersedia":
                 return {
                     "rs_tujuan": rs_sekarang,
                     "rute"     : rute,
-                    "hop"      : len(rute) - 1
+                    "hop"      : len(rute) - 1,
+                    "history"  : history
                 }
 
             for tetangga in self.graph.get(rs_sekarang, []):
@@ -75,4 +85,4 @@ class GraphRujukan:
                     visited.add(tetangga)
                     queue.append((tetangga, rute + [tetangga]))
 
-        return {"rs_tujuan": None, "rute": [], "hop": 0}
+        return {"rs_tujuan": None, "rute": [], "hop": 0, "history": history}

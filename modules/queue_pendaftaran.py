@@ -70,11 +70,11 @@ class QueuePendaftaran:
         return len(self.items)
 
     def tampilkan_antrian(self):
-        """Menampilkan seluruh isi antrian secara terurut dari depan."""
+        """Menampilkan seluruh isi antrean secara terurut dari depan."""
         if self.cek_antrian_kosong():
             print("[SISTEM] Antrean saat ini kosong.")
             return
-        print(f"[SISTEM] Isi antrean ({self.jmlh_antrian_pasien()} pasien) — urutan dari depan:")
+        print(f"Jumlah Antrean ({self.jmlh_antrian_pasien()} pasien)")
 
         # Menampilkan nomor urut, NIK, nama, dan layanan pasien dalam antrian
         nomor_urut = 1

@@ -12,15 +12,10 @@ from collections import deque
 from modules.graph_rujukan import GraphRujukan
 
 
-# ══════════════════════════════════════════════════════════════════════════════
-# BUSINESS LOGIC (ALGORITMA BFS DENGAN DEMO)
-# ══════════════════════════════════════════════════════════════════════════════
-
-
 def bfs_dengan_langkah(graph_obj, rs_asal="Smart Hospital"):
     """
-    Versi BFS yang menampilkan proses pencariannya step by step
-    untuk keperluan demo/presentasi.
+    Versi BFS yang menampilkan proses pencariannya step by step,
+    dengan mendelegasikan logika pencarian ke class GraphRujukan.
     """
     print(f"\n  [BFS] Mulai dari: {rs_asal}")
     print(f"  [BFS] Menelusuri RS tetangga level demi level...\n")
@@ -29,46 +24,24 @@ def bfs_dengan_langkah(graph_obj, rs_asal="Smart Hospital"):
         print(f"  [ERROR] RS '{rs_asal}' tidak ditemukan.")
         return {"rs_tujuan": None, "rute": [], "hop": 0}
 
-    queue = deque()
-    visited = set()
+    # Panggil logika inti
+    hasil = graph_obj.bfs_cari_rujukan(rs_asal)
 
-    queue.append((rs_asal, [rs_asal]))
-    visited.add(rs_asal)
-
-    langkah = 0
-
-    while queue:
-        rs_sekarang, rute = queue.popleft()
-        langkah += 1
-
-        status_rs = graph_obj.status.get(rs_sekarang, "?")
-
-        if rs_sekarang != rs_asal:
+    # Cetak history langkah yang dikunjungi oleh BFS
+    if "history" in hasil:
+        for langkah, (rs_sekarang, status_rs) in enumerate(hasil["history"], 1):
             print(f"  Langkah {langkah}: Memeriksa {rs_sekarang:<18} → {status_rs}")
 
-        if rs_sekarang != rs_asal and status_rs == "Tersedia":
-            rute_str = " → ".join(rute)
-            print(f"\n  ✅ DITEMUKAN: {rs_sekarang}")
-            print(f"  Rute  : {rute_str}")
-            print(f"  Jarak : {len(rute)-1} hop")
-            return {
-                "rs_tujuan": rs_sekarang,
-                "rute"     : rute,
-                "hop"      : len(rute) - 1
-            }
+    if hasil["rs_tujuan"]:
+        rute_str = " → ".join(hasil["rute"])
+        print(f"\n   DITEMUKAN: {hasil['rs_tujuan']}")
+        print(f"  Rute  : {rute_str}")
+        print(f"  Jarak : {hasil['hop']} hop")
+    else:
+        print("\n   Semua RS penuh. Tidak ada rujukan tersedia.")
 
-        for tetangga in graph_obj.graph.get(rs_sekarang, []):
-            if tetangga not in visited:
-                visited.add(tetangga)
-                queue.append((tetangga, rute + [tetangga]))
+    return hasil
 
-    print("\n  ❌ Semua RS penuh. Tidak ada rujukan tersedia.")
-    return {"rs_tujuan": None, "rute": [], "hop": 0}
-
-
-# ══════════════════════════════════════════════════════════════════════════════
-# FUNGSI CLI & PRESENTATION
-# ══════════════════════════════════════════════════════════════════════════════
 
 def tampilkan_peta(graph_obj):
     """Menampilkan seluruh jaringan RS dalam format adjacency list."""
@@ -96,8 +69,6 @@ def tampilkan_status(graph_obj):
         print(f"  - {rs:<20} : {status}")
 
 
-# ── ENTRY POINTS UNTUK MAIN.PY ────────────────────────────────────────────────
-
 def lihat_peta_rujukan():
     """Entry point CLI: tampilkan peta jaringan RS."""
     graph_obj = GraphRujukan()
@@ -117,15 +88,15 @@ def cari_rs_rujukan():
     tampilkan_status(graph_obj)
 
     print("\n" + "─" * 52)
-    print("  Mencari RS rujukan dari Smart Hospital...\n")
+    print("   Mencari RS rujukan dari Smart Hospital...\n")
 
     hasil = bfs_dengan_langkah(graph_obj, "Smart Hospital")
 
     if hasil["rs_tujuan"]:
         print("\n" + "=" * 52)
-        print(f"  RS Rujukan  : {hasil['rs_tujuan']}")
-        print(f"  Rute        : {' → '.join(hasil['rute'])}")
-        print(f"  Jarak       : {hasil['hop']} hop dari Smart Hospital")
+        print(f"   RS Rujukan  : {hasil['rs_tujuan']}")
+        print(f"   Rute        : {' → '.join(hasil['rute'])}")
+        print(f"   Jarak       : {hasil['hop']} hop dari Smart Hospital")
         print("=" * 52)
     else:
         print("\n" + "=" * 52)
