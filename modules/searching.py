@@ -1,54 +1,29 @@
 """
-File    : modules/searching.py
-Materi  : Searching — Linear Search dan Binary Search
-Deskripsi:
-    Menyediakan fungsi pencarian data pasien menggunakan dua algoritma:
-    1. Linear Search  — mencari pasien berdasarkan nama (tidak harus terurut)
-    2. Binary Search  — mencari pasien berdasarkan NIK (data harus terurut dulu)
-    Serta fungsi filter pasien berdasarkan kategori layanan.
-Catatan :
-    - Linear Search  : O(n)      — cek satu per satu dari awal sampai akhir
-    - Binary Search  : O(log n)  — bagi dua area pencarian setiap iterasi
-    - Binary Search diimplementasikan MANUAL (tanpa modul bisect bawaan Python)
-    - Semua pencarian nama bersifat case-insensitive (tidak peka huruf besar/kecil)
-Relasi  :
-    - Membaca data dari data/pasien.json via utils.json_handler
-    - Menggunakan models.pasien.Pasien untuk konversi dict → objek
+Menyediakan fungsi pencarian data pasien menggunakan dua algoritma:
+1. Linear Search  — mencari pasien berdasarkan nama (tidak harus terurut)
+2. Binary Search  — mencari pasien berdasarkan NIK (data harus terurut dulu)
+Serta fungsi filter pasien berdasarkan kategori layanan.
 """
 
 from models.pasien import Pasien
 from utils.json_handler import load_json
 
-
-# ── HELPER: LOAD SEMUA PASIEN SEBAGAI OBJEK ──────────────────────────────────
-
+#fungsi yang sering dipanggil
 def _load_daftar_pasien():
     """
     Membaca pasien.json dan mengembalikan list objek Pasien.
     Fungsi internal — diawali _ karena hanya dipakai di dalam file ini.
-
-    Returns:
-        list: List objek Pasien. List kosong jika file bermasalah.
     """
     data_dict = load_json("data/pasien.json")
     daftar = []
     for data in data_dict:
-        p = Pasien("", "", 0, "")
+        p = Pasien()
         p.dict_ke_objek(data)
         daftar.append(p)
     return daftar
 
-
-# ── HELPER: TAMPILKAN HASIL PENCARIAN ────────────────────────────────────────
-
 def _tampilkan_hasil(daftar_hasil, keyword=""):
-    """
-    Menampilkan list objek Pasien hasil pencarian ke terminal.
-
-    Args:
-        daftar_hasil (list): List objek Pasien yang akan ditampilkan.
-        keyword      (str) : Kata kunci yang dipakai saat pencarian (opsional).
-    """
+    """Menampilkan list objek Pasien hasil pencarian."""
     if not daftar_hasil:
         if keyword:
             print(f"\n  [INFO] Tidak ada pasien yang cocok dengan '{keyword}'.")
@@ -69,12 +44,9 @@ def _tampilkan_hasil(daftar_hasil, keyword=""):
         print("  " + "─" * 60)
 
 
-# ── 1. LINEAR SEARCH — CARI PASIEN BERDASARKAN NAMA ──────────────────────────
-
 def linear_search_nama(daftar_pasien, keyword):
     """
     Mencari pasien yang namanya mengandung keyword menggunakan Linear Search.
-
     Cara kerja:
         Loop seluruh list dari index 0 sampai akhir.
         Setiap pasien dicek apakah keyword ada di dalam namanya.
@@ -82,17 +54,10 @@ def linear_search_nama(daftar_pasien, keyword):
         Tidak berhenti di hasil pertama — mengembalikan SEMUA yang cocok.
 
     Kompleksitas: O(n) — harus cek setiap elemen satu per satu.
-
-    Args:
-        daftar_pasien (list): List objek Pasien yang akan dicari.
-        keyword       (str) : Kata kunci nama yang dicari (case-insensitive).
-
-    Returns:
-        list: List objek Pasien yang namanya mengandung keyword.
-              List kosong jika tidak ada yang cocok.
     """
     hasil = []
-    keyword_lower = keyword.lower()   # ubah ke huruf kecil untuk perbandingan
+    # ubah ke huruf kecil untuk perbandingan
+    keyword_lower = keyword.lower() 
 
     # Loop dari index 0 sampai akhir — inilah Linear Search
     for pasien in daftar_pasien:
@@ -103,21 +68,8 @@ def linear_search_nama(daftar_pasien, keyword):
     return hasil
 
 
-# ── 2. BINARY SEARCH — CARI PASIEN BERDASARKAN NIK ───────────────────────────
-
 def _urutkan_by_nik(daftar_pasien):
-    """
-    Mengurutkan list pasien berdasarkan NIK secara ascending (A→Z).
-    Menggunakan Bubble Sort manual agar konsisten dengan sorting_triase.py.
-
-    Binary Search MEMBUTUHKAN data yang sudah terurut — ini pra-syaratnya.
-
-    Args:
-        daftar_pasien (list): List objek Pasien.
-
-    Returns:
-        list: List objek Pasien terurut ascending by NIK.
-    """
+    """Mengurutkan list pasien berdasarkan NIK secara ascending (A→Z) untuk implementasi Bubble Sort"""
     n = len(daftar_pasien)
     for i in range(n - 1):
         for j in range(n - 1 - i):
@@ -130,7 +82,6 @@ def _urutkan_by_nik(daftar_pasien):
 def binary_search_nik(daftar_pasien, target_nik):
     """
     Mencari satu pasien berdasarkan NIK menggunakan Binary Search.
-
     Cara kerja:
         1. Pastikan list sudah terurut ascending by NIK (dilakukan di dalam fungsi ini)
         2. Set low = 0 (index paling kiri), high = len-1 (index paling kanan)
@@ -140,18 +91,10 @@ def binary_search_nik(daftar_pasien, target_nik):
            - Lebih kecil → target ada di kanan, set low  = mid + 1
            - Lebih besar → target ada di kiri,  set high = mid - 1
         5. Ulangi sampai ditemukan atau low > high (tidak ada)
-
-    Kompleksitas: O(log n) — setiap iterasi membuang separuh data.
-
-    Args:
-        daftar_pasien (list): List objek Pasien (belum harus terurut).
-        target_nik    (str) : NIK pasien yang dicari (16 digit).
-
-    Returns:
-        Pasien | None: Objek Pasien jika ditemukan, None jika tidak ada.
     """
-    # Urutkan dulu berdasarkan NIK — syarat wajib Binary Search
-    daftar_terurut = _urutkan_by_nik(daftar_pasien[:])  # copy agar list asli tidak berubah
+    # Urutkan dulu berdasarkan NIK 
+    # copy agar list asli tidak berubah, karena Binary Search butuh data terurut
+    daftar_terurut = _urutkan_by_nik(daftar_pasien[:])
 
     low  = 0
     high = len(daftar_terurut) - 1
@@ -165,7 +108,6 @@ def binary_search_nik(daftar_pasien, target_nik):
         nik_mid = daftar_terurut[mid].nik
 
         if nik_mid == target_nik:
-            # DITEMUKAN — kembalikan objek pasien
             return daftar_terurut[mid]
 
         elif nik_mid < target_nik:
@@ -180,19 +122,8 @@ def binary_search_nik(daftar_pasien, target_nik):
     return None
 
 
-# ── 3. FILTER BERDASARKAN LAYANAN ────────────────────────────────────────────
-
 def filter_layanan(daftar_pasien, layanan):
-    """
-    Memfilter pasien berdasarkan jenis layanan menggunakan Linear Search.
-
-    Args:
-        daftar_pasien (list): List objek Pasien.
-        layanan       (str) : Kategori layanan ("UGD", "Rawat Inap", "Rawat Jalan").
-
-    Returns:
-        list: List objek Pasien yang layanannya sesuai.
-    """
+    """Memfilter pasien berdasarkan jenis layanan menggunakan Linear Search."""
     hasil = []
     layanan_lower = layanan.lower()
 
@@ -203,14 +134,8 @@ def filter_layanan(daftar_pasien, layanan):
     return hasil
 
 
-# ── FUNGSI CLI — DIPANGGIL DARI main.py ──────────────────────────────────────
-
 def cari_pasien_nama():
-    """
-    Entry point untuk pencarian pasien by nama via CLI.
-    Menggunakan Linear Search.
-    Dipanggil dari main.py saat pengguna memilih menu cari pasien.
-    """
+    """untuk pencarian pasien by nama. Menggunakan Linear Search."""
     print("\n" + "=" * 44)
     print("     CARI PASIEN BERDASARKAN NAMA")
     print("     Algoritma: Linear Search O(n)")
@@ -234,17 +159,13 @@ def cari_pasien_nama():
 
 
 def cari_pasien_nik():
-    """
-    Entry point untuk pencarian pasien by NIK via CLI.
-    Menggunakan Binary Search.
-    Dipanggil dari main.py saat pengguna memilih menu cari pasien by NIK.
-    """
+    """Entry point untuk pencarian pasien by nik. Menggunakan Binary Search."""
     print("\n" + "=" * 44)
     print("      CARI PASIEN BERDASARKAN NIK")
     print("     Algoritma: Binary Search O(log n)")
     print("=" * 44)
 
-    nik = input("  Masukkan NIK (16 digit): ").strip()
+    nik = input("  Masukkan NIK (6 digit): ").strip()
     if not nik:
         print("  [ERROR] NIK tidak boleh kosong.")
         return
@@ -266,11 +187,7 @@ def cari_pasien_nik():
 
 
 def cari_pasien_layanan():
-    """
-    Entry point untuk filter pasien berdasarkan jenis layanan via CLI.
-    Menggunakan Linear Search (filter).
-    Dipanggil dari main.py.
-    """
+    """Entry point untuk filter pasien berdasarkan jenis layanan. Menggunakan Linear Search (filter)."""
     # Tuple kategori layanan — sesuai dengan implementasi di proyek
     KATEGORI_LAYANAN = ("UGD", "Rawat Inap", "Rawat Jalan")
 

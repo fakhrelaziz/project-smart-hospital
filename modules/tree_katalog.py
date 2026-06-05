@@ -1,58 +1,27 @@
 """
-File    : modules/tree_katalog.py
-Materi  : Tree (Data Structure)
-Deskripsi:
-    Mengimplementasikan struktur Tree murni untuk node hierarki katalog farmasi.
-Catatan :
-    - Class ini hanya mendefinisikan struktur data.
-    - Algoritma pembangunan Tree dan CLI dipindahkan ke manage_obat.py.
+Mengimplementasikan struktur Tree untuk node hierarki katalog farmasi.
 """
-
-# ══════════════════════════════════════════════════════════════════════════════
-# CLASS NODE TREE
-# ══════════════════════════════════════════════════════════════════════════════
-
 class NodeTree:
-    """
-    Merepresentasikan satu node di dalam Tree katalog farmasi.
-
-    Setiap node bisa berupa:
-        - Node kategori/bentuk : nama = nama node, kode_obat = None
-        - Node obat (daun)     : nama = nama obat, kode_obat = kode obat
-
-    Atribut:
-        nama      (str)        : Nama node.
-        kode_obat (str | None) : Kode obat jika ini node daun, None jika kategori/bentuk.
-        children  (list)       : List NodeTree anak dari node ini.
-    """
-
     def __init__(self, nama, kode_obat=None):
         self.nama      = nama
-        self.kode_obat = kode_obat   # None jika node kategori/bentuk
-        self.children  = []          # list of NodeTree
+        self.kode_obat = kode_obat   
+        self.children  = []         
 
     def tambah_anak(self, node_anak):
         """Menambahkan node anak ke daftar children."""
         self.children.append(node_anak)
-        return node_anak             # return agar bisa chaining
-
-# ══════════════════════════════════════════════════════════════════════════════
-# CLASS KATALOG OBAT (TREE DATA STRUCTURE & ALGORITHM)
-# ══════════════════════════════════════════════════════════════════════════════
+        return node_anak         
 
 class KatalogObat:
     """
     Tree hierarki katalog farmasi (4-Level).
-
     Struktur tree dibangun STATIS di __init__ berdasarkan
     data obat.json.
     Hierarki: Farmasi -> Kategori -> Bentuk -> Nama Obat
     """
-
     def __init__(self):
-        # Root node — puncak hierarki
+        # Root node 
         self.root = NodeTree("Farmasi")
-
         # Dict untuk tracking node yang sudah dibuat
         self._node_kategori = {}
         self._node_bentuk = {}
@@ -91,10 +60,9 @@ class KatalogObat:
             self._node_bentuk[key_bentuk].tambah_anak(node_obat)
 
     # TAMPILKAN TREE (REKURSIF)
-
     def tampilkan(self, node=None, level=0):
         """
-        Menampilkan seluruh hierarki tree ke terminal secara REKURSIF.
+        Menampilkan seluruh hierarki tree ke terminal secara rekursif.
         """
         if node is None:
             node = self.root

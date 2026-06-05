@@ -1,17 +1,8 @@
 """
-File    : main.py
-Deskripsi: Entry point utama program Smart Hospital CLI.
-Tujuan  : Menampilkan menu utama dan menghubungkan semua modul handler ke antarmuka CLI.
-Catatan :
-    - Semua logika bisnis berada di dalam modules/. main.py hanya sebagai router menu.
-    - Data disimpan per-operasi (tidak perlu save eksplisit saat keluar).
-Relasi  :
-    - modules.manage_pasien
-    - modules.manage_kamar
-    - modules.manage_obat
-    - modules.sorting_triase
-    - modules.graph_rujukan
-    - modules.searching
+program utama
+Menampilkan menu utama dan menghubungkan semua modul handler ke antarmuka CLI.
+- Semua logika bisnis berada di dalam modules/. main.py hanya sebagai router menu.
+- Data disimpan per-operasi/ketika ada data yang di update.
 """
 
 from modules.manage_kamar import (
@@ -54,7 +45,6 @@ from modules.searching import (
 )
 
 #MENU UTAMA
-
 while True:
     print("\n" + "=" * 50)
     print("     SELAMAT DATANG DI SMART HOSPITAL SYSTEM")
@@ -72,16 +62,15 @@ while True:
 
     pilihan = input("Pilih menu: ").strip()
 
-    # ── [1] PENDAFTARAN PASIEN 
     if pilihan == "1":
         while True:
             print("\n=== LAYANAN PASIEN ===")
             print("  [1] Lihat Keseluruhan Pasien")
-            print("  [2] Daftar Pasien Baru (Antri)")
+            print("  [2] Tambah Pasien Baru (Antri)")
             print("  [3] Lihat Antrean Pendaftaran")
             print("  [4] Proses Antrean (Layani Pasien)")
             print("  [5] Undo Pendaftaran Terakhir")
-            print("  [6] Lihat Rekam Medis Pasien (SLL)")
+            print("  [6] Lihat Rekam Medis Pasien")
             print("  [7] Tambah Catatan Rekam Medis")
             print("  [0] Kembali")
 
@@ -106,13 +95,12 @@ while True:
             else:
                 print("[INFO] Pilihan tidak valid.")
 
-    # ── [2] LAYANAN UGD ───────────────────────────────────────────────────────
     elif pilihan == "2":
         while True:
             print("\n=== LAYANAN UGD ===")
-            print("  [1] Lihat Antrean UGD (Sorted by Danger Score)")
-            print("  [2] Update Skor Triase Pasien")
-            print("  [3] Undo Update Skor Triase Terakhir")
+            print("  [1] Lihat Antrean UGD")
+            print("  [2] Input / Update Danger Score Pasien")
+            print("  [3] Undo Update Danger Score Terakhir")
             print("  [0] Kembali")
 
             pilihan = input("Pilih menu: ").strip()
@@ -128,15 +116,14 @@ while True:
             else:
                 print("[INFO] Pilihan tidak valid.")
 
-    # ── [3] RAWAT INAP & NAVIGASI KAMAR ──────────────────────────────────────
     elif pilihan == "3":
         while True:
             print("\n===  RAWAT INAP & NAVIGASI KAMAR  ===")
-            print("  [1] Navigasi Lorong Kamar (next-prev — DLL)")
+            print("  [1] Navigasi Lorong Kamar")
             print("  [2] Lihat Kamar Tersedia")
             print("  [3] Assign Pasien ke Kamar")
             print("  [4] Pasien Keluar Kamar")
-            print("  [5] Lihat Jadwal Minum Obat Pasien (CLL)")
+            print("  [5] Lihat Jadwal Minum Obat Pasien")
             print("  [0] Kembali")
 
             pilihan = input("Pilih menu: ").strip()
@@ -156,15 +143,14 @@ while True:
             else:
                 print("[INFO] Pilihan tidak valid.")
 
-    # ── [4] SISTEM FARMASI & APOTEK ───────────────────────────────────────────
     elif pilihan == "4":
         while True:
             print("\n===  SISTEM FARMASI & APOTEK  ===")
             print("  [1] Lihat Daftar Obat")
             print("  [2] Tambah Obat")
             print("  [3] Cari obat -> ubah stok & harga")
-            print("  [4] Laporan Prediksi Seluruh Stok Obat (Rekursif)")
-            print("  [5] Lihat Direktori Katalog Obat (Tree)")
+            print("  [4] Laporan Prediksi Seluruh Stok Obat")
+            print("  [5] Lihat Direktori Katalog Obat")
             print("  [0] Kembali")
 
             pilihan = input("Pilih menu: ").strip()
@@ -184,12 +170,11 @@ while True:
             else:
                 print("[INFO] Pilihan tidak valid.")
 
-    # ── [5] SISTEM RUJUKAN LINTAS RS ──────────────────────────────────────────
     elif pilihan == "5":
         while True:
             print("\n=== SISTEM RUJUKAN LINTAS RS ===")
             print("  [1] Lihat Peta Visual Jaringan RS")
-            print("  [2] Cari RS Rujukan Terdekat (BFS)")
+            print("  [2] Cari RS Rujukan Terdekat")
             print("  [3] Ubah Ketersediaan / Status RS")
             print("  [0] Kembali")
 
@@ -206,12 +191,11 @@ while True:
             else:
                 print("[INFO] Pilihan tidak valid.")
 
-    # ── [6] PENCARIAN DATA ────────────────────────────────────────────────────
     elif pilihan == "6":
         while True:
             print("\n=== PENCARIAN DATA ===")
-            print("  [1] Cari Pasien by Nama  (Linear Search)")
-            print("  [2] Cari Pasien by NIK   (Binary Search)")
+            print("  [1] Cari Pasien by Nama")
+            print("  [2] Cari Pasien by NIK")
             print("  [3] Filter Pasien by Layanan")
             print("  [0] Kembali")
 
@@ -228,7 +212,6 @@ while True:
             else:
                 print("[INFO] Pilihan tidak valid.")
 
-    # ── [7] KELUAR ────────────────────────────────────────────────────────────
     elif pilihan == "0":
         print("\n[INFO] Data sudah tersimpan secara otomatis setiap operasi.")
         print("Terima kasih telah menggunakan Smart Hospital System. Sampai jumpa!")

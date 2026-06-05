@@ -1,15 +1,13 @@
 """
-File    : modules/graph_rujukan.py
-Materi  : Graph (Data Structure)
-Deskripsi:
-    Merepresentasikan jaringan rumah sakit rujukan sebagai Struktur Data Graph
-    dengan adjacency list.
-Catatan :
-    - Data diimpor dari models/rumah_sakit.py.
-    - Algoritma pencarian dan interaksi CLI dikelola oleh manage_rujukan.py.
+Merepresentasikan jaringan rumah sakit rujukan sebagai Struktur Data Graph
+dengan adjacency list.
+- Data diimpor dari models/rumah_sakit.py.
+- Algoritma pencarian dan interaksi CLI dikelola oleh manage_rujukan.py.
 """
 
-from models.rumah_sakit import JARINGAN_RS, STATUS_AWAL
+import os
+from models.rumah_sakit import JARINGAN_RS
+from utils.json_handler import load_json, save_json
 
 class GraphRujukan:
     """
@@ -19,21 +17,14 @@ class GraphRujukan:
 
     def __init__(self):
         # Adjacency list — struktur utama graph
-        self.graph  = JARINGAN_RS
-        # Status setiap RS (Merujuk ke global dictionary agar perubahan permanen)
-        self.status = STATUS_AWAL
+        self.graph  = JARINGAN_RS 
+        
+        # Status setiap RS diambil dari JSON agar perubahannya permanen
+        os.path.exists("data/rs_status.json")
+        self.status = load_json("data/rs_status.json")
 
     def set_status(self, nama_rs, status):
-        """
-        Mengubah status sebuah RS.
-
-        Args:
-            nama_rs (str): Nama RS yang ingin diubah statusnya.
-            status  (str): "Tersedia" atau "Penuh".
-
-        Returns:
-            bool: True jika berhasil, False jika nama RS tidak ada atau input salah.
-        """
+        """Mengubah status sebuah RS."""
         if nama_rs not in self.graph:
             print(f"  [ERROR] RS '{nama_rs}' tidak ada di jaringan.")
             return False
@@ -43,6 +34,8 @@ class GraphRujukan:
             return False
 
         self.status[nama_rs] = status
+        # Simpan secara permanen ke file JSON
+        save_json("data/rs_status.json", self.status)
         return True
 
     def bfs_cari_rujukan(self, rs_asal="Smart Hospital"):
@@ -52,7 +45,7 @@ class GraphRujukan:
         """
         from collections import deque
         if rs_asal not in self.graph:
-            return {"rs_tujuan": None, "rute": [], "hop": 0}
+            return {"rs_tujuan": None, "rute": [], "hop": 0, "history": []}
 
         queue = deque()
         visited = set()
@@ -60,14 +53,22 @@ class GraphRujukan:
         queue.append((rs_asal, [rs_asal]))
         visited.add(rs_asal)
 
+        history = []
+
         while queue:
             rs_sekarang, rute = queue.popleft()
+            status_rs = self.status.get(rs_sekarang, "?")
 
-            if rs_sekarang != rs_asal and self.status.get(rs_sekarang) == "Tersedia":
+            # Catat riwayat pemeriksaan untuk keperluan UI/Demo (selain RS asal)
+            if rs_sekarang != rs_asal:
+                history.append((rs_sekarang, status_rs))
+
+            if rs_sekarang != rs_asal and status_rs == "Tersedia":
                 return {
                     "rs_tujuan": rs_sekarang,
                     "rute"     : rute,
-                    "hop"      : len(rute) - 1
+                    "hop"      : len(rute) - 1,
+                    "history"  : history
                 }
 
             for tetangga in self.graph.get(rs_sekarang, []):
@@ -75,4 +76,4 @@ class GraphRujukan:
                     visited.add(tetangga)
                     queue.append((tetangga, rute + [tetangga]))
 
-        return {"rs_tujuan": None, "rute": [], "hop": 0}
+        return {"rs_tujuan": None, "rute": [], "hop": 0, "history": history}

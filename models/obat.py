@@ -1,11 +1,6 @@
 """
-File: models/obat.py
-Deskripsi: Model data Obat dan operasi dasar stok serta harga.
-Tujuan: Menyimpan data obat dan menyediakan method manipulasi sederhana.
-Catatan penting: Validasi input dilakukan di layer handler.
-Relasi: Digunakan oleh modules/manage_obat.py dan modul farmasi lainnya.
+representasi data obat dalam bentuk class Obat dan manipulasi data
 """
-
 
 class Obat:
     def __init__(self, kode, nama, kategori, bentuk, stok, harga, pemakaian_harian=0):

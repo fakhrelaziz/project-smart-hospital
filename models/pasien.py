@@ -1,29 +1,22 @@
 """
-File    : models/pasien.py
-Materi  : OOP — Class Model Pasien
-Deskripsi:
-    Mendefinisikan class Pasien sebagai representasi objek data pasien
-    dalam sistem Smart Hospital. Menyimpan semua atribut dan method
-    manipulasi data pasien.
-Catatan :
-    - Rekam medis disimpan sebagai list dict dan dikelola oleh sll_rekammedis.py.
-    - Method objek_ke_dict() digunakan untuk serialisasi ke JSON.
-    - Method dict_ke_objek() digunakan untuk deserialisasi dari JSON.
-Relasi  :
-    - Digunakan oleh modules/manage_pasien.py, modules/sorting_triase.py,
-      modules/searching.py, dan modules/graph_rujukan.py.
+Mendefinisikan class Pasien sebagai representasi objek data pasien
+dalam sistem Smart Hospital. Menyimpan semua atribut dan method
+untuk manipulasi data pasien.
+- Rekam medis disimpan sebagai list dict dan dikelola oleh sll_rekammedis.py.
+- Method objek_ke_dict() digunakan untuk serialisasi ke JSON.
+- Method dict_ke_objek() digunakan untuk deserialisasi dari JSON.
 """
 
+from modules.sll_rekammedis import SingleLinkedListRekamMedis
 
 class Pasien:
-    def __init__(self, nik, nama, umur, layanan):
+    def __init__(self, nik="", nama="", umur=0, layanan=""):
         self.nik = nik
         self.nama = nama
         self.umur = umur
         self.jenis_layanan = layanan
         self.status = "antri"
-        #rekam medis digunakan di sll_rekammedis.py
-        self.rekam_medis = []
+        self.rekam_medis = SingleLinkedListRekamMedis()
         self.danger_score = 0
         self.kamar = None
         
@@ -37,8 +30,8 @@ class Pasien:
             "layanan"     : self.jenis_layanan,
             "status"      : self.status,
             "danger_score": self.danger_score,
-            "nomor_kamar" : self.kamar if hasattr(self, 'kamar') else None,
-            "rekam_medis" : []
+            "nomor_kamar" : self.kamar,
+            "rekam_medis" : self.rekam_medis.to_list()
         }
     
 
@@ -51,7 +44,7 @@ class Pasien:
         self.status = data.get("status")
         self.danger_score = data.get("danger_score")
         self.kamar = data.get("nomor_kamar")
-        self.rekam_medis = data.get("rekam_medis", [])
+        self.rekam_medis = SingleLinkedListRekamMedis(data.get("rekam_medis", []))
 
     def data_pasien(self):
         """ini untuk tampilkan atau ngeprint data pasien """
@@ -66,27 +59,27 @@ class Pasien:
         """Mengembalikan nilai danger_score pasien."""
         return self.danger_score
 
-    def update_danger_score(self, danger_score_baru):
+    def update_danger_score(self, danger_score):
         """Memperbarui nilai danger_score pasien setelah pemeriksaan atau perawatan."""
-        self.danger_score = danger_score_baru
+        self.danger_score = danger_score
 
-    def update_status(self, status_baru):
-        """Memperbarui status pasien, misalnya dari 'antri' ke 'selesai'."""
-        self.status = status_baru
+    def update_status(self, status):
+        """Memperbarui status pasien, misalnya dari 'antri' ketika mendaftar lalu 'selesai' ketika dilayani."""
+        self.status = status
 
-    def update_layanan(self, layanan_baru):
+    def update_layanan(self, layanan):
         """Memperbarui jenis layanan pasien, misalnya dari rawat jalan ke rawat inap."""
-        self.jenis_layanan = layanan_baru
+        self.jenis_layanan = layanan
 
-    def set_kamar(self, nomor_kamar_baru):
+    def set_kamar(self, nomor_kamar):
         """Menyimpan nomor kamar yang ditempati pasien."""
-        self.kamar = nomor_kamar_baru
+        self.kamar = nomor_kamar
 
     def tambah_rekam_medis(self, tanggal, diagnosis, resep):
         """tambah rekam medis pasien """
-        rekam_baru = {
+        rekam_medis = {
             "tanggal": tanggal,
             "diagnosis": diagnosis,
             "resep": resep
         }
-        self.rekam_medis.append(rekam_baru)
+        self.rekam_medis.insert(rekam_medis)
