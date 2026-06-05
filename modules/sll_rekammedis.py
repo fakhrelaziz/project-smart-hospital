@@ -1,16 +1,10 @@
 """
-File    : modules/sll_rekammedis.py
-Materi  : Single Linked List (SLL)
-Deskripsi:
-    Mengimplementasikan Single Linked List untuk menyimpan riwayat rekam
-    medis pasien secara kronologis. Setiap kali pasien berobat, catatan
-    baru ditambahkan (append) ke ujung list sebagai node baru.
-Catatan :
-    - Setiap node menyimpan satu catatan rekam medis (dict: tanggal, diagnosis, resep).
-    - to_list() dan from_list() digunakan untuk serialisasi/deserialisasi JSON.
+Mengimplementasikan Single Linked List untuk menyimpan riwayat rekam
+medis pasien secara kronologis. Setiap kali pasien berobat, catatan
+baru ditambahkan (append) ke ujung list sebagai node baru.
+- Setiap node menyimpan satu catatan rekam medis (dict: tanggal, diagnosis, resep).
+- to_list() dan from_list() digunakan untuk serialisasi/deserialisasi JSON.
 """
-
-
 class Node:
     def __init__(self, data):
         self.data = data  

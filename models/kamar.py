@@ -1,25 +1,21 @@
 """
-Materi  : OOP — Class Model Kamar
-Deskripsi:
-    Mendefinisikan class Kamar sebagai representasi data kamar rawat inap, jadi ini tempat manipulasi data kamar.
-    Mendukung kamar dengan kapasitas tunggal maupun multi-kasur.
-Catatan :
-    - Konversi dict → objek menggunakan dict_ke_objek(), ini untuk mengubah dictionary pada json 
-    menjadi objek python agar lebih enak di manipulasi karena sudah berbentuk objek, jadi setiap data kamar.json
-    di panggil dengan menggunakan looping untuk membuat objek nya dengan Blueprint Kamwr atau class Kamar
+Mendefinisikan class Kamar sebagai representasi data kamar rawat inap, jadi ini tempat manipulasi data kamar.
+Mendukung kamar dengan kapasitas tunggal maupun multi-kasur.
+
+- Konversi dict → objek menggunakan dict_ke_objek(), ini untuk mengubah dictionary pada json 
+menjadi objek python agar lebih enak di manipulasi karena sudah berbentuk objek, jadi setiap data kamar.json
+di panggil dengan menggunakan looping untuk membuat objek nya dengan Blueprint Kamwr atau class Kamar
     
-    - Konversi objek → dict menggunakan objek_ke_dict() untuk serialisasi ke JSON. 
-    setelah data diubah ke objek dan saat menjalankan program misal ingin memasukkan pasien ke kamar 
-    setelah dimasukkan sebelum data terbaru disimpan ke .json dari objek iti diubah dulu ke format dictionary, kemudian 
-    disimpan dengan memanggil fungsi save_json pada file json_handler.py
-    - Kapasitas kasur otomatis ditentukan berdasarkan tipe kamar saat dict_ke_objek().
-Relasi  :
-    - Digunakan oleh modules/manage_kamar.py dan modules/dll_kamar.py.
+- Konversi objek → dict menggunakan objek_ke_dict() untuk serialisasi ke JSON. 
+setelah data diubah ke objek dan saat menjalankan program misal ingin memasukkan pasien ke kamar 
+setelah dimasukkan sebelum data terbaru disimpan ke .json dari objek iti diubah dulu ke format dictionary, kemudian 
+disimpan dengan memanggil fungsi save_json pada file json_handler.py
+- Kapasitas kasur otomatis ditentukan berdasarkan tipe kamar saat dict_ke_objek().
 """
 
 
 class Kamar:
-    def __init__(self, nomor, tipe, pasien_terisi=None, kapasitas_kasur=1):
+    def __init__(self, nomor="", tipe="", pasien_terisi=None, kapasitas_kasur=1):
         self.nomor = nomor
         self.tipe = tipe
         self.kapasitas_kasur = kapasitas_kasur 

@@ -1,20 +1,14 @@
 """
-File    : modules/recursive_stok.py
-Materi  : Rekursif (Recursive Function)
-Deskripsi:
-    Menghitung estimasi sisa hari pemakaian stok obat menggunakan
-    fungsi rekursif. Program memanggil dirinya sendiri berulang kali,
-    mengurangi stok sebesar pemakaian_harian setiap panggilan, hingga
-    mencapai base case (stok <= 0).
+Menghitung estimasi sisa hari pemakaian stok obat menggunakan
+fungsi rekursif. Program memanggil dirinya sendiri berulang kali,
+mengurangi stok sebesar pemakaian_harian setiap panggilan, hingga
+mencapai base case (stok <= 0).
 Cara kerja rekursif:
     hitung_sisa_hari(stok=50, dosis=3, hari=0)
         → stok 50 > 0, rekursif ke hitung_sisa_hari(47, 3, 1)
             → stok 47 > 0, rekursif ke hitung_sisa_hari(44, 3, 2)
                 → ... terus hingga stok <= 0
                     → BASE CASE: return hari  (= 17)
-Catatan :
-    - Fungsi utama: hitung_sisa_hari() — WAJIB rekursif, bukan loop
-    - Kompleksitas : O(stok / pemakaian_harian) panggilan rekursif
 """
 
 from models.obat import Obat
@@ -43,9 +37,6 @@ def hitung_sisa_hari(stok, pemakaian_harian, hari=0):
         pemakaian_harian (int) : Berapa unit obat dipakai per hari.
         hari         (int) : Akumulator — bertambah 1 setiap panggilan rekursif.
                              Nilai awal selalu 0 (default).
-
-    Returns:
-        int: Estimasi jumlah hari sampai stok habis.
     """
 
     # base case
@@ -58,28 +49,14 @@ def hitung_sisa_hari(stok, pemakaian_harian, hari=0):
 
 def prediksi_stok_obat(nama_obat, stok, pemakaian_harian):
     """
-    Wrapper yang menggabungkan validasi dan format hasil prediksi.
-    Sistem 100% dipaksa menggunakan metode rekursif sesuai instruksi.
-
-    Args:
-        nama_obat    (str) : Nama obat (untuk ditampilkan di output).
-        stok         (int) : Stok obat saat ini.
-        pemakaian_harian (int) : Unit obat yang dipakai per hari.
-
-    Returns:
-        dict: {
-            "nama"        : nama obat,
-            "stok"        : stok saat ini,
-            "pemakaian_harian":  rata-rata pemakaian obat per hari,
-            "sisa_hari"   : estimasi hari tersisa,
-            "peringatan"  : pesan jika stok menipis (atau None)
-        }
+    Memanggil fungsi hitung_sisa_hari untuk menghitung prediksi sisa hari stok obat berdasarkan 
+    rata rata rumah sakit memakai obat dari farmasi per harinya.
     """
     sisa_hari = None
     
     # Validasi untuk mencegah Infinite Recursion
     if pemakaian_harian <= 0:
-        peringatan = "ERROR: Dosis harian harus lebih dari 0."
+        peringatan = "Dosis harian harus lebih dari 0."
     else:
         # Langsung gunakan metode rekursif 
         sisa_hari = hitung_sisa_hari(stok, pemakaian_harian)
@@ -106,9 +83,7 @@ def prediksi_stok_obat(nama_obat, stok, pemakaian_harian):
 
 
 def tampilkan_hasil_prediksi(hasil):
-    """
-    fungsi di pakai saat cari obat --> ubah stok & harga (main.py menu Farmasi)
-    """
+    """fungsi di pakai pada fitur cari obat"""
     print("\n" + "=" * 48)
     print("       HASIL PREDIKSI STOK OBAT")
     print("=" * 48)
@@ -132,7 +107,7 @@ def tampilkan_hasil_prediksi(hasil):
 
 def prediksi_semua_obat():
     """
-    Entry point CLI: prediksi stok untuk seluruh obat di database.
+    prediksi stok untuk seluruh obat di data.
     Berguna untuk laporan ketersediaan obat secara menyeluruh.
     Dipanggil dari main.py menu Farmasi.
     """

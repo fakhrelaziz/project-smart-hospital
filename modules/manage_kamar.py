@@ -15,6 +15,7 @@ Relasi  :
 """
 
 from models.kamar import Kamar
+from models.pasien import Pasien
 from utils.json_handler import load_json, save_json
 from modules.dll_kamar import NavigasiKamar
 from modules.cll_obat import CircularLinkedList
@@ -37,7 +38,7 @@ def _cari_kamar(data, nomor):
 
 def _dict_ke_kamar(data):
     """Mengkonversi satu dict kamar menjadi objek Kamar."""
-    kamar_obj = Kamar("", "")
+    kamar_obj = Kamar()
     kamar_obj.dict_ke_objek(data)
     return kamar_obj
 
@@ -110,9 +111,12 @@ def assign_pasien_ke_kamar():
     if not kamar_obj.pasien_masuk(nik):
         return
 
-    # Update data pasien
-    pasien_data["nomor_kamar"] = nomor_kamar
-    pasien_data["status"] = "dirawat"
+    # Update data pasien menggunakan OOP
+    pasien_obj = Pasien()
+    pasien_obj.dict_ke_objek(pasien_data)
+    pasien_obj.set_kamar(nomor_kamar)
+    pasien_obj.update_status("dirawat")
+    pasien_data.update(pasien_obj.objek_ke_dict())
 
     # Sync dict kamar dari objek yang sudah diperbarui
     kamar_data.update(kamar_obj.objek_ke_dict())
@@ -158,9 +162,12 @@ def pasien_keluar_kamar():
 
     kamar_obj.pasien_keluar(nik)
 
-    # Update data pasien
-    pasien_data["nomor_kamar"] = None
-    pasien_data["status"] = "selesai"
+    # Update data pasien menggunakan OOP
+    pasien_obj = Pasien()
+    pasien_obj.dict_ke_objek(pasien_data)
+    pasien_obj.set_kamar(None)
+    pasien_obj.update_status("selesai")
+    pasien_data.update(pasien_obj.objek_ke_dict())
 
     # Sync dict kamar dari objek yang sudah diperbarui
     kamar_data.update(kamar_obj.objek_ke_dict())

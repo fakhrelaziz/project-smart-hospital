@@ -1,7 +1,7 @@
 """
 business logic dari smart hospital untuk mengelola pasien, termasuk pendaftaran, triase, dan rekam medis.
-Tujuan  : Menyediakan operasi interaktif terminal validasi, menampilkan input/output
-         dengan memanggil stuktur data antrean (Queue) dan pembatalan pendaftaran dengan (Stack).
+Tujuan nya menyediakan operasi interaktif terminal validasi, menampilkan input/output
+dengan memanggil stuktur data antrean (Queue) dan pembatalan pendaftaran dengan (Stack).
     - Menggunakan struktur data Queue manual (QueuePendaftaran) untuk alur pasien 'antri'.
     - Menggunakan Stack manual (Stack_UGD) untuk keperluan Undo pendaftaran.
     - Rekam medis disimpan menggunakan Single Linked List (sll_rekammedis.py).
@@ -14,14 +14,13 @@ from modules.queue_pendaftaran import QueuePendaftaran
 from modules.undo_stack import UndoStack 
 from modules.sll_rekammedis import SingleLinkedListRekamMedis
 
-
 def lihat_semua_pasien():
     """Menampilkan data semua pasien di database (json) rumah sakit."""
     data_pasien_dict = load_json("data/pasien.json")
 
     daftar_objek_pasien = []
     for data in data_pasien_dict:
-        pasien_obj = Pasien("", "", 0, "")
+        pasien_obj = Pasien()
         pasien_obj.dict_ke_objek(data)
         daftar_objek_pasien.append(pasien_obj)
 
@@ -113,9 +112,12 @@ def proses_antrian_pendaftaran():
 
     if pasien_diproses:
         # Refleksikan status baru ke master data
-        for master_p in data_pasien:
-            if master_p["nik"] == pasien_diproses["nik"]:
-                master_p["status"] = "diperiksa"
+        for proses in data_pasien:
+            if proses["nik"] == pasien_diproses["nik"]:
+                pasien_obj = Pasien()
+                pasien_obj.dict_ke_objek(proses)
+                pasien_obj.update_status("diperiksa")
+                proses.update(pasien_obj.objek_ke_dict())
                 break
 
         save_json("data/pasien.json", data_pasien)
@@ -209,7 +211,7 @@ def tambah_rekam_medis_pasien():
         return
 
     # Pilihan 2: Menggunakan objek Pasien dari models
-    pasien_obj = Pasien("", "", 0, "")
+    pasien_obj = Pasien()
     pasien_obj.dict_ke_objek(pasien_target)
 
     # Input terstruktur sesuai desain rekam medis
@@ -231,8 +233,11 @@ def tambah_rekam_medis_pasien():
     sll = SingleLinkedListRekamMedis()
     sll.from_list(pasien_obj.rekam_medis)
 
-    # Simpan kembali ke JSON
+    # Update status via OOP
+    pasien_obj.update_status("selesai")
+    pasien_target.update(pasien_obj.objek_ke_dict())
+
+    # Timpa atribut rekam_medis menggunakan versi SLL 
     pasien_target["rekam_medis"] = sll.to_list()
-    pasien_target["status"] = "selesai"
     save_json("data/pasien.json", data_pasien)
     print(f"[SUCCESS] Catatan rekam medis berhasil ditambahkan untuk NIK {nik}.")

@@ -8,7 +8,7 @@ untuk manipulasi data pasien.
 """
 
 class Pasien:
-    def __init__(self, nik, nama, umur, layanan):
+    def __init__(self, nik="", nama="", umur=0, layanan=""):
         self.nik = nik
         self.nama = nama
         self.umur = umur
@@ -57,27 +57,27 @@ class Pasien:
         """Mengembalikan nilai danger_score pasien."""
         return self.danger_score
 
-    def update_danger_score(self, danger_score_baru):
+    def update_danger_score(self, danger_score):
         """Memperbarui nilai danger_score pasien setelah pemeriksaan atau perawatan."""
-        self.danger_score = danger_score_baru
+        self.danger_score = danger_score
 
-    def update_status(self, status_baru):
+    def update_status(self, status):
         """Memperbarui status pasien, misalnya dari 'antri' ketika mendaftar lalu 'selesai' ketika dilayani."""
-        self.status = status_baru
+        self.status = status
 
-    def update_layanan(self, layanan_baru):
+    def update_layanan(self, layanan):
         """Memperbarui jenis layanan pasien, misalnya dari rawat jalan ke rawat inap."""
-        self.jenis_layanan = layanan_baru
+        self.jenis_layanan = layanan
 
-    def set_kamar(self, nomor_kamar_baru):
+    def set_kamar(self, nomor_kamar):
         """Menyimpan nomor kamar yang ditempati pasien."""
-        self.kamar = nomor_kamar_baru
+        self.kamar = nomor_kamar
 
     def tambah_rekam_medis(self, tanggal, diagnosis, resep):
         """tambah rekam medis pasien """
-        rekam_baru = {
+        rekam_medis = {
             "tanggal": tanggal,
             "diagnosis": diagnosis,
             "resep": resep
         }
-        self.rekam_medis.append(rekam_baru)
+        self.rekam_medis.append(rekam_medis)

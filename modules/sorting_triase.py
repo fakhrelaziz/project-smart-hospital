@@ -1,16 +1,9 @@
 """
-File    : modules/sorting_triase.py
-Materi  : Sorting — Bubble Sort manual
-Deskripsi:
-    Mengurutkan antrean pasien UGD berdasarkan danger_score secara descending
-    (danger_score tertinggi = paling kritis = paling atas antrian).
-Catatan :
-    - Sorting diimplementasikan MANUAL menggunakan Bubble Sort.
-    - Tidak menggunakan sorted() atau list.sort() bawaan Python.
-    - Hanya memproses pasien dengan layanan == "UGD".
-Relasi  :
-    - Membaca data dari data/pasien.json via utils.json_handler.
-    - Menggunakan models.pasien.Pasien untuk konversi dict → objek.
+Mengurutkan antrean pasien UGD berdasarkan danger_score
+(danger_score tertinggi = paling kritis = paling atas antrian).
+- Sorting diimplementasikan menggunakan Bubble Sort.
+- Membaca data dari data/pasien.json via utils.json_handler.
+- Menggunakan models.pasien.Pasien untuk konversi dict → objek.
 """
 
 from models.pasien import Pasien
@@ -21,8 +14,6 @@ def label_kegawatan(danger_score):
     """
     Mengembalikan label kegawatan berdasarkan nilai danger_score.
     Digunakan saat menampilkan antrian UGD.
-
-    Skala:
         8 - 10 → KRITIS
         5 - 7  → DARURAT
         1 - 4  → Ringan
@@ -40,9 +31,6 @@ def label_kegawatan(danger_score):
 
 def bubble_sort_ugd(daftar_pasien):
     """
-    Mengurutkan list objek Pasien berdasarkan danger_score secara descending
-    menggunakan algoritma Bubble Sort yang diimplementasikan secara manual.
-
     Cara kerja Bubble Sort:
         - Loop luar  : berjalan sebanyak (n-1) kali
         - Loop dalam : membandingkan dua elemen bertetangga
@@ -50,15 +38,6 @@ def bubble_sort_ugd(daftar_pasien):
         - Setelah setiap putaran loop luar, elemen terbesar "menggelembung"
           ke posisi yang benar di ujung kanan
         - Ulangi sampai seluruh list terurut descending
-
-    Kompleksitas: O(n²) — sesuai untuk jumlah pasien UGD yang tidak banyak.
-
-    Args:
-        daftar_pasien (list): List objek Pasien yang akan diurutkan.
-                              List diubah IN-PLACE (langsung di list aslinya).
-
-    Returns:
-        list: List objek Pasien yang sudah terurut descending by danger_score.
     """
     n = len(daftar_pasien)
 
@@ -85,17 +64,13 @@ def ambil_pasien_ugd():
     """
     Membaca data pasien dari JSON, filter hanya yang layanan == "UGD",
     lalu konversi setiap dict menjadi objek Pasien.
-
-    Returns:
-        list: List objek Pasien dengan layanan UGD.
-              List kosong jika tidak ada pasien UGD.
     """
     data_semua = load_json("data/pasien.json")
 
     daftar_ugd = []
     for data in data_semua:
         if data.get("layanan") == "UGD":
-            pasien_obj = Pasien("", "", 0, "")
+            pasien_obj = Pasien()
             pasien_obj.dict_ke_objek(data)
             daftar_ugd.append(pasien_obj)
 
@@ -104,12 +79,8 @@ def ambil_pasien_ugd():
 
 def tampilkan_antrian_ugd(daftar_pasien_terurut):
     """
-    Menampilkan daftar antrian UGD yang sudah terurut dalam format tabel CLI.
+    Menampilkan daftar antrian UGD yang sudah terurut.
     Pasien dengan danger_score tertinggi tampil di urutan paling atas.
-
-    Args:
-        daftar_pasien_terurut (list): List objek Pasien yang sudah diurutkan
-                                      oleh bubble_sort_ugd().
     """
     print("\n" + "=" * 68)
     print("           ANTRIAN UGD — TERURUT BERDASARKAN PRIORITAS")
@@ -138,7 +109,6 @@ def update_danger_score(app_state):
     """
     Memperbarui danger_score pasien UGD berdasarkan input NIK.
     Perubahan langsung disimpan ke data/pasien.json.
-
     Alur:
         1. Tampilkan antrian UGD saat ini
         2. Input NIK pasien yang ingin diperbarui
@@ -186,7 +156,12 @@ def update_danger_score(app_state):
 
     # Update dan simpan
     score_lama = data_semua[pasien_index]["danger_score"]
-    data_semua[pasien_index]["danger_score"] = score_baru
+    
+    # OOP Setter
+    pasien_obj = Pasien()
+    pasien_obj.dict_ke_objek(data_semua[pasien_index])
+    pasien_obj.update_danger_score(score_baru)
+    data_semua[pasien_index].update(pasien_obj.objek_ke_dict())
     save_json("data/pasien.json", data_semua)
     
     # Simpan ke histori Stack untuk keperluan Undo
@@ -215,7 +190,11 @@ def undo_danger_score(app_state):
     pasien_ditemukan = False
     for data in data_semua:
         if data.get("nik") == nik_batal:
-            data["danger_score"] = skor_lama
+            # OOP Setter
+            pasien_obj = Pasien()
+            pasien_obj.dict_ke_objek(data)
+            pasien_obj.update_danger_score(skor_lama)
+            data.update(pasien_obj.objek_ke_dict())
             pasien_ditemukan = True
             break
             
