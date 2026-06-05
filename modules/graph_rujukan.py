@@ -1,12 +1,8 @@
 """
-File    : modules/graph_rujukan.py
-Materi  : Graph (Data Structure)
-Deskripsi:
-    Merepresentasikan jaringan rumah sakit rujukan sebagai Struktur Data Graph
-    dengan adjacency list.
-Catatan :
-    - Data diimpor dari models/rumah_sakit.py.
-    - Algoritma pencarian dan interaksi CLI dikelola oleh manage_rujukan.py.
+Merepresentasikan jaringan rumah sakit rujukan sebagai Struktur Data Graph
+dengan adjacency list.
+- Data diimpor dari models/rumah_sakit.py.
+- Algoritma pencarian dan interaksi CLI dikelola oleh manage_rujukan.py.
 """
 
 import os
@@ -28,16 +24,7 @@ class GraphRujukan:
         self.status = load_json("data/rs_status.json")
 
     def set_status(self, nama_rs, status):
-        """
-        Mengubah status sebuah RS.
-
-        Args:
-            nama_rs (str): Nama RS yang ingin diubah statusnya.
-            status  (str): "Tersedia" atau "Penuh".
-
-        Returns:
-            bool: True jika berhasil, False jika nama RS tidak ada atau input salah.
-        """
+        """Mengubah status sebuah RS."""
         if nama_rs not in self.graph:
             print(f"  [ERROR] RS '{nama_rs}' tidak ada di jaringan.")
             return False
@@ -55,8 +42,6 @@ class GraphRujukan:
         """
         Mencari RS rujukan terdekat yang statusnya "Tersedia"
         menggunakan algoritma Breadth-First Search (BFS).
-        
-        Returns dictionary yang berisi rs_tujuan, rute, hop, dan history pemeriksaan.
         """
         from collections import deque
         if rs_asal not in self.graph:

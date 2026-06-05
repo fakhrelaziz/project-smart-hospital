@@ -1,58 +1,40 @@
-"""
-File    : modules/manage_kamar.py
-Deskripsi: Handler CLI untuk menampilkan data kamar dan mengelola keterisian kamar.
-Tujuan  : Menyediakan fungsi melihat kamar, ketersediaan, navigasi DLL,
-           serta sinkronisasi data pasien-kamar.
-Catatan :
-    - Perubahan disimpan langsung ke data/kamar.json dan data/pasien.json (per-operasi).
-    - Konversi dict → Kamar menggunakan pola: buat objek kosong, lalu dict_ke_objek().
-    - Jadwal minum obat pasien ditampilkan dengan Circular Linked List (cll_obat.py).
-Relasi  :
-    - models.kamar.Kamar
-    - modules.dll_kamar.NavigasiKamar
-    - modules.cll_obat.CircularLinkedList
-    - utils.json_handler.load_json / save_json
-"""
-
 from models.kamar import Kamar
 from models.pasien import Pasien
 from utils.json_handler import load_json, save_json
 from modules.dll_kamar import NavigasiKamar
 from modules.cll_obat import CircularLinkedList
 
-# ── HELPER INTERNAL ───────────────────────────────────────────────────────────
 
+# fungsi yang sering digunakan atau disebut fungsi helper
 def _cari_pasien(data, nik):
-    """Helper pencarian pasien dari list dict."""
     for p in data:
         if p.get("nik") == nik:
             return p
     return None
 
 def _cari_kamar(data, nomor):
-    """Helper pencarian kamar dari list dict."""
     for k in data:
         if k.get("nomor") == nomor:
             return k
     return None
 
-def _dict_ke_kamar(data):
-    """Mengkonversi satu dict kamar menjadi objek Kamar."""
+def _dict_ke_objek(data):
+    """Mengkonversi dict kamar menjadi objek Kamar."""
     kamar_obj = Kamar()
     kamar_obj.dict_ke_objek(data)
     return kamar_obj
 
 def _bangun_dll():
-    """Helper internal: memuat kamar.json dan membangun DLL NavigasiKamar."""
+    """ memuat kamar.json dan membangun DLL NavigasiKamar."""
     data_kamar = load_json("data/kamar.json")
     dll = NavigasiKamar()
     for data in data_kamar:
-        kamar_obj = _dict_ke_kamar(data)
+        kamar_obj = _dict_ke_objek(data)
         dll.insert(kamar_obj)
     return dll
 
 
-# ── LIHAT KAMAR TERSEDIA ──────────────────────────────────────────────────────
+# ───────────────────────────────────────────────────────
 
 def lihat_kamar_tersedia():
     """Menampilkan daftar kamar yang masih memiliki kapasitas kosong via DLL."""
@@ -70,8 +52,6 @@ def lihat_kamar_tersedia():
 
     print("-" * 32)
 
-
-# ── ASSIGN PASIEN KE KAMAR ────────────────────────────────────────────────────
 
 def assign_pasien_ke_kamar():
     """Menempatkan pasien ke kamar dan memperbarui data JSON."""
@@ -103,7 +83,7 @@ def assign_pasien_ke_kamar():
         return
 
     # Konversi dict → objek Kamar
-    kamar_obj = _dict_ke_kamar(kamar_data)
+    kamar_obj = _dict_ke_objek(kamar_data)
     if nik in kamar_obj.pasien_terisi:
         print("[INFO] Pasien sudah tercatat di kamar ini.")
         return
@@ -125,8 +105,6 @@ def assign_pasien_ke_kamar():
 
     print(f"[OK] Pasien {nik} berhasil ditempatkan ke kamar {nomor_kamar}.")
 
-
-# ── PASIEN KELUAR KAMAR ───────────────────────────────────────────────────────
 
 def pasien_keluar_kamar():
     """Mengeluarkan pasien dari kamar dan memperbarui data JSON."""
@@ -155,7 +133,7 @@ def pasien_keluar_kamar():
         return
 
     # Konversi dict → objek Kamar
-    kamar_obj = _dict_ke_kamar(kamar_data)
+    kamar_obj = _dict_ke_objek(kamar_data)
     if nik not in kamar_obj.pasien_terisi:
         print("[ERROR] Pasien tidak ditemukan di kamar ini.")
         return
@@ -177,7 +155,6 @@ def pasien_keluar_kamar():
     print(f"[OK] Pasien {nik} berhasil keluar dari kamar {nomor_kamar}.")
 
 
-# ── NAVIGASI DLL ──────────────────────────────────────────────────────────────
 def navigasi_kamar():
     """Menavigasi kamar satu per satu secara interaktif (Next/Prev) menggunakan DLL."""
     dll = _bangun_dll()
@@ -211,8 +188,6 @@ def navigasi_kamar():
             print("  [ERROR] Pilihan tidak valid.")
 
 
-
-# ── CLL JADWAL MINUM OBAT ─────────────────────────────────────────────────────
 
 def lihat_jadwal_obat_pasien():
     """

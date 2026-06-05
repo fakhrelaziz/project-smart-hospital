@@ -1,11 +1,3 @@
-"""
-File: modules/manage_obat.py
-Deskripsi: Handler CLI untuk melihat dan mengubah data obat.
-Tujuan: Menyediakan fungsi dasar manajemen obat berbasis JSON.
-Catatan penting: Beberapa fungsi menunggu modul struktur data lain selesai.
-Relasi: Menggunakan models.obat.Obat dan utils.json_handler untuk load/save JSON.
-"""
-
 from models.obat import Obat
 from utils.json_handler import load_json, save_json
 from modules.hash_obat import HashObat

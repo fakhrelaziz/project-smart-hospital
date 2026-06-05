@@ -8,14 +8,11 @@ Serta fungsi filter pasien berdasarkan kategori layanan.
 from models.pasien import Pasien
 from utils.json_handler import load_json
 
-#fungsi yang sering dipanggil ditandai
+#fungsi yang sering dipanggil
 def _load_daftar_pasien():
     """
     Membaca pasien.json dan mengembalikan list objek Pasien.
     Fungsi internal — diawali _ karena hanya dipakai di dalam file ini.
-
-    Returns:
-        list: List objek Pasien. List kosong jika file bermasalah.
     """
     data_dict = load_json("data/pasien.json")
     daftar = []
@@ -26,13 +23,7 @@ def _load_daftar_pasien():
     return daftar
 
 def _tampilkan_hasil(daftar_hasil, keyword=""):
-    """
-    Menampilkan list objek Pasien hasil pencarian ke terminal.
-
-    Args:
-        daftar_hasil (list): List objek Pasien yang akan ditampilkan.
-        keyword      (str) : Kata kunci yang dipakai saat pencarian (opsional).
-    """
+    """Menampilkan list objek Pasien hasil pencarian."""
     if not daftar_hasil:
         if keyword:
             print(f"\n  [INFO] Tidak ada pasien yang cocok dengan '{keyword}'.")
@@ -78,10 +69,7 @@ def linear_search_nama(daftar_pasien, keyword):
 
 
 def _urutkan_by_nik(daftar_pasien):
-    """
-    Mengurutkan list pasien berdasarkan NIK secara ascending (A→Z).
-    Menggunakan Bubble Sort manual agar konsisten dengan sorting_triase.py.
-    """
+    """Mengurutkan list pasien berdasarkan NIK secara ascending (A→Z) untuk implementasi Bubble Sort"""
     n = len(daftar_pasien)
     for i in range(n - 1):
         for j in range(n - 1 - i):
@@ -104,8 +92,9 @@ def binary_search_nik(daftar_pasien, target_nik):
            - Lebih besar → target ada di kiri,  set high = mid - 1
         5. Ulangi sampai ditemukan atau low > high (tidak ada)
     """
-    # Urutkan dulu berdasarkan NIK — syarat wajib Binary Search
-    daftar_terurut = _urutkan_by_nik(daftar_pasien[:])  # copy agar list asli tidak berubah
+    # Urutkan dulu berdasarkan NIK 
+    # copy agar list asli tidak berubah, karena Binary Search butuh data terurut
+    daftar_terurut = _urutkan_by_nik(daftar_pasien[:])
 
     low  = 0
     high = len(daftar_terurut) - 1
@@ -119,7 +108,6 @@ def binary_search_nik(daftar_pasien, target_nik):
         nik_mid = daftar_terurut[mid].nik
 
         if nik_mid == target_nik:
-            # DITEMUKAN — kembalikan objek pasien
             return daftar_terurut[mid]
 
         elif nik_mid < target_nik:

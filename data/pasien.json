@@ -1,26 +1,38 @@
 [
     {
-        "nik": "3201010101010001",
+        "nik": "100000",
         "nama": "Albert Edison",
         "umur": 35,
         "layanan": "UGD",
         "status": "selesai",
-        "danger_score": 0,
+        "danger_score": 3,
         "nomor_kamar": null,
-        "rekam_medis": []
+        "rekam_medis": [
+            {
+                "tanggal": "2026-05-10",
+                "diagnosis": "Kecelakaan Ringan",
+                "resep": "OBT008"
+            }
+        ]
     },
     {
-        "nik": "3201010101010002",
+        "nik": "100001",
         "nama": "Olivia Rodriguez",
         "umur": 28,
         "layanan": "Rawat Jalan",
         "status": "selesai",
         "danger_score": 0,
         "nomor_kamar": null,
-        "rekam_medis": []
+        "rekam_medis": [
+            {
+                "tanggal": "2026-05-23",
+                "diagnosis": "Kontrol Rutin",
+                "resep": "OBT010"
+            }
+        ]
     },
     {
-        "nik": "3201010101010003",
+        "nik": "100002",
         "nama": "Sabrina Carpenter",
         "umur": 45,
         "layanan": "Rawat Inap",
@@ -35,49 +47,73 @@
             },
             {
                 "tanggal": "2025-01-15",
-                "diagnosis": "Kontrol rutin",
-                "resep": "OBT003"
+                "diagnosis": "Migrain",
+                "resep": "OBT004"
             }
         ]
     },
     {
-        "nik": "3201010101010004",
+        "nik": "100003",
         "nama": "Michael Johnson",
         "umur": 35,
         "layanan": "UGD",
         "status": "selesai",
         "danger_score": 5,
         "nomor_kamar": null,
-        "rekam_medis": []
+        "rekam_medis": [
+            {
+                "tanggal": "2026-05-28",
+                "diagnosis": "Patah Tulang Terbuka",
+                "resep": "OBT004"
+            }
+        ]
     },
     {
-        "nik": "3201010101010005",
+        "nik": "100004",
         "nama": "Emily Davis",
         "umur": 22,
         "layanan": "Rawat Jalan",
         "status": "selesai",
         "danger_score": 0,
         "nomor_kamar": null,
-        "rekam_medis": []
+        "rekam_medis": [
+            {
+                "tanggal": "2026-06-02",
+                "diagnosis": "Flu Berat",
+                "resep": "OBT001"
+            }
+        ]
     },
     {
-        "nik": "3201010101010006",
+        "nik": "100005",
         "nama": "John Doe",
         "umur": 40,
         "layanan": "UGD",
         "status": "selesai",
         "danger_score": 10,
         "nomor_kamar": null,
-        "rekam_medis": []
+        "rekam_medis": [
+            {
+                "tanggal": "2026-05-11",
+                "diagnosis": "Trauma Kepala Berat",
+                "resep": "OBT004"
+            }
+        ]
     },
     {
-        "nik": "3201010101010007",
+        "nik": "100006",
         "nama": "Jhonccena",
         "umur": 45,
         "layanan": "Rawat Jalan",
         "status": "selesai",
         "danger_score": 0,
         "nomor_kamar": null,
-        "rekam_medis": []
+        "rekam_medis": [
+            {
+                "tanggal": "2026-05-31",
+                "diagnosis": "Flu Berat",
+                "resep": "OBT001"
+            }
+        ]
     }
 ]

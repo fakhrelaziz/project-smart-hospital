@@ -20,13 +20,7 @@ class Kamar:
         self.tipe = tipe
         self.kapasitas_kasur = kapasitas_kasur 
         
-        if pasien_terisi is False or pasien_terisi is None:
-            self.pasien_terisi = []
-        elif isinstance(pasien_terisi, list):
-            self.pasien_terisi = pasien_terisi
-        else:
-            # Jika isinya berupa 1 string NIK, konversikan ke dalam list
-            self.pasien_terisi = [pasien_terisi]
+        self.pasien_terisi = pasien_terisi if pasien_terisi else []
 
     def data_kamar(self):        
         """Mengembalikan string representasi data kamar untuk ditampilkan di CLI."""
@@ -58,14 +52,7 @@ class Kamar:
         self.tipe = data.get('tipe')
         self.kapasitas_kasur = data.get('kapasitas_kasur', 1)
         
-        pasien_terisi = data.get('pasien_terisi', [])
-        # Fallback jaga-jaga apabila ada data lama
-        if not pasien_terisi:
-            self.pasien_terisi = []
-        elif isinstance(pasien_terisi, list):
-            self.pasien_terisi = pasien_terisi
-        else:
-            self.pasien_terisi = [pasien_terisi]
+        self.pasien_terisi = data.get('pasien_terisi', [])
 
     def status_kamar(self):
         jumlah_pasien = len(self.pasien_terisi)

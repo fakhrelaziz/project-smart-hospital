@@ -14,6 +14,8 @@ from modules.queue_pendaftaran import QueuePendaftaran
 from modules.undo_stack import UndoStack 
 from modules.sll_rekammedis import SingleLinkedListRekamMedis
 
+stack_pendaftaran = UndoStack()
+
 def lihat_semua_pasien():
     """Menampilkan data semua pasien di database (json) rumah sakit."""
     data_pasien_dict = load_json("data/pasien.json")
@@ -34,7 +36,7 @@ def lihat_semua_pasien():
     print("-" * 40)
 
 
-def daftar_pasien_baru(app_state):
+def daftar_pasien_baru():
     """Fungsi untuk mendaftar pasien baru yang dibuat dengan class Pasien kemudian dari objek diubah
     ke dictionary baru kemudian masuk ke antrian (queue)"""
     data_pasien = load_json("data/pasien.json")
@@ -94,7 +96,7 @@ def daftar_pasien_baru(app_state):
         save_json("data/pasien.json", data_pasien)
 
         # Simpan ke data pasien baru Stack untuk keperluan Undo
-        app_state.stack_pendaftaran.push({
+        stack_pendaftaran.push({
             "nik": nik,
             "nama": nama
         })
@@ -136,26 +138,29 @@ def lihat_antrian_pendaftaran():
     print("-" * 33)
 
 
-def undo_pendaftaran_terakhir(app_state):
-    if app_state.stack_pendaftaran.is_empty():
-        print("[INFO] Tidak ada riwayat pendaftaran yang bisa dibatalkan.")
+def undo_pendaftaran_terakhir():
+    if stack_pendaftaran.is_empty():
+        print("Tidak ada riwayat pendaftaran yang bisa dibatalkan.")
         return
     
-    """Membatalkan (Undo) proses pendaftaran terakhir menggunakan Stack LIFO."""
-    aksi_terakhir = app_state.stack_pendaftaran.pop()
-
-    #mengambil nik dari pasien yang daftar terakhir untuk dihapus dari data pasien
-    nik_batal = aksi_terakhir["nik"]
     daftar_pasien = load_json("data/pasien.json")
-    
-    jumlah_pasien_awal = len(daftar_pasien)
-    daftar_pasien = [p for p in daftar_pasien if p["nik"] != nik_batal]
+    """Membatalkan (Undo) proses pendaftaran terakhir menggunakan Stack LIFO."""
+    if stack_pendaftaran.intip_aksi_terakhir().get("status") == "antri":
+        aksi_terakhir = stack_pendaftaran.pop()
 
-    if len(daftar_pasien) < jumlah_pasien_awal:
-        save_json("data/pasien.json", daftar_pasien)
-        print(f"[SUCCESS] Pendaftaran NIK {nik_batal} berhasil dibatalkan.")
-    else:
-        print(f"[ERROR] NIK {nik_batal} tidak ditemukan, gagal undo.")
+        #mengambil nik dari pasien yang daftar terakhir untuk dihapus dari data pasien
+        nik_batal = aksi_terakhir["nik"]
+
+        jumlah_pasien_awal = len(daftar_pasien)
+        daftar_pasien = [p for p in daftar_pasien if p["nik"] != nik_batal]
+
+        if len(daftar_pasien) < jumlah_pasien_awal:
+            save_json("data/pasien.json", daftar_pasien)
+            print(f"[SUCCESS] Pendaftaran NIK {nik_batal} berhasil dibatalkan.")
+        else:
+            print(f"[ERROR] NIK {nik_batal} tidak ditemukan, gagal undo.")
+    
+    print("Tidak ada riwayat pendaftaran yang bisa dibatalkan.")
 
 
 def lihat_rekam_medis_pasien():
@@ -229,15 +234,8 @@ def tambah_rekam_medis_pasien():
     # Menggunakan method tingkat model Pasien
     pasien_obj.tambah_rekam_medis(tanggal, diagnosis, resep)
 
-    # Muat ke dalam SLL untuk memenuhi syarat struktur data
-    sll = SingleLinkedListRekamMedis()
-    sll.from_list(pasien_obj.rekam_medis)
-
     # Update status via OOP
     pasien_obj.update_status("selesai")
     pasien_target.update(pasien_obj.objek_ke_dict())
-
-    # Timpa atribut rekam_medis menggunakan versi SLL 
-    pasien_target["rekam_medis"] = sll.to_list()
     save_json("data/pasien.json", data_pasien)
     print(f"[SUCCESS] Catatan rekam medis berhasil ditambahkan untuk NIK {nik}.")

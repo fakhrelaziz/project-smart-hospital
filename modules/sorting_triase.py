@@ -10,6 +10,8 @@ from models.pasien import Pasien
 from utils.json_handler import load_json, save_json
 from modules.undo_stack import UndoStack
 
+stack_triase = UndoStack()
+
 def label_kegawatan(danger_score):
     """
     Mengembalikan label kegawatan berdasarkan nilai danger_score.
@@ -60,23 +62,6 @@ def bubble_sort_ugd(daftar_pasien):
     return daftar_pasien
 
 
-def ambil_pasien_ugd():
-    """
-    Membaca data pasien dari JSON, filter hanya yang layanan == "UGD",
-    lalu konversi setiap dict menjadi objek Pasien.
-    """
-    data_semua = load_json("data/pasien.json")
-
-    daftar_ugd = []
-    for data in data_semua:
-        if data.get("layanan") == "UGD":
-            pasien_obj = Pasien()
-            pasien_obj.dict_ke_objek(data)
-            daftar_ugd.append(pasien_obj)
-
-    return daftar_ugd
-
-
 def tampilkan_antrian_ugd(daftar_pasien_terurut):
     """
     Menampilkan daftar antrian UGD yang sudah terurut.
@@ -87,7 +72,7 @@ def tampilkan_antrian_ugd(daftar_pasien_terurut):
     print("=" * 68)
 
     if not daftar_pasien_terurut:
-        print("  [INFO] Tidak ada pasien UGD saat ini.")
+        print("  Tidak ada pasien UGD saat ini.")
         print("=" * 68)
         return
 
@@ -105,7 +90,7 @@ def tampilkan_antrian_ugd(daftar_pasien_terurut):
     print(f"  Total pasien UGD: {len(daftar_pasien_terurut)} orang")
 
 
-def update_danger_score(app_state):
+def update_danger_score():
     """
     Memperbarui danger_score pasien UGD berdasarkan input NIK.
     Perubahan langsung disimpan ke data/pasien.json.
@@ -133,14 +118,14 @@ def update_danger_score(app_state):
             break
 
     if pasien_data is None:
-        print(f"[ERROR] Pasien dengan NIK '{nik}' tidak ditemukan.")
+        print(f" Pasien dengan NIK '{nik}' tidak ditemukan.")
         return
 
     if pasien_data.get("layanan") != "UGD":
-        print(f"[ERROR] Pasien '{pasien_data['nama']}' bukan pasien UGD.")
+        print(f" Pasien '{pasien_data['nama']}' bukan pasien UGD.")
         return
 
-    print(f"[OK] Pasien ditemukan: {pasien_data['nama']}")
+    print(f" Pasien ditemukan: {pasien_data['nama']}")
     print(f"     Danger score saat ini: {pasien_data['danger_score']}")
 
     # Input danger score baru dengan validasi
@@ -150,9 +135,9 @@ def update_danger_score(app_state):
             if 1 <= score_baru <= 10:
                 break
             else:
-                print("[ERROR] Nilai harus antara 1 dan 10.")
+                print(" Nilai harus antara 1 dan 10.")
         except ValueError:
-            print("[ERROR] Input harus berupa angka.")
+            print(" Input harus berupa angka.")
 
     # Update dan simpan
     score_lama = data_semua[pasien_index]["danger_score"]
@@ -165,22 +150,22 @@ def update_danger_score(app_state):
     save_json("data/pasien.json", data_semua)
     
     # Simpan ke histori Stack untuk keperluan Undo
-    app_state.stack_triase.push({
+    stack_triase.push({
         "nik": nik,
         "skor_lama": score_lama
     })
 
-    print(f"[OK] Danger score {pasien_data['nama']} diperbarui: {score_lama} → {score_baru}")
+    print(f" Danger score {pasien_data['nama']} diperbarui: {score_lama} → {score_baru}")
     print(f"     Status kegawatan: {label_kegawatan(score_baru)}")
 
 
-def undo_danger_score(app_state):
-    if app_state.stack_triase.is_empty():
-        print("[INFO] Tidak ada riwayat triase yang bisa dibatalkan.")
+def undo_danger_score():
+    if stack_triase.is_empty():
+        print("Tidak ada riwayat triase yang bisa dibatalkan.")
         return
 
     """Membatalkan (Undo) proses update skor triase menggunakan Stack LIFO."""
-    aksi_terakhir = app_state.stack_triase.pop()
+    aksi_terakhir = stack_triase.pop()
     
     nik_batal = aksi_terakhir["nik"]
     skor_lama = aksi_terakhir["skor_lama"]
@@ -200,7 +185,7 @@ def undo_danger_score(app_state):
             
     if pasien_ditemukan:
         save_json("data/pasien.json", data_semua)
-        print(f"[SUCCESS] Danger score NIK {nik_batal} berhasil di-restore ke nilai awal: {skor_lama}.")
+        print(f" Danger score NIK {nik_batal} berhasil di-restore ke nilai awal: {skor_lama}.")
     else:
         print(f"[ERROR] Data pasien NIK {nik_batal} tidak ditemukan, gagal undo.")
 
@@ -211,6 +196,14 @@ def lihat_antrian_ugd():
     Mengambil pasien UGD, mengurutkan dengan Bubble Sort,
     lalu menampilkan hasilnya.
     """
-    daftar_ugd = ambil_pasien_ugd()
+    data_semua = load_json("data/pasien.json")
+
+    daftar_ugd = []
+    for data in data_semua:
+        if data.get("layanan") == "UGD":
+            pasien_obj = Pasien()
+            pasien_obj.dict_ke_objek(data)
+            daftar_ugd.append(pasien_obj)
+  
     daftar_terurut = bubble_sort_ugd(daftar_ugd)
     tampilkan_antrian_ugd(daftar_terurut)

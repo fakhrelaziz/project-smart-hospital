@@ -1,10 +1,8 @@
 """
-File    : main.py
-Deskripsi: Entry point utama program Smart Hospital CLI.
-Tujuan  : Menampilkan menu utama dan menghubungkan semua modul handler ke antarmuka CLI.
-Catatan :
-    - Semua logika bisnis berada di dalam modules/. main.py hanya sebagai router menu.
-    - Data disimpan per-operasi.
+program utama
+Menampilkan menu utama dan menghubungkan semua modul handler ke antarmuka CLI.
+- Semua logika bisnis berada di dalam modules/. main.py hanya sebagai router menu.
+- Data disimpan per-operasi/ketika ada data yang di update.
 """
 
 from modules.manage_kamar import (
@@ -45,10 +43,6 @@ from modules.searching import (
     cari_pasien_nik,
     cari_pasien_layanan
 )
-from models.sistem_rs import SistemRS
-
-# Inisialisasi state global (Aman dari global module variable)
-app_state = SistemRS()
 
 #MENU UTAMA
 while True:
@@ -85,13 +79,13 @@ while True:
             if pilihan == "1":
                 lihat_semua_pasien()
             elif pilihan == "2":
-                daftar_pasien_baru(app_state)
+                daftar_pasien_baru()
             elif pilihan == "3":
                 lihat_antrian_pendaftaran()
             elif pilihan == "4":
                 proses_antrian_pendaftaran()
             elif pilihan == "5":
-                undo_pendaftaran_terakhir(app_state)
+                undo_pendaftaran_terakhir()
             elif pilihan == "6":
                 lihat_rekam_medis_pasien()
             elif pilihan == "7":
@@ -114,9 +108,9 @@ while True:
             if pilihan == "1":
                 lihat_antrian_ugd()
             elif pilihan == "2":
-                update_danger_score(app_state)
+                update_danger_score()
             elif pilihan == "3":
-                undo_danger_score(app_state)
+                undo_danger_score()
             elif pilihan == "0":
                 break
             else:
@@ -125,11 +119,11 @@ while True:
     elif pilihan == "3":
         while True:
             print("\n===  RAWAT INAP & NAVIGASI KAMAR  ===")
-            print("  [1] Navigasi Lorong Kamar (next-prev)")
+            print("  [1] Navigasi Lorong Kamar")
             print("  [2] Lihat Kamar Tersedia")
             print("  [3] Assign Pasien ke Kamar")
             print("  [4] Pasien Keluar Kamar")
-            print("  [5] Lihat Jadwal Minum Obat Pasien (CLL)")
+            print("  [5] Lihat Jadwal Minum Obat Pasien")
             print("  [0] Kembali")
 
             pilihan = input("Pilih menu: ").strip()

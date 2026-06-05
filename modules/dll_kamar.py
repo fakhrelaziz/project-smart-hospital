@@ -1,13 +1,7 @@
 """
-File    : modules/dll_kamar.py
-Materi  : Double Linked List (DLL)
-Deskripsi:
-    Mengimplementasikan Double Linked List untuk navigasi kamar rawat inap.
-    Setiap node merepresentasikan satu kamar dengan pointer ke kamar
-    berikutnya (next) dan sebelumnya (prev).
-Catatan :
-Relasi  :
-    - Digunakan oleh modules/manage_kamar.py untuk navigasi dan pencarian kamar.
+Mengimplementasikan Double Linked List untuk navigasi kamar rawat inap.
+Setiap node merepresentasikan satu kamar dengan pointer ke kamar
+berikutnya (next) dan sebelumnya (prev).
 """
 
 
@@ -45,4 +39,4 @@ class NavigasiKamar:
                 kamar_tersedia.append(saat_ini.data)
             saat_ini = saat_ini.next
         return kamar_tersedia
-
+

@@ -88,5 +88,95 @@
         "stok": 80,
         "harga": 35000,
         "pemakaian_harian": 1
+    },
+    {
+        "kode": "OBT011",
+        "nama": "Omeprazole 20mg",
+        "kategori": "Antasida",
+        "bentuk": "Kapsul",
+        "stok": 75,
+        "harga": 8000,
+        "pemakaian_harian": 1
+    },
+    {
+        "kode": "OBT012",
+        "nama": "Cetirizine 10mg",
+        "kategori": "Obat Dalam",
+        "bentuk": "Tablet",
+        "stok": 50,
+        "harga": 4500,
+        "pemakaian_harian": 1
+    },
+    {
+        "kode": "OBT013",
+        "nama": "Salbutamol 2mg",
+        "kategori": "Obat Dalam",
+        "bentuk": "Tablet",
+        "stok": 40,
+        "harga": 3000,
+        "pemakaian_harian": 3
+    },
+    {
+        "kode": "OBT014",
+        "nama": "Amlodipine 5mg",
+        "kategori": "Obat Dalam",
+        "bentuk": "Tablet",
+        "stok": 60,
+        "harga": 5500,
+        "pemakaian_harian": 1
+    },
+    {
+        "kode": "OBT015",
+        "nama": "Simvastatin 10mg",
+        "kategori": "Obat Dalam",
+        "bentuk": "Tablet",
+        "stok": 45,
+        "harga": 7000,
+        "pemakaian_harian": 1
+    },
+    {
+        "kode": "OBT016",
+        "nama": "Betamethasone Krim",
+        "kategori": "Obat Luar",
+        "bentuk": "Salep",
+        "stok": 25,
+        "harga": 12500,
+        "pemakaian_harian": 2
+    },
+    {
+        "kode": "OBT017",
+        "nama": "Cefadroxil 500mg",
+        "kategori": "Antibiotik",
+        "bentuk": "Kapsul",
+        "stok": 35,
+        "harga": 15000,
+        "pemakaian_harian": 2
+    },
+    {
+        "kode": "OBT018",
+        "nama": "Vitamin C 500mg",
+        "kategori": "Vitamin",
+        "bentuk": "Tablet",
+        "stok": 120,
+        "harga": 2000,
+        "pemakaian_harian": 1
+    },
+    {
+        "kode": "OBT019",
+        "nama": "Mefenamic Acid 500mg",
+        "kategori": "Analgesik",
+        "bentuk": "Tablet",
+        "stok": 55,
+        "harga": 4000,
+        "pemakaian_harian": 3
+    },
+    {
+        "kode": "OBT020",
+        "nama": "OBH Sirup",
+        "kategori": "Obat Dalam",
+        "bentuk": "Sirup",
+        "stok": 30,
+        "harga": 18000,
+        "pemakaian_harian": 3
     }
 ]

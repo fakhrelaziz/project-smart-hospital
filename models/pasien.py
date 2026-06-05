@@ -7,6 +7,8 @@ untuk manipulasi data pasien.
 - Method dict_ke_objek() digunakan untuk deserialisasi dari JSON.
 """
 
+from modules.sll_rekammedis import SingleLinkedListRekamMedis
+
 class Pasien:
     def __init__(self, nik="", nama="", umur=0, layanan=""):
         self.nik = nik
@@ -14,7 +16,7 @@ class Pasien:
         self.umur = umur
         self.jenis_layanan = layanan
         self.status = "antri"
-        self.rekam_medis = []
+        self.rekam_medis = SingleLinkedListRekamMedis()
         self.danger_score = 0
         self.kamar = None
         
@@ -28,8 +30,8 @@ class Pasien:
             "layanan"     : self.jenis_layanan,
             "status"      : self.status,
             "danger_score": self.danger_score,
-            "nomor_kamar" : self.kamar if hasattr(self, 'kamar') else None,
-            "rekam_medis" : self.rekam_medis
+            "nomor_kamar" : self.kamar,
+            "rekam_medis" : self.rekam_medis.to_list()
         }
     
 
@@ -42,7 +44,7 @@ class Pasien:
         self.status = data.get("status")
         self.danger_score = data.get("danger_score")
         self.kamar = data.get("nomor_kamar")
-        self.rekam_medis = data.get("rekam_medis", [])
+        self.rekam_medis = SingleLinkedListRekamMedis(data.get("rekam_medis", []))
 
     def data_pasien(self):
         """ini untuk tampilkan atau ngeprint data pasien """
@@ -80,4 +82,4 @@ class Pasien:
             "diagnosis": diagnosis,
             "resep": resep
         }
-        self.rekam_medis.append(rekam_medis)
+        self.rekam_medis.insert(rekam_medis)

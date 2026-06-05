@@ -1,13 +1,3 @@
-"""
-File    : modules/manage_rujukan.py
-Materi  : Graph + BFS (Business Logic & CLI)
-Deskripsi:
-    Mengelola antarmuka pengguna (CLI) dan algoritma pencarian BFS
-    untuk fitur jaringan rumah sakit rujukan.
-Catatan :
-    - Menggunakan struktur data Graph dari modules/graph_rujukan.py.
-"""
-
 from collections import deque
 from modules.graph_rujukan import GraphRujukan
 

@@ -1,17 +1,8 @@
 """
-File    : modules/cll_obat.py
-Materi  : Circular Linked List (CLL)
-Deskripsi:
-    Mengimplementasikan Circular Linked List untuk mengelola siklus jadwal
-    minum obat pasien rawat inap. Node terakhir (Malam) menunjuk kembali
-    ke node pertama (Pagi) sehingga siklus berjalan tanpa batas.
-Catatan :
-    - Siklus default: Pagi (07.00) → Siang (13.00) → Malam (19.00) → kembali ke Pagi.
-    - lihat_jadwal(jumlah_putaran) membatasi iterasi agar tidak infinite loop.
-Relasi  :
-    - Digunakan oleh modules/manage_kamar.py melalui lihat_jadwal_obat_pasien().
+Mengimplementasikan Circular Linked List untuk mengelola siklus jadwal
+minum obat pasien rawat inap. Node terakhir (Malam) menunjuk kembali
+ke node pertama (Pagi) sehingga siklus berjalan tanpa batas.
 """
-
 
 class NodeJadwal:
     def __init__(self, data):
