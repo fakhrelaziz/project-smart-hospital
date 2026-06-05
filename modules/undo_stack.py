@@ -19,24 +19,13 @@ class UndoStack:
     def __init__(self):
         self.data = []
 
-    def append(self, aksi):
-        """Menyimpan data aksi ke atas tumpukan (Push).
-
-        Args:
-            aksi: Data riwayat perubahan.
-
-        Returns:
-            True jika berhasil disimpan.
-        """
+    def push(self, aksi):
+        """Menyimpan data aksi ke atas tumpukan (Push)."""
         self.data.append(aksi)
         return True
 
     def pop(self):
-        """Mengambil dan menghapus data aksi teratas dari tumpukan (Pop).
-
-        Returns:
-            Data aksi teratas, atau None jika tumpukan kosong.
-        """
+        """Mengambil dan menghapus data aksi teratas dari tumpukan (Pop)."""
         if self.is_empty():
             return None
         return self.data.pop()

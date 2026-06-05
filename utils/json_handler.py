@@ -14,12 +14,27 @@ import json
 
 def load_json(path):
     """Membaca file JSON dari path yang diberikan dan mengembalikan datanya."""
-    with open(path, "r") as file:
-        data = json.load(file)
-    return data
+    try:
+        with open(path, "r") as file:
+            data = json.load(file)
+        return data
+    except FileNotFoundError:
+        print(f"  [WARNING] File '{path}' tidak ditemukan. Mengembalikan list kosong.")
+        return []
+    except json.JSONDecodeError:
+        print(f"  [ERROR] Format JSON pada '{path}' rusak atau tidak valid. Mengembalikan list kosong.")
+        return []
+    except Exception as e:
+        print(f"  [ERROR] Terjadi kesalahan saat membaca '{path}': {e}")
+        return []
 
 
 def save_json(path, data):
     """Menyimpan data ke file JSON pada path yang diberikan."""
-    with open(path, "w") as file:
-        json.dump(data, file, indent=4)
+    try:
+        with open(path, "w") as file:
+            json.dump(data, file, indent=4)
+        return True
+    except Exception as e:
+        print(f"  [ERROR] Gagal menyimpan data ke '{path}': {e}")
+        return False

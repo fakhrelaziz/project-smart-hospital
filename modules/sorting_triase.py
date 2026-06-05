@@ -17,10 +17,6 @@ from models.pasien import Pasien
 from utils.json_handler import load_json, save_json
 from modules.undo_stack import UndoStack
 
-# variabel untuk menampung undo khusus update danger score
-stack_triase = UndoStack()
-
-
 def label_kegawatan(danger_score):
     """
     Mengembalikan label kegawatan berdasarkan nilai danger_score.
@@ -138,7 +134,7 @@ def tampilkan_antrian_ugd(daftar_pasien_terurut):
     print(f"  Total pasien UGD: {len(daftar_pasien_terurut)} orang")
 
 
-def update_danger_score():
+def update_danger_score(app_state):
     """
     Memperbarui danger_score pasien UGD berdasarkan input NIK.
     Perubahan langsung disimpan ke data/pasien.json.
@@ -194,7 +190,7 @@ def update_danger_score():
     save_json("data/pasien.json", data_semua)
     
     # Simpan ke histori Stack untuk keperluan Undo
-    stack_triase.append({
+    app_state.stack_triase.push({
         "nik": nik,
         "skor_lama": score_lama
     })
@@ -203,13 +199,13 @@ def update_danger_score():
     print(f"     Status kegawatan: {label_kegawatan(score_baru)}")
 
 
-def undo_danger_score():
-    if stack_triase.is_empty():
+def undo_danger_score(app_state):
+    if app_state.stack_triase.is_empty():
         print("[INFO] Tidak ada riwayat triase yang bisa dibatalkan.")
         return
 
     """Membatalkan (Undo) proses update skor triase menggunakan Stack LIFO."""
-    aksi_terakhir = stack_triase.pop()
+    aksi_terakhir = app_state.stack_triase.pop()
     
     nik_batal = aksi_terakhir["nik"]
     skor_lama = aksi_terakhir["skor_lama"]

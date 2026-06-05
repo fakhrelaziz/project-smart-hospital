@@ -45,6 +45,10 @@ from modules.searching import (
     cari_pasien_nik,
     cari_pasien_layanan
 )
+from models.sistem_rs import SistemRS
+
+# Inisialisasi state global (Aman dari global module variable)
+app_state = SistemRS()
 
 #MENU UTAMA
 while True:
@@ -81,13 +85,13 @@ while True:
             if pilihan == "1":
                 lihat_semua_pasien()
             elif pilihan == "2":
-                daftar_pasien_baru()
+                daftar_pasien_baru(app_state)
             elif pilihan == "3":
                 lihat_antrian_pendaftaran()
             elif pilihan == "4":
                 proses_antrian_pendaftaran()
             elif pilihan == "5":
-                undo_pendaftaran_terakhir()
+                undo_pendaftaran_terakhir(app_state)
             elif pilihan == "6":
                 lihat_rekam_medis_pasien()
             elif pilihan == "7":
@@ -101,7 +105,7 @@ while True:
         while True:
             print("\n=== LAYANAN UGD ===")
             print("  [1] Lihat Antrean UGD")
-            print("  [2] Update Danger Score Pasien")
+            print("  [2] Input / Update Danger Score Pasien")
             print("  [3] Undo Update Danger Score Terakhir")
             print("  [0] Kembali")
 
@@ -110,9 +114,9 @@ while True:
             if pilihan == "1":
                 lihat_antrian_ugd()
             elif pilihan == "2":
-                update_danger_score()
+                update_danger_score(app_state)
             elif pilihan == "3":
-                undo_danger_score()
+                undo_danger_score(app_state)
             elif pilihan == "0":
                 break
             else:

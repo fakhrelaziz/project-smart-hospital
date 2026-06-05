@@ -9,7 +9,9 @@ Catatan :
     - Algoritma pencarian dan interaksi CLI dikelola oleh manage_rujukan.py.
 """
 
-from models.rumah_sakit import JARINGAN_RS, STATUS_AWAL
+import os
+from models.rumah_sakit import JARINGAN_RS
+from utils.json_handler import load_json, save_json
 
 class GraphRujukan:
     """
@@ -19,9 +21,11 @@ class GraphRujukan:
 
     def __init__(self):
         # Adjacency list — struktur utama graph
-        self.graph  = JARINGAN_RS
-        # Status setiap RS (Merujuk ke global dictionary agar perubahan permanen)
-        self.status = STATUS_AWAL
+        self.graph  = JARINGAN_RS 
+        
+        # Status setiap RS diambil dari JSON agar perubahannya permanen
+        os.path.exists("data/rs_status.json")
+        self.status = load_json("data/rs_status.json")
 
     def set_status(self, nama_rs, status):
         """
@@ -43,6 +47,8 @@ class GraphRujukan:
             return False
 
         self.status[nama_rs] = status
+        # Simpan secara permanen ke file JSON
+        save_json("data/rs_status.json", self.status)
         return True
 
     def bfs_cari_rujukan(self, rs_asal="Smart Hospital"):

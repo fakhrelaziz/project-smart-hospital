@@ -1,19 +1,11 @@
 """
-File    : models/pasien.py
-Materi  : OOP — Class Model Pasien
-Deskripsi:
-    Mendefinisikan class Pasien sebagai representasi objek data pasien
-    dalam sistem Smart Hospital. Menyimpan semua atribut dan method
-    manipulasi data pasien.
-Catatan :
-    - Rekam medis disimpan sebagai list dict dan dikelola oleh sll_rekammedis.py.
-    - Method objek_ke_dict() digunakan untuk serialisasi ke JSON.
-    - Method dict_ke_objek() digunakan untuk deserialisasi dari JSON.
-Relasi  :
-    - Digunakan oleh modules/manage_pasien.py, modules/sorting_triase.py,
-      modules/searching.py, dan modules/graph_rujukan.py.
+Mendefinisikan class Pasien sebagai representasi objek data pasien
+dalam sistem Smart Hospital. Menyimpan semua atribut dan method
+untuk manipulasi data pasien.
+- Rekam medis disimpan sebagai list dict dan dikelola oleh sll_rekammedis.py.
+- Method objek_ke_dict() digunakan untuk serialisasi ke JSON.
+- Method dict_ke_objek() digunakan untuk deserialisasi dari JSON.
 """
-
 
 class Pasien:
     def __init__(self, nik, nama, umur, layanan):
@@ -22,7 +14,6 @@ class Pasien:
         self.umur = umur
         self.jenis_layanan = layanan
         self.status = "antri"
-        #rekam medis digunakan di sll_rekammedis.py
         self.rekam_medis = []
         self.danger_score = 0
         self.kamar = None
@@ -38,7 +29,7 @@ class Pasien:
             "status"      : self.status,
             "danger_score": self.danger_score,
             "nomor_kamar" : self.kamar if hasattr(self, 'kamar') else None,
-            "rekam_medis" : []
+            "rekam_medis" : self.rekam_medis
         }
     
 
@@ -71,7 +62,7 @@ class Pasien:
         self.danger_score = danger_score_baru
 
     def update_status(self, status_baru):
-        """Memperbarui status pasien, misalnya dari 'antri' ke 'selesai'."""
+        """Memperbarui status pasien, misalnya dari 'antri' ketika mendaftar lalu 'selesai' ketika dilayani."""
         self.status = status_baru
 
     def update_layanan(self, layanan_baru):
