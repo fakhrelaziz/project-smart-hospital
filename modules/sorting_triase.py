@@ -187,7 +187,7 @@ def undo_danger_score():
         save_json("data/pasien.json", data_semua)
         print(f" Danger score NIK {nik_batal} berhasil di-restore ke nilai awal: {skor_lama}.")
     else:
-        print(f"[ERROR] Data pasien NIK {nik_batal} tidak ditemukan, gagal undo.")
+        print(f"ERROR: Data pasien NIK {nik_batal} tidak ditemukan, gagal undo.")
 
 
 def lihat_antrian_ugd():

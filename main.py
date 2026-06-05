@@ -93,7 +93,7 @@ while True:
             elif pilihan == "0":
                 break
             else:
-                print("[INFO] Pilihan tidak valid.")
+                print("Pilihan tidak valid.")
 
     elif pilihan == "2":
         while True:
@@ -114,7 +114,7 @@ while True:
             elif pilihan == "0":
                 break
             else:
-                print("[INFO] Pilihan tidak valid.")
+                print("ERROR: Pilihan tidak valid.")
 
     elif pilihan == "3":
         while True:
@@ -141,14 +141,14 @@ while True:
             elif pilihan == "0":
                 break
             else:
-                print("[INFO] Pilihan tidak valid.")
+                print("ERROR: Pilihan tidak valid.")
 
     elif pilihan == "4":
         while True:
             print("\n===  SISTEM FARMASI & APOTEK  ===")
             print("  [1] Lihat Daftar Obat")
             print("  [2] Tambah Obat")
-            print("  [3] Cari obat -> ubah stok & harga")
+            print("  [3] Cari obat -> ubah stok, harga & prediksi stok")
             print("  [4] Laporan Prediksi Seluruh Stok Obat")
             print("  [5] Lihat Direktori Katalog Obat")
             print("  [0] Kembali")
@@ -168,7 +168,7 @@ while True:
             elif pilihan == "0":
                 break
             else:
-                print("[INFO] Pilihan tidak valid.")
+                print("ERROR: Pilihan tidak valid.")
 
     elif pilihan == "5":
         while True:
@@ -189,7 +189,7 @@ while True:
             elif pilihan == "0":
                 break
             else:
-                print("[INFO] Pilihan tidak valid.")
+                print("ERROR: Pilihan tidak valid.")
 
     elif pilihan == "6":
         while True:
@@ -210,12 +210,12 @@ while True:
             elif pilihan == "0":
                 break
             else:
-                print("[INFO] Pilihan tidak valid.")
+                print("ERROR: Pilihan tidak valid.")
 
     elif pilihan == "0":
-        print("\n[INFO] Data sudah tersimpan secara otomatis setiap operasi.")
+        print("\nData sudah tersimpan secara otomatis setiap operasi.")
         print("Terima kasih telah menggunakan Smart Hospital System. Sampai jumpa!")
         break
 
     else:
-        print("[INFO] Pilihan tidak valid. Masukkan angka 1-7.")
+        print("ERROR: Pilihan tidak valid. Masukkan angka 1-7.")

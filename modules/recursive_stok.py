@@ -56,7 +56,7 @@ def prediksi_stok_obat(nama_obat, stok, pemakaian_harian):
     
     # Validasi untuk mencegah Infinite Recursion
     if pemakaian_harian <= 0:
-        peringatan = "Dosis harian harus lebih dari 0."
+        peringatan = "Pemakaian harian harus lebih dari 0."
     else:
         # Langsung gunakan metode rekursif 
         sisa_hari = hitung_sisa_hari(stok, pemakaian_harian)
@@ -89,18 +89,18 @@ def tampilkan_hasil_prediksi(hasil):
     print("=" * 48)
 
     if hasil["sisa_hari"] is None:
-        print(f"  [ERROR] {hasil['peringatan']}")
+        print(f"  ERROR: {hasil['peringatan']}")
         print("=" * 48)
         return
 
     print(f"  Obat         : {hasil['nama']}")
     print(f"  Stok saat ini: {hasil['stok']} unit")
-    print(f"  Dosis harian : {hasil['pemakaian_harian']}x per hari")
+    print(f"  Pemakaian harian : {hasil['pemakaian_harian']} stok per hari")
     print("  " + "─" * 44)
     print(f"  Estimasi habis dalam: {hasil['sisa_hari']} hari")
 
     if hasil["peringatan"]:
-        print(f"\n  ⚠  {hasil['peringatan']}")
+        print(f"\n  {hasil['peringatan']}")
 
     print("=" * 48)
 
@@ -118,7 +118,7 @@ def prediksi_semua_obat():
     data_dict = load_json("data/obat.json")
 
     if not data_dict:
-        print("  [INFO] Belum ada data obat.")
+        print("  Belum ada data obat.")
         return
 
     # Hitung prediksi untuk setiap obat
