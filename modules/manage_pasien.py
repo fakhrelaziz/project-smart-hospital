@@ -140,7 +140,7 @@ def lihat_antrian_pendaftaran():
 
 def undo_pendaftaran_terakhir():
     if stack_pendaftaran.is_empty():
-        print("Tidak ada riwayat pendaftaran yang bisa dibatalkan.")
+        print("ERROR: Tidak ada riwayat pendaftaran yang bisa dibatalkan.")
         return
     
     daftar_pasien = load_json("data/pasien.json")
@@ -156,11 +156,11 @@ def undo_pendaftaran_terakhir():
 
         if len(daftar_pasien) < jumlah_pasien_awal:
             save_json("data/pasien.json", daftar_pasien)
-            print(f"[SUCCESS] Pendaftaran NIK {nik_batal} berhasil dibatalkan.")
+            print(f"Pendaftaran NIK {nik_batal} berhasil dibatalkan.")
         else:
-            print(f"[ERROR] NIK {nik_batal} tidak ditemukan, gagal undo.")
+            print(f"ERROR: NIK {nik_batal} tidak ditemukan, gagal undo.")
     
-    print("Tidak ada riwayat pendaftaran yang bisa dibatalkan.")
+    print("ERROR: Tidak ada riwayat pendaftaran yang bisa dibatalkan.")
 
 
 def lihat_rekam_medis_pasien():
@@ -175,7 +175,7 @@ def lihat_rekam_medis_pasien():
             break
 
     if not pasien_target:
-        print("[ERROR] Pasien tidak ditemukan.")
+        print("ERROR: Pasien tidak ditemukan.")
         return
 
     sll = SingleLinkedListRekamMedis()
@@ -212,7 +212,7 @@ def tambah_rekam_medis_pasien():
             break
 
     if not pasien_target:
-        print("[ERROR] Pasien tidak ditemukan.")
+        print("ERROR: Pasien tidak ditemukan.")
         return
 
     # Pilihan 2: Menggunakan objek Pasien dari models
@@ -227,7 +227,7 @@ def tambah_rekam_medis_pasien():
         if len(parts) == 3 and parts[0].isdigit() and parts[1].isdigit() and parts[2].isdigit():
             if len(parts[0]) == 4 and len(parts[1]) == 2 and len(parts[2]) == 2:
                 break
-        print("  [ERROR] Format tanggal harus berupa YYYY-MM-DD (Contoh: 2024-12-01).")
+        print("  ERROR: Format tanggal harus berupa YYYY-MM-DD (Contoh: 2024-12-01).")
     diagnosis = input("  Diagnosis            : ").strip()
     resep     = input("  Resep / Obat         : ").strip()
 
@@ -238,4 +238,4 @@ def tambah_rekam_medis_pasien():
     pasien_obj.update_status("selesai")
     pasien_target.update(pasien_obj.objek_ke_dict())
     save_json("data/pasien.json", data_pasien)
-    print(f"[SUCCESS] Catatan rekam medis berhasil ditambahkan untuk NIK {nik}.")
+    print(f"Catatan rekam medis berhasil ditambahkan untuk NIK {nik}.")

@@ -7,11 +7,11 @@ def bfs_dengan_langkah(graph_obj, rs_asal="Smart Hospital"):
     Versi BFS yang menampilkan proses pencariannya step by step,
     dengan mendelegasikan logika pencarian ke class GraphRujukan.
     """
-    print(f"\n  [BFS] Mulai dari: {rs_asal}")
-    print(f"  [BFS] Menelusuri RS tetangga level demi level...\n")
+    print(f"\n  Mulai dari: {rs_asal}")
+    print(f"  Menelusuri RS tetangga level demi level...\n")
 
     if rs_asal not in graph_obj.graph:
-        print(f"  [ERROR] RS '{rs_asal}' tidak ditemukan.")
+        print(f"  ERROR: RS '{rs_asal}' tidak ditemukan.")
         return {"rs_tujuan": None, "rute": [], "hop": 0}
 
     # Panggil logika inti
@@ -37,13 +37,12 @@ def tampilkan_peta(graph_obj):
     """Menampilkan seluruh jaringan RS dalam format adjacency list."""
     print("\n" + "=" * 52)
     print("       PETA JARINGAN RUMAH SAKIT RUJUKAN")
-    print("       Struktur Data: Graph (Adjacency List)")
     print("=" * 52)
 
     for rs, tetangga in graph_obj.graph.items():
         status   = graph_obj.status.get(rs, "?")
         koneksi  = " → ".join(tetangga)
-        print(f"  - {rs:<18} : {koneksi} ({status})")
+        print(f"  - {rs:<18} : ({status}) {koneksi}")
 
     print("=" * 52)
     print("\n  Keterangan Status:")
@@ -70,7 +69,6 @@ def cari_rs_rujukan():
     """Entry point CLI: jalankan BFS untuk menemukan RS rujukan terdekat."""
     print("\n" + "=" * 52)
     print("       CARI RS RUJUKAN TERDEKAT")
-    print("       Algoritma: BFS (Breadth-First Search)")
     print("=" * 52)
 
     graph_obj = GraphRujukan()
@@ -90,7 +88,7 @@ def cari_rs_rujukan():
         print("=" * 52)
     else:
         print("\n" + "=" * 52)
-        print("  [INFO] Tidak ada RS rujukan yang tersedia.")
+        print("  Tidak ada RS rujukan yang tersedia.")
         print("  Semua RS dalam jaringan sedang penuh.")
         print("=" * 52)
 
@@ -106,7 +104,7 @@ def ubah_status_rs():
 
     nama_rs = input("\n  Masukkan nama RS: ").strip()
     if nama_rs not in graph_obj.graph:
-        print(f"  [ERROR] RS '{nama_rs}' tidak ditemukan.")
+        print(f"  ERROR: RS '{nama_rs}' tidak ditemukan.")
         return
 
     print("  Pilih status baru:")
@@ -119,8 +117,8 @@ def ubah_status_rs():
     elif pilih == "2":
         status = "Penuh"
     else:
-        print("  [ERROR] Pilihan tidak valid.")
+        print("  ERROR: Pilihan tidak valid.")
         return
 
     if graph_obj.set_status(nama_rs, status):
-        print(f"  [OK] Status {nama_rs} diubah menjadi '{status}'.")
+        print(f"  Status {nama_rs} diubah menjadi '{status}'.")

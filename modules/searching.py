@@ -8,7 +8,7 @@ Serta fungsi filter pasien berdasarkan kategori layanan.
 from models.pasien import Pasien
 from utils.json_handler import load_json
 
-#fungsi yang sering dipanggil
+#fungsi yang sering dipanggil 
 def _load_daftar_pasien():
     """
     Membaca pasien.json dan mengembalikan list objek Pasien.
@@ -26,9 +26,9 @@ def _tampilkan_hasil(daftar_hasil, keyword=""):
     """Menampilkan list objek Pasien hasil pencarian."""
     if not daftar_hasil:
         if keyword:
-            print(f"\n  [INFO] Tidak ada pasien yang cocok dengan '{keyword}'.")
+            print(f"\n  Tidak ada pasien yang cocok dengan '{keyword}'.")
         else:
-            print("\n  [INFO] Tidak ada data yang ditemukan.")
+            print("\n  Tidak ada data yang ditemukan.")
         return
 
     print(f"\n  Ditemukan: {len(daftar_hasil)} pasien")
@@ -51,17 +51,15 @@ def linear_search_nama(daftar_pasien, keyword):
         Loop seluruh list dari index 0 sampai akhir.
         Setiap pasien dicek apakah keyword ada di dalam namanya.
         Semua pasien yang cocok dikumpulkan ke list hasil.
-        Tidak berhenti di hasil pertama — mengembalikan SEMUA yang cocok.
-
-    Kompleksitas: O(n) — harus cek setiap elemen satu per satu.
+        Tidak berhenti di hasil pertama — mengembalikan semua yang cocok.
     """
     hasil = []
     # ubah ke huruf kecil untuk perbandingan
     keyword_lower = keyword.lower() 
 
-    # Loop dari index 0 sampai akhir — inilah Linear Search
+    # Loop dari index 0 sampai akhir 
     for pasien in daftar_pasien:
-        # Cek apakah keyword ada di dalam nama pasien (case-insensitive)
+        # Cek apakah keyword ada di dalam nama pasien 
         if keyword_lower in pasien.nama.lower():
             hasil.append(pasien)
 
@@ -138,18 +136,17 @@ def cari_pasien_nama():
     """untuk pencarian pasien by nama. Menggunakan Linear Search."""
     print("\n" + "=" * 44)
     print("     CARI PASIEN BERDASARKAN NAMA")
-    print("     Algoritma: Linear Search O(n)")
     print("=" * 44)
 
     keyword = input("  Masukkan nama (atau sebagian): ").strip()
     if not keyword:
-        print("  [ERROR] Keyword tidak boleh kosong.")
+        print("  Keyword tidak boleh kosong.")
         return
 
     daftar_pasien = _load_daftar_pasien()
 
     if not daftar_pasien:
-        print("  [INFO] Belum ada data pasien.")
+        print("  Belum ada data pasien.")
         return
 
     print(f"\n  Mencari '{keyword}' dari {len(daftar_pasien)} data pasien...")
@@ -159,21 +156,20 @@ def cari_pasien_nama():
 
 
 def cari_pasien_nik():
-    """Entry point untuk pencarian pasien by nik. Menggunakan Binary Search."""
+    """mencarian pasien by nik menggunakan Binary Search."""
     print("\n" + "=" * 44)
     print("      CARI PASIEN BERDASARKAN NIK")
-    print("     Algoritma: Binary Search O(log n)")
     print("=" * 44)
 
     nik = input("  Masukkan NIK (6 digit): ").strip()
     if not nik:
-        print("  [ERROR] NIK tidak boleh kosong.")
+        print("  ERROR: NIK tidak boleh kosong.")
         return
 
     daftar_pasien = _load_daftar_pasien()
 
     if not daftar_pasien:
-        print("  [INFO] Belum ada data pasien.")
+        print("  Belum ada data pasien.")
         return
 
     print(f"\n  Mencari NIK '{nik}'...")
@@ -183,7 +179,7 @@ def cari_pasien_nik():
     if hasil:
         _tampilkan_hasil([hasil])
     else:
-        print(f"\n  [INFO] Pasien dengan NIK '{nik}' tidak ditemukan.")
+        print(f"\n  Pasien dengan NIK '{nik}' tidak ditemukan.")
 
 
 def cari_pasien_layanan():
@@ -204,14 +200,14 @@ def cari_pasien_layanan():
             if 1 <= pilih <= len(KATEGORI_LAYANAN):
                 layanan = KATEGORI_LAYANAN[pilih - 1]
                 break
-            print("  [ERROR] Pilih angka 1, 2, atau 3.")
+            print("  ERROR: Pilih angka 1, 2, atau 3.")
         except ValueError:
-            print("  [ERROR] Input harus berupa angka.")
+            print("  ERROR: Input harus berupa angka.")
 
     daftar_pasien = _load_daftar_pasien()
 
     if not daftar_pasien:
-        print("  [INFO] Belum ada data pasien.")
+        print("  Belum ada data pasien.")
         return
 
     print(f"\n  Menampilkan pasien dengan layanan '{layanan}'...")

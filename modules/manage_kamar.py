@@ -48,7 +48,7 @@ def lihat_kamar_tersedia():
         for kamar in daftar_kamar:
             print(kamar.data_kamar())
     else:
-        print("Tidak ada kamar tersedia.")
+        print("ERROR: Tidak ada kamar tersedia.")
 
     print("-" * 32)
 
@@ -65,27 +65,27 @@ def assign_pasien_ke_kamar():
     pasien_data = _cari_pasien(data_pasien, nik)
 
     if pasien_data is None:
-        print("[ERROR] Pasien tidak ditemukan.")
+        print("ERROR: Pasien tidak ditemukan.")
         return
 
     if pasien_data.get("nomor_kamar"):
         if pasien_data.get("nomor_kamar") == nomor_kamar:
-            print("[INFO] Pasien sudah berada di kamar tersebut.")
+            print("Pasien sudah berada di kamar tersebut.")
         else:
-            print(f"[INFO] Pasien sudah terdaftar di kamar {pasien_data.get('nomor_kamar')}.")
+            print(f"Pasien sudah terdaftar di kamar {pasien_data.get('nomor_kamar')}.")
         return
 
     # Cari data kamar 
     kamar_data = _cari_kamar(data_kamar, nomor_kamar)
 
     if kamar_data is None:
-        print("[ERROR] Kamar tidak ditemukan.")
+        print("ERROR: Kamar tidak ditemukan.")
         return
 
     # Konversi dict → objek Kamar
     kamar_obj = _dict_ke_objek(kamar_data)
     if nik in kamar_obj.pasien_terisi:
-        print("[INFO] Pasien sudah tercatat di kamar ini.")
+        print("Pasien sudah tercatat di kamar ini.")
         return
 
     if not kamar_obj.pasien_masuk(nik):
@@ -103,7 +103,7 @@ def assign_pasien_ke_kamar():
     save_json("data/kamar.json", data_kamar)
     save_json("data/pasien.json", data_pasien)
 
-    print(f"[OK] Pasien {nik} berhasil ditempatkan ke kamar {nomor_kamar}.")
+    print(f"Pasien {nik} berhasil ditempatkan ke kamar {nomor_kamar}.")
 
 
 def pasien_keluar_kamar():
@@ -117,25 +117,25 @@ def pasien_keluar_kamar():
     pasien_data = _cari_pasien(data_pasien, nik)
 
     if pasien_data is None:
-        print("[ERROR] Pasien tidak ditemukan.")
+        print("ERROR: Pasien tidak ditemukan.")
         return
 
     nomor_kamar = pasien_data.get("nomor_kamar")
     if not nomor_kamar:
-        print("[INFO] Pasien tidak tercatat di kamar manapun.")
+        print("ERROR: Pasien tidak tercatat di kamar manapun.")
         return
 
     # Cari data kamar
     kamar_data = _cari_kamar(data_kamar, nomor_kamar)
 
     if kamar_data is None:
-        print("[ERROR] Kamar tidak ditemukan.")
+        print("ERROR: Kamar tidak ditemukan.")
         return
 
     # Konversi dict → objek Kamar
     kamar_obj = _dict_ke_objek(kamar_data)
     if nik not in kamar_obj.pasien_terisi:
-        print("[ERROR] Pasien tidak ditemukan di kamar ini.")
+        print("ERROR: Pasien tidak ditemukan di kamar ini.")
         return
 
     kamar_obj.pasien_keluar(nik)
@@ -152,7 +152,7 @@ def pasien_keluar_kamar():
     save_json("data/kamar.json", data_kamar)
     save_json("data/pasien.json", data_pasien)
 
-    print(f"[OK] Pasien {nik} berhasil keluar dari kamar {nomor_kamar}.")
+    print(f"Pasien {nik} berhasil keluar dari kamar {nomor_kamar}.")
 
 
 def navigasi_kamar():
@@ -160,7 +160,7 @@ def navigasi_kamar():
     dll = _bangun_dll()
     
     if dll.head is None:
-        print("\n[INFO] Belum ada data kamar.")
+        print("\nBelum ada data kamar.")
         return
 
     saat_ini = dll.head
@@ -178,14 +178,14 @@ def navigasi_kamar():
             if saat_ini.next is not None:
                 saat_ini = saat_ini.next
             else:
-                print("  [INFO] Anda sudah berada di ujung lorong terakhir.")
+                print("  Anda sudah berada di ujung lorong terakhir.")
         elif pilihan == 'p':
             if saat_ini.prev is not None:
                 saat_ini = saat_ini.prev
             else:
-                print("  [INFO] Anda sudah berada di ujung lorong pertama.")
+                print("  Anda sudah berada di ujung lorong pertama.")
         else:
-            print("  [ERROR] Pilihan tidak valid.")
+            print("  ERROR: Pilihan tidak valid.")
 
 
 
@@ -202,11 +202,11 @@ def lihat_jadwal_obat_pasien():
     pasien_data = _cari_pasien(data_pasien, nik)
 
     if pasien_data is None:
-        print("[ERROR] Pasien tidak ditemukan.")
+        print("ERROR: Pasien tidak ditemukan.")
         return
 
     if not pasien_data.get("nomor_kamar"):
-        print(f"[INFO] Pasien '{pasien_data['nama']}' belum dirawat inap (tidak memiliki kamar).")
+        print(f"Pasien '{pasien_data['nama']}' belum dirawat inap (tidak memiliki kamar).")
         return
 
     # Bangun CLL jadwal default: Pagi → Siang → Malam

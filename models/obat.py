@@ -3,7 +3,7 @@ representasi data obat dalam bentuk class Obat dan manipulasi data
 """
 
 class Obat:
-    def __init__(self, kode, nama, kategori, bentuk, stok, harga, pemakaian_harian=0):
+    def __init__(self, kode="", nama="", kategori="", bentuk="", stok=0, harga=0, pemakaian_harian=0):
         """Inisialisasi objek obat dengan atribut utama."""
         self.kode = kode
         self.nama = nama

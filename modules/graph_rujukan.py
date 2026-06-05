@@ -26,11 +26,11 @@ class GraphRujukan:
     def set_status(self, nama_rs, status):
         """Mengubah status sebuah RS."""
         if nama_rs not in self.graph:
-            print(f"  [ERROR] RS '{nama_rs}' tidak ada di jaringan.")
+            print(f"  ERROR: RS '{nama_rs}' tidak ada di jaringan.")
             return False
 
         if status not in ("Tersedia", "Penuh"):
-            print(f"  [ERROR] Status harus 'Tersedia' atau 'Penuh'.")
+            print(f"  ERROR: Status harus 'Tersedia' atau 'Penuh'.")
             return False
 
         self.status[nama_rs] = status

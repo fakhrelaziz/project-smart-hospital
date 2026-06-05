@@ -13,11 +13,11 @@ def _input_angka(prompt):
         try:
             nilai = int(input(prompt))
             if nilai < 0:
-                print("  [ERROR] Input tidak boleh negatif. Silakan coba lagi.")
+                print("  Input tidak boleh negatif. Silakan coba lagi.")
                 continue
             return nilai
         except ValueError:
-            print("  [ERROR] Input harus berupa angka bulat. Silakan coba lagi.")
+            print("  Input harus berupa angka bulat. Silakan coba lagi.")
 
 def lihat_obat():
     """Menampilkan seluruh data obat dari file JSON."""
@@ -26,7 +26,7 @@ def lihat_obat():
     # Mengubah data mentah (dict) menjadi barisan Objek Obat
     daftar_objek_obat = []
     for data in data_obat_dict:
-        obat_obj = Obat("", "", "", "", 0, 0, 0)
+        obat_obj = Obat()
         obat_obj.dict_ke_objek(data)
         daftar_objek_obat.append(obat_obj)
 
@@ -46,7 +46,7 @@ def tambah_obat():
 
     for item in data_obat:
         if item.get("kode") == kode:
-            print(f"\n[SISTEM] GAGAL! Kode '{kode}' sudah dipakai oleh obat '{item.get('nama')}'.")
+            print(f"\nGAGAL! Kode '{kode}' sudah dipakai oleh obat '{item.get('nama')}'.")
             return
 
     nama = input("Masukkan nama: ")
@@ -67,7 +67,7 @@ def tambah_obat():
 
 
 def cari_obat_kode():
-    """Mencari obat menggunakan kode obat (O(1)) dan Opsi Manajemen Lanjutan."""
+    """Mencari obat menggunakan kode obat."""
     data_obat = load_json("data/obat.json")
     if not data_obat:
         print("Data obat kosong")
@@ -94,7 +94,7 @@ def cari_obat_kode():
         print("  [0] Selesai & Kembali")
         pilihan = input("  Pilih aksi: ").strip()
 
-        obat_obj = Obat("", "", "", "", 0, 0, 0)
+        obat_obj = Obat()
         obat_obj.dict_ke_objek(hasil)
 
         if pilihan == "1":
@@ -126,17 +126,12 @@ def cari_obat_kode():
             hasil_prediksi = prediksi_stok_obat(obat_obj.nama, obat_obj.stok, obat_obj.pemakaian_harian)
             tampilkan_hasil_prediksi(hasil_prediksi)
             
-        else:
-            print(f"Obat dengan kode '{kode_cari}' tidak ditemukan.")
     
     save_json("data/obat.json", data_obat)
 
-# MENU KATALOG (FARMASI)
+
 def tampilkan_katalog():
-    """
-    Entry point CLI untuk menampilkan katalog obat 
-    dalam bentuk struktur tree.
-    """
+    """menampilkan katalog obat dalam bentuk struktur tree."""
     print("\n" + "=" * 52)
     print("             KATALOG OBAT FARMASI")
     print("          Struktur Data: General Tree")

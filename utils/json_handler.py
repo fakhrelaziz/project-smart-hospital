@@ -19,13 +19,13 @@ def load_json(path):
             data = json.load(file)
         return data
     except FileNotFoundError:
-        print(f"  [WARNING] File '{path}' tidak ditemukan. Mengembalikan list kosong.")
+        print(f"  File '{path}' tidak ditemukan. Mengembalikan list kosong.")
         return []
     except json.JSONDecodeError:
-        print(f"  [ERROR] Format JSON pada '{path}' rusak atau tidak valid. Mengembalikan list kosong.")
+        print(f"  ERROR: Format JSON pada '{path}' rusak atau tidak valid. Mengembalikan list kosong.")
         return []
     except Exception as e:
-        print(f"  [ERROR] Terjadi kesalahan saat membaca '{path}': {e}")
+        print(f"  ERROR: Terjadi kesalahan saat membaca '{path}': {e}")
         return []
 
 
@@ -36,5 +36,5 @@ def save_json(path, data):
             json.dump(data, file, indent=4)
         return True
     except Exception as e:
-        print(f"  [ERROR] Gagal menyimpan data ke '{path}': {e}")
+        print(f"  ERROR: Gagal menyimpan data ke '{path}': {e}")
         return False
