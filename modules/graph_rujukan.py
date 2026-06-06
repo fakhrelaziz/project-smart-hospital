@@ -71,9 +71,9 @@ class GraphRujukan:
                     "history"  : history
                 }
 
-            for tetangga in self.graph.get(rs_sekarang, []):
-                if tetangga not in visited:
-                    visited.add(tetangga)
-                    queue.append((tetangga, rute + [tetangga]))
+            for i in self.graph.get(rs_sekarang, []):
+                if i not in visited:
+                    visited.add(i)
+                    queue.append((i, rute + [i]))
 
         return {"rs_tujuan": None, "rute": [], "hop": 0, "history": history}

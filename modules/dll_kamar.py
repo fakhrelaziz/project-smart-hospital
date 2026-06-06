@@ -4,7 +4,6 @@ Setiap node merepresentasikan satu kamar dengan pointer ke kamar
 berikutnya (next) dan sebelumnya (prev).
 """
 
-
 class NodeKamar:
     def __init__(self, data_kamar):
         self.data = data_kamar
@@ -16,8 +15,8 @@ class NavigasiKamar:
         self.head = None
         self.tail = None
 
-    # fungsi lihat_kamar_tersedia di file manage_kamar melooping data kamar dan dimasukkan ke fungsi insert dari dll
     def insert(self, data_kamar):
+        """fungsi lihat_kamar_tersedia di file manage_kamar melooping data kamar dan dimasukkan ke fungsi insert"""
         node_baru = NodeKamar(data_kamar)
         
         if self.head is None:

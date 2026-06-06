@@ -191,8 +191,8 @@ def cari_pasien_layanan():
     print("    FILTER PASIEN BERDASARKAN LAYANAN")
     print("=" * 44)
     print("  Pilih kategori layanan:")
-    for i, kat in enumerate(KATEGORI_LAYANAN, 1):
-        print(f"    [{i}] {kat}")
+    for i in range(len(KATEGORI_LAYANAN)):
+        print(f"    [{i+1}] {KATEGORI_LAYANAN[i]}")
 
     while True:
         try:

@@ -19,8 +19,9 @@ def bfs_dengan_langkah(graph_obj, rs_asal="Smart Hospital"):
 
     # Cetak history langkah yang dikunjungi oleh BFS
     if "history" in hasil:
-        for langkah, (rs_sekarang, status_rs) in enumerate(hasil["history"], 1):
-            print(f"  Langkah {langkah}: Memeriksa {rs_sekarang:<18} → {status_rs}")
+        for i in range(len(hasil["history"])):
+            rs_sekarang, status_rs = hasil["history"][i]
+            print(f"  Langkah {i + 1}: Memeriksa {rs_sekarang:<18} → {status_rs}")
 
     if hasil["rs_tujuan"]:
         rute_str = " → ".join(hasil["rute"])
@@ -39,10 +40,10 @@ def tampilkan_peta(graph_obj):
     print("       PETA JARINGAN RUMAH SAKIT RUJUKAN")
     print("=" * 52)
 
-    for rs, tetangga in graph_obj.graph.items():
-        status   = graph_obj.status.get(rs, "?")
+    for i, tetangga in graph_obj.graph.items():
+        status   = graph_obj.status.get(i, "?")
         koneksi  = " → ".join(tetangga)
-        print(f"  - {rs:<18} : ({status}) {koneksi}")
+        print(f"  - {i:<18} : ({status}) {koneksi}")
 
     print("=" * 52)
     print("\n  Keterangan Status:")
@@ -54,8 +55,8 @@ def tampilkan_status(graph_obj):
     """Menampilkan status (Tersedia/Penuh) semua RS."""
     print("\n  Status Rumah Sakit Saat Ini:")
     print("  " + "─" * 40)
-    for rs, status in graph_obj.status.items():
-        print(f"  - {rs:<20} : {status}")
+    for i, status in graph_obj.status.items():
+        print(f"  - {i:<20} : {status}")
 
 
 def lihat_peta_rujukan():
