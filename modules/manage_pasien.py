@@ -229,7 +229,50 @@ def tambah_rekam_medis_pasien():
                 break
         print("  ERROR: Format tanggal harus berupa YYYY-MM-DD (Contoh: 2024-12-01).")
     diagnosis = input("  Diagnosis            : ").strip()
-    resep     = input("  Resep / Obat         : ").strip()
+    
+    # Input obat dan sinkronisasi ke obat.json
+    data_obat = load_json("data/obat.json")
+    resep_list = []
+    
+    print("\n  --- Tambah Resep Obat ---")
+    while True:
+        nama_obat = input("  Nama/Kode Obat (Ketik '0' jika selesai): ").strip()
+        if nama_obat == '0':
+            break
+            
+        obat_ditemukan = None
+        for o in data_obat:
+            if o["kode"].lower() == nama_obat.lower() or o["nama"].lower() == nama_obat.lower():
+                obat_ditemukan = o
+                break
+                
+        if not obat_ditemukan:
+            print("  ERROR: Obat tidak ditemukan di sistem farmasi.")
+            continue
+            
+        while True:
+            try:
+                jumlah = int(input(f"  Jumlah {obat_ditemukan['nama']}: ").strip())
+                if jumlah <= 0:
+                    print("  ERROR: Jumlah harus lebih dari 0.")
+                    continue
+                if jumlah > obat_ditemukan["stok"]:
+                    print(f"  ERROR: Stok tidak cukup! (Sisa stok: {obat_ditemukan['stok']})")
+                    continue
+                
+                # Potong stok
+                obat_ditemukan["stok"] -= jumlah
+                resep_list.append(obat_ditemukan['nama'])
+                print(f"  {jumlah} {obat_ditemukan['nama']} ditambahkan ke resep.")
+                break
+            except ValueError:
+                print("  ERROR: Masukkan angka yang valid.")
+                
+    resep = ", ".join(resep_list) if resep_list else "Tidak ada obat"
+    
+    # Simpan kembali stok obat jika ada perubahan
+    if resep_list:
+        save_json("data/obat.json", data_obat)
 
     # Menggunakan method tingkat model Pasien
     pasien_obj.tambah_rekam_medis(tanggal, diagnosis, resep)

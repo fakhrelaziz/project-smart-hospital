@@ -96,6 +96,7 @@ def assign_pasien_ke_kamar():
     pasien_obj.dict_ke_objek(pasien_data)
     pasien_obj.set_kamar(nomor_kamar)
     pasien_obj.update_status("dirawat")
+    pasien_obj.update_layanan("Rawat Inap")
     pasien_data.update(pasien_obj.objek_ke_dict())
 
     # Sync dict kamar dari objek yang sudah diperbarui

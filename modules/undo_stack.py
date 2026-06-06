@@ -28,7 +28,3 @@ class UndoStack:
     def is_empty(self):
         """Memeriksa apakah tumpukan sedang kosong."""
         return len(self.data) == 0
-
-    def total_data(self):
-        """Mengembalikan jumlah total data yang tersimpan di dalam tumpukan."""
-        return len(self.data)
