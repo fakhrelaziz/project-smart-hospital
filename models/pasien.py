@@ -55,10 +55,6 @@ class Pasien:
                 f"Status       : {self.status}\n"
                 f"Kamar        : {self.kamar if self.kamar else '-'}")
 
-    def cek_danger_score(self):
-        """Mengembalikan nilai danger_score pasien."""
-        return self.danger_score
-
     def update_danger_score(self, danger_score):
         """Memperbarui nilai danger_score pasien setelah pemeriksaan atau perawatan."""
         self.danger_score = danger_score

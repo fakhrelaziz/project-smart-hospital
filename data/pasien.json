@@ -11,7 +11,7 @@
             {
                 "tanggal": "2026-05-10",
                 "diagnosis": "Kecelakaan Ringan",
-                "resep": "OBT008"
+                "resep": "Ketoconazole Krim 2%"
             }
         ]
     },
@@ -27,7 +27,7 @@
             {
                 "tanggal": "2026-05-23",
                 "diagnosis": "Kontrol Rutin",
-                "resep": "OBT010"
+                "resep": "Neurobion Forte"
             }
         ]
     },
@@ -43,12 +43,12 @@
             {
                 "tanggal": "2025-01-10",
                 "diagnosis": "Hipertensi",
-                "resep": "OBT001"
+                "resep": "Paracetamol 500mg"
             },
             {
                 "tanggal": "2025-01-15",
                 "diagnosis": "Migrain",
-                "resep": "OBT004"
+                "resep": "Ibuprofen 400mg"
             }
         ]
     },
@@ -64,7 +64,7 @@
             {
                 "tanggal": "2026-05-28",
                 "diagnosis": "Patah Tulang Terbuka",
-                "resep": "OBT004"
+                "resep": "Ibuprofen 400mg"
             }
         ]
     },
@@ -80,7 +80,7 @@
             {
                 "tanggal": "2026-06-02",
                 "diagnosis": "Flu Berat",
-                "resep": "OBT001"
+                "resep": "Paracetamol 500mg"
             }
         ]
     },
@@ -96,7 +96,7 @@
             {
                 "tanggal": "2026-05-11",
                 "diagnosis": "Trauma Kepala Berat",
-                "resep": "OBT004"
+                "resep": "Ibuprofen 400mg"
             }
         ]
     },
@@ -112,7 +112,12 @@
             {
                 "tanggal": "2026-05-31",
                 "diagnosis": "Flu Berat",
-                "resep": "OBT001"
+                "resep": "Paracetamol 500mg"
+            },
+            {
+                "tanggal": "2026-06-06",
+                "diagnosis": "fluee",
+                "resep": "Mefenamic Acid 500mg (5)"
             }
         ]
     }

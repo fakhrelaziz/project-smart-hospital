@@ -12,15 +12,17 @@
         "status": "Penuh",
         "kapasitas_kasur": 1,
         "pasien_terisi": [
-            "3201010101010003"
+            "100002"
         ]
     },
     {
         "nomor": "K201",
         "tipe": "Umum",
-        "status": "Kosong",
+        "status": "Terisi",
         "kapasitas_kasur": 2,
-        "pasien_terisi": []
+        "pasien_terisi": [
+            "100006"
+        ]
     },
     {
         "nomor": "K202",
