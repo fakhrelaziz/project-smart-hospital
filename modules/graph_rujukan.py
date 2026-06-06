@@ -4,8 +4,6 @@ dengan adjacency list.
 - Data diimpor dari models/rumah_sakit.py.
 - Algoritma pencarian dan interaksi CLI dikelola oleh manage_rujukan.py.
 """
-
-import os
 from models.rumah_sakit import JARINGAN_RS
 from utils.json_handler import load_json, save_json
 
@@ -20,8 +18,11 @@ class GraphRujukan:
         self.graph  = JARINGAN_RS 
         
         # Status setiap RS diambil dari JSON agar perubahannya permanen
-        os.path.exists("data/rs_status.json")
         self.status = load_json("data/rs_status.json")
+        
+        # Fallback jika file json hilang/kosong (berupa list []) atau isinya bukan dictionary
+        if not self.status or type(self.status) is not dict:
+            self.status = {rs: "Tersedia" for rs in self.graph}
 
     def set_status(self, nama_rs, status):
         """Mengubah status sebuah RS."""
@@ -71,9 +72,9 @@ class GraphRujukan:
                     "history"  : history
                 }
 
-            for tetangga in self.graph.get(rs_sekarang, []):
-                if tetangga not in visited:
-                    visited.add(tetangga)
-                    queue.append((tetangga, rute + [tetangga]))
+            for i in self.graph.get(rs_sekarang, []):
+                if i not in visited:
+                    visited.add(i)
+                    queue.append((i, rute + [i]))
 
         return {"rs_tujuan": None, "rute": [], "hop": 0, "history": history}

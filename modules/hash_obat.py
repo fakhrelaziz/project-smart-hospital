@@ -40,8 +40,8 @@ class HashObat:
         #4. Rumus standar: jumlah ASCII huruf di-modulo ukuran lemari
         total_ascii = 0
         #itung nilai huruf dari kode obatnya satu-satu
-        for karakter in kode_obat:
-            total_ascii += ord(karakter)  #mengubah huruf jadi angka angka satu-satu
+        for i in kode_obat:
+            total_ascii += ord(i)  #mengubah huruf jadi angka angka satu-satu
         return total_ascii % self._ukuran  #sisa bagi biar hasilnya pas dengan nomor slot lemari
 
     '''

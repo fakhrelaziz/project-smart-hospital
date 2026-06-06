@@ -23,16 +23,16 @@ class Kamar:
         self.pasien_terisi = pasien_terisi if pasien_terisi else []
 
     def data_kamar(self):        
-        """Mengembalikan string representasi data kamar untuk ditampilkan di CLI."""
+        """Mengembalikan string representasi data kamar untuk ditampilkan."""
         if not self.pasien_terisi:
             daftar_pasien = "-"
         else:
             daftar_pasien = ""
-            for p in self.pasien_terisi:
+            for i in self.pasien_terisi:
                 if daftar_pasien == "":
-                    daftar_pasien += p
+                    daftar_pasien += i
                 else:
-                    daftar_pasien += ", " + p
+                    daftar_pasien += ", " + i
                     
         return f"[Kamar {self.nomor}]\n | Tipe     : {self.tipe}\n | Status   : {self.status_kamar()}\n | Kapasitas: {len(self.pasien_terisi)}/{self.kapasitas_kasur} terisi\n | Pasien   : {daftar_pasien}"
 

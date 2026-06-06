@@ -37,26 +37,12 @@ def bubble_sort_ugd(daftar_pasien):
         - Loop luar  : berjalan sebanyak (n-1) kali
         - Loop dalam : membandingkan dua elemen bertetangga
         - Jika elemen kiri LEBIH KECIL dari kanan → tukar posisi (swap)
-        - Setelah setiap putaran loop luar, elemen terbesar "menggelembung"
-          ke posisi yang benar di ujung kanan
-        - Ulangi sampai seluruh list terurut descending
     """
     n = len(daftar_pasien)
 
-    # Loop luar — sebanyak n-1 putaran
     for i in range(n - 1):
-
-        # Loop dalam — bandingkan elemen bertetangga
-        # Setiap putaran loop luar, elemen terbesar sudah di posisi akhir
-        # jadi tidak perlu cek sampai ujung lagi (n - 1 - i)
         for j in range(n - 1 - i):
-
-            # Bandingkan danger_score dua pasien bertetangga
-            # Jika pasien[j] LEBIH KECIL dari pasien[j+1] → tukar
-            # (kita ingin descending, jadi yang BESAR harus di kiri/depan)
             if daftar_pasien[j].danger_score < daftar_pasien[j + 1].danger_score:
-
-                # SWAP — tukar posisi dua elemen
                 daftar_pasien[j], daftar_pasien[j + 1] = daftar_pasien[j + 1], daftar_pasien[j]
 
     return daftar_pasien
@@ -81,10 +67,11 @@ def tampilkan_antrian_ugd(daftar_pasien_terurut):
     print("  " + "─" * 64)
 
     # Baris data
-    for urutan, pasien in enumerate(daftar_pasien_terurut, start=1):
+    for i in range(len(daftar_pasien_terurut)):
+        pasien = daftar_pasien_terurut[i]
         label  = label_kegawatan(pasien.danger_score)
         nama   = pasien.nama[:18] if len(pasien.nama) > 18 else pasien.nama
-        print(f"  {urutan:<4} {pasien.nik:<18} {nama:<20} {pasien.danger_score:<7} {label}")
+        print(f"  {i+1:<4} {pasien.nik:<18} {nama:<20} {pasien.danger_score:<7} {label}")
 
     print("=" * 68)
     print(f"  Total pasien UGD: {len(daftar_pasien_terurut)} orang")
@@ -111,7 +98,8 @@ def update_danger_score():
     # Cari pasien berdasarkan NIK
     pasien_data = None
     pasien_index = None
-    for i, data in enumerate(data_semua):
+    for i in range(len(data_semua)):
+        data = data_semua[i]
         if data.get("nik") == nik:
             pasien_data  = data
             pasien_index = i
@@ -207,3 +195,4 @@ def lihat_antrian_ugd():
   
     daftar_terurut = bubble_sort_ugd(daftar_ugd)
     tampilkan_antrian_ugd(daftar_terurut)
+    

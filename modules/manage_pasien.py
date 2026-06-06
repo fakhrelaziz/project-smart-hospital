@@ -18,10 +18,10 @@ stack_pendaftaran = UndoStack()
 
 def lihat_semua_pasien():
     """Menampilkan data semua pasien di database (json) rumah sakit."""
-    data_pasien_dict = load_json("data/pasien.json")
+    data_pasien = load_json("data/pasien.json")
 
     daftar_objek_pasien = []
-    for data in data_pasien_dict:
+    for data in data_pasien:
         pasien_obj = Pasien()
         pasien_obj.dict_ke_objek(data)
         daftar_objek_pasien.append(pasien_obj)
@@ -95,10 +95,11 @@ def daftar_pasien_baru():
         data_pasien.append(p_dict)
         save_json("data/pasien.json", data_pasien)
 
-        # Simpan ke data pasien baru Stack untuk keperluan Undo
+        # Simpan data pasien baru ke Stack untuk keperluan Undo
         stack_pendaftaran.push({
             "nik": nik,
-            "nama": nama
+            "nama": nama,
+            "status": "antri"
         })
  
 
@@ -159,8 +160,8 @@ def undo_pendaftaran_terakhir():
             print(f"Pendaftaran NIK {nik_batal} berhasil dibatalkan.")
         else:
             print(f"ERROR: NIK {nik_batal} tidak ditemukan, gagal undo.")
-    
-    print("ERROR: Tidak ada riwayat pendaftaran yang bisa dibatalkan.")
+    else:
+        print("ERROR: Tidak bisa undo, status pasien bukan 'antri'.")
 
 
 def lihat_rekam_medis_pasien():
@@ -178,8 +179,7 @@ def lihat_rekam_medis_pasien():
         print("ERROR: Pasien tidak ditemukan.")
         return
 
-    sll = SingleLinkedListRekamMedis()
-    sll.from_list(pasien_target.get("rekam_medis", []))
+    sll = SingleLinkedListRekamMedis(pasien_target.get("rekam_medis", []))
 
     print(f"\n--- REKAM MEDIS: {pasien_target['nama']} ---")
 

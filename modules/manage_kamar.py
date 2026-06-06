@@ -28,8 +28,8 @@ def _bangun_dll():
     """ memuat kamar.json dan membangun DLL NavigasiKamar."""
     data_kamar = load_json("data/kamar.json")
     dll = NavigasiKamar()
-    for data in data_kamar:
-        kamar_obj = _dict_ke_objek(data)
+    for i in data_kamar:
+        kamar_obj = _dict_ke_objek(i)
         dll.insert(kamar_obj)
     return dll
 
@@ -37,16 +37,16 @@ def _bangun_dll():
 # ───────────────────────────────────────────────────────
 
 def lihat_kamar_tersedia():
-    """Menampilkan daftar kamar yang masih memiliki kapasitas kosong via DLL."""
-
-    dll = _bangun_dll()  # Bangun DLL dari data kamar.json
+    """Menampilkan daftar kamar yang masih memiliki kapasitas kosong pakai DLL."""
+    # Bangun DLL dari data kamar.json
+    dll = _bangun_dll()  
 
     print("\n--- KAMAR TERSEDIA ---")
     daftar_kamar = dll.traversal()
     
     if daftar_kamar:
-        for kamar in daftar_kamar:
-            print(kamar.data_kamar())
+        for i in daftar_kamar:
+            print(i.data_kamar())
     else:
         print("ERROR: Tidak ada kamar tersedia.")
 
@@ -147,7 +147,6 @@ def pasien_keluar_kamar():
     pasien_obj.update_status("selesai")
     pasien_data.update(pasien_obj.objek_ke_dict())
 
-    # Sync dict kamar dari objek yang sudah diperbarui
     kamar_data.update(kamar_obj.objek_ke_dict())
     save_json("data/kamar.json", data_kamar)
     save_json("data/pasien.json", data_pasien)

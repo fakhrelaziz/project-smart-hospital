@@ -5,38 +5,38 @@ from modules.recursive_stok import prediksi_stok_obat, tampilkan_hasil_prediksi
 from modules.tree_katalog import KatalogObat
 
 
-def _input_angka(prompt):
+def _input_angka(angka):
     """Fungsi yang sering dipakai oleh function lain ketika ingin minta input
      dari pada setiap input harus menginisialisai code input terus, lebih baik di jadikan function 
     input angka dari user dengan Error Handling."""
     while True:
         try:
-            nilai = int(input(prompt))
+            nilai = int(input(angka))
             if nilai < 0:
-                print("  Input tidak boleh negatif. Silakan coba lagi.")
+                print("  ERROR: Input tidak boleh negatif. Silakan coba lagi.")
                 continue
             return nilai
         except ValueError:
-            print("  Input harus berupa angka bulat. Silakan coba lagi.")
+            print("  ERROR: Input harus berupa angka bulat. Silakan coba lagi.")
 
 def lihat_obat():
     """Menampilkan seluruh data obat dari file JSON."""
-    data_obat_dict = load_json("data/obat.json")
+    data_obat = load_json("data/obat.json")
 
     # Mengubah data mentah (dict) menjadi barisan Objek Obat
     daftar_objek_obat = []
-    for data in data_obat_dict:
+    for i in data_obat:
         obat_obj = Obat()
-        obat_obj.dict_ke_objek(data)
+        obat_obj.dict_ke_objek(i)
         daftar_objek_obat.append(obat_obj)
 
     # Menampilkan data menggunakan fungsi dari class Obat
     print("\n--- DAFTAR OBAT RUMAH SAKIT ---")
-    for obat in daftar_objek_obat:
-        print(obat.data_obat())
+    for i in daftar_objek_obat:
+        print(i.data_obat())
         print("─" * 42)
 
-    print(f"  Total: {len(data_obat_dict)} jenis obat")
+    print(f"  Total: {len(data_obat)} jenis obat")
 
 def tambah_obat():
     """Menambahkan obat baru ke data JSON."""
@@ -44,9 +44,9 @@ def tambah_obat():
 
     kode = input("Masukkan kode obat: ")
 
-    for item in data_obat:
-        if item.get("kode") == kode:
-            print(f"\nGAGAL! Kode '{kode}' sudah dipakai oleh obat '{item.get('nama')}'.")
+    for i in data_obat:
+        if i.get("kode") == kode:
+            print(f"\nGAGAL! Kode '{kode}' sudah dipakai oleh obat '{i.get('nama')}'.")
             return
 
     nama = input("Masukkan nama: ")
@@ -57,7 +57,6 @@ def tambah_obat():
     pemakaian_harian = _input_angka("Rata-rata pemakaian RS per hari: ")
      
     obat_baru = Obat(kode, nama, kategori, bentuk, stok, harga, pemakaian_harian)
-
     data_obat.append(obat_baru.objek_ke_dict())
 
     save_json("data/obat.json", data_obat)
@@ -75,8 +74,8 @@ def cari_obat_kode():
 
     # 1. Bangun Hash Table O(1)
     hash_tabel = HashObat()
-    for item in data_obat:
-        hash_tabel.insert(item['kode'], item)
+    for i in data_obat:
+        hash_tabel.insert(i['kode'], i)
 
     print("\n--- PENCARIAN OBAT (HASH TABLE) ---")
     kode_cari = input("Masukkan kode obat yang dicari: ").strip()
@@ -107,9 +106,9 @@ def cari_obat_kode():
                 print(obat_obj.kurang_stok(jumlah))
             
             # Update List JSON & Save
-            for item in data_obat:
-                if item['kode'] == kode_cari:
-                    item['stok'] = obat_obj.stok
+            for i in data_obat:
+                if i['kode'] == kode_cari:
+                    i['stok'] = obat_obj.stok
                     break
 
         elif pilihan == "2":
@@ -117,9 +116,9 @@ def cari_obat_kode():
             print(obat_obj.ubah_harga(harga_baru))
             
             # Update List JSON & Save
-            for item in data_obat:
-                if item['kode'] == kode_cari:
-                    item['harga'] = obat_obj.harga
+            for i in data_obat:
+                if i['kode'] == kode_cari:
+                    i['harga'] = obat_obj.harga
                     break
                 
         elif pilihan == "3":
@@ -131,7 +130,7 @@ def cari_obat_kode():
 
 
 def tampilkan_katalog():
-    """menampilkan katalog obat dalam bentuk struktur tree."""
+    """menampilkan katalog obat dalam bentuk direktori."""
     print("\n" + "=" * 52)
     print("             KATALOG OBAT FARMASI")
     print("          Struktur Data: General Tree")
