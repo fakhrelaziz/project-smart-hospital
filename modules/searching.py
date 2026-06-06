@@ -59,8 +59,9 @@ def linear_search_nama(daftar_pasien, keyword):
 
     # Loop dari index 0 sampai akhir 
     for pasien in daftar_pasien:
-        # Cek apakah keyword ada di dalam nama pasien 
-        if keyword_lower in pasien.nama.lower():
+        # Proteksi nilai None
+        nama_pasien = str(pasien.nama).lower() if pasien.nama else ""
+        if keyword_lower in nama_pasien:
             hasil.append(pasien)
 
     return hasil
@@ -71,7 +72,9 @@ def _urutkan_by_nik(daftar_pasien):
     n = len(daftar_pasien)
     for i in range(n - 1):
         for j in range(n - 1 - i):
-            if daftar_pasien[j].nik > daftar_pasien[j + 1].nik:
+            nik1 = str(daftar_pasien[j].nik) if daftar_pasien[j].nik else ""
+            nik2 = str(daftar_pasien[j + 1].nik) if daftar_pasien[j + 1].nik else ""
+            if nik1 > nik2:
                 daftar_pasien[j], daftar_pasien[j + 1] = \
                     daftar_pasien[j + 1], daftar_pasien[j]
     return daftar_pasien
@@ -103,7 +106,7 @@ def binary_search_nik(daftar_pasien, target_nik):
         # Hitung index tengah
         mid = (low + high) // 2
 
-        nik_mid = daftar_terurut[mid].nik
+        nik_mid = str(daftar_terurut[mid].nik) if daftar_terurut[mid].nik else ""
 
         if nik_mid == target_nik:
             return daftar_terurut[mid]
@@ -126,7 +129,8 @@ def filter_layanan(daftar_pasien, layanan):
     layanan_lower = layanan.lower()
 
     for pasien in daftar_pasien:
-        if pasien.jenis_layanan.lower() == layanan_lower:
+        layanan_pasien = str(pasien.jenis_layanan).lower() if pasien.jenis_layanan else ""
+        if layanan_pasien == layanan_lower:
             hasil.append(pasien)
 
     return hasil

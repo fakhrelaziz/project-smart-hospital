@@ -1,4 +1,3 @@
-from collections import deque
 from modules.graph_rujukan import GraphRujukan
 
 
@@ -103,7 +102,8 @@ def ubah_status_rs():
     print("=" * 52)
     tampilkan_status(graph_obj)
 
-    nama_rs = input("\n  Masukkan nama RS: ").strip()
+    # Format otomatis "rs medika" -> "RS Medika"
+    nama_rs = input("\n  Masukkan nama RS: ").strip().title().replace("Rs", "RS")
     if nama_rs not in graph_obj.graph:
         print(f"  ERROR: RS '{nama_rs}' tidak ditemukan.")
         return
