@@ -31,8 +31,8 @@ def _tampilkan_hasil(daftar_hasil, keyword=""):
             print("\n  Tidak ada data yang ditemukan.")
         return
 
-    print(f"\n  Ditemukan: {len(daftar_hasil)} pasien")
-    print("  " + "─" * 60)
+    print(f"\n  Pasien Ditemukan")
+    print("  " + "─" * 30)
     for pasien in daftar_hasil:
         print(f"  NIK          : {pasien.nik}")
         print(f"  Nama         : {pasien.nama}")
@@ -41,7 +41,7 @@ def _tampilkan_hasil(daftar_hasil, keyword=""):
         print(f"  Status       : {pasien.status}")
         print(f"  Danger Score : {pasien.danger_score}")
         print(f"  Kamar        : {pasien.kamar if pasien.kamar else '-'}")
-        print("  " + "─" * 60)
+        print("  " + "─" * 30)
 
 
 def linear_search_nama(daftar_pasien, keyword):
@@ -188,7 +188,6 @@ def cari_pasien_nik():
 
 def cari_pasien_layanan():
     """Entry point untuk filter pasien berdasarkan jenis layanan. Menggunakan Linear Search (filter)."""
-    # Tuple kategori layanan — sesuai dengan implementasi di proyek
     KATEGORI_LAYANAN = ("UGD", "Rawat Inap", "Rawat Jalan")
 
     print("\n" + "=" * 44)

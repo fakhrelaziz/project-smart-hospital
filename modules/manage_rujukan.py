@@ -42,7 +42,7 @@ def tampilkan_peta(graph_obj):
     for i, tetangga in graph_obj.graph.items():
         status   = graph_obj.status.get(i, "?")
         koneksi  = " → ".join(tetangga)
-        print(f"  - {i:<18} : ({status}) {koneksi}")
+        print(f"  - {i:<18} : {koneksi}")
 
     print("=" * 52)
     print("\n  Keterangan Status:")

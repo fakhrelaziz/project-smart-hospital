@@ -14,13 +14,13 @@ class UndoStack:
         return True
 
     def pop(self):
-        """Mengambil dan menghapus data teratas dari tumpukan (Pop)."""
+        """Mengambil dan menghapus data terakhir (Pop)."""
         if self.is_empty():
             return None
         return self.data.pop()
 
     def intip_aksi_terakhir(self):
-        """Melihat data aksi teratas tanpa menghapusnya (Peek)."""
+        """Melihat data teratas tanpa menghapusnya (Peek)."""
         if self.is_empty():
             return None
         return self.data[-1]

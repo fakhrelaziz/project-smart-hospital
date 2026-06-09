@@ -120,5 +120,21 @@
                 "resep": "Mefenamic Acid 500mg (5)"
             }
         ]
+    },
+    {
+        "nik": "100007",
+        "nama": "Devin",
+        "umur": 19,
+        "layanan": "Rawat Inap",
+        "status": "selesai",
+        "danger_score": 5,
+        "nomor_kamar": null,
+        "rekam_medis": [
+            {
+                "tanggal": "2026-06-09",
+                "diagnosis": "Asam Lambung",
+                "resep": "Omeprazole 20mg"
+            }
+        ]
     }
 ]

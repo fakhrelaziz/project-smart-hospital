@@ -8,19 +8,14 @@ from models.rumah_sakit import JARINGAN_RS
 from utils.json_handler import load_json, save_json
 
 class GraphRujukan:
-    """
-    Merepresentasikan jaringan RS rujukan sebagai Graph.
-    Berperan sebagai Struktur Data (Data Structure).
-    """
-
     def __init__(self):
-        # Adjacency list — struktur utama graph
+        # Adjacency list struktur utama graph
         self.graph  = JARINGAN_RS 
         
-        # Status setiap RS diambil dari JSON agar perubahannya permanen
+        # Status setiap RS diambil dari JSON
         self.status = load_json("data/rs_status.json")
         
-        # Fallback jika file json hilang/kosong (berupa list []) atau isinya bukan dictionary
+        # alternatif lain jika file json hilang/kosong (berupa list []) atau isinya bukan dictionary
         if not self.status or type(self.status) is not dict:
             self.status = {rs: "Tersedia" for rs in self.graph}
 

@@ -52,7 +52,7 @@ while True:
 
     print("\n" + "=" * 15 + " MENU UTAMA " + "=" * 15)
     print("  [1] Pendaftaran Pasien")
-    print("  [2] Layanan UGD")
+    print("  [2] Sistem UGD")
     print("  [3] Rawat Inap & Navigasi Kamar")
     print("  [4] Sistem Farmasi & Apotek")
     print("  [5] Sistem Rujukan Lintas RS")
@@ -97,7 +97,7 @@ while True:
 
     elif pilihan == "2":
         while True:
-            print("\n=== LAYANAN UGD ===")
+            print("\n=== SISTEM UGD ===")
             print("  [1] Lihat Antrean UGD")
             print("  [2] Input / Update Danger Score Pasien")
             print("  [3] Undo Update Danger Score Terakhir")

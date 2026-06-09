@@ -17,7 +17,7 @@ class CircularLinkedList:
     def tambah_jadwal(self, data):
         node_baru = NodeJadwal(data)
         
-        # Kalau masih kosong, dia jadi kepala sekaligus ekor, dan menunjuk ke dirinya sendiri
+        # Kalau masih kosong, dia jadi head sekaligus ekor, dan menunjuk ke dirinya sendiri
         if self.head is None:
             self.head = node_baru
             self.tail = node_baru
@@ -28,10 +28,10 @@ class CircularLinkedList:
         self.tail.next = node_baru
         self.tail = node_baru
         
-        # Sisi unik CLL: Ekor yang baru wajib nunjuk balik ke kepala
+        # Sisi unik CLL: Ekor yang baru wajib nunjuk balik ke head
         self.tail.next = self.head
 
-    def lihat_jadwal(self, jumlah_putaran=1):
+    def lihat_jadwal(self, jumlah_putaran=1, interaktif=False):
         if self.head is None:
             print("[-] Belum ada jadwal.")
             return
@@ -40,15 +40,26 @@ class CircularLinkedList:
         putaran_sekarang = 0
         
         print("=== JADWAL SIKLUS ===")
-        # Karena muter terus gak ada ujungnya, kita kasih batas putaran biar gak infinity loop
-        while putaran_sekarang < jumlah_putaran:
-            print(f"- {saat_ini.data}")
-            saat_ini = saat_ini.next
-            
-            # Kalau udah balik ke kepala, berarti satu putaran selesai
-            if saat_ini == self.head:
-                putaran_sekarang += 1
-                print("--- (Siklus Berulang) ---")
+        
+        if interaktif:
+            while True:
+                pilihan = input(f"- {saat_ini.data}   (Tekan ENTER untuk lanjut, ketik 'q' untuk berhenti): ").strip().lower()
+                if pilihan == 'q':
+                    break
+                
+                saat_ini = saat_ini.next
+                if saat_ini == self.head:
+                    print("--- (Siklus Berulang) ---")
+        else:
+            # Karena muter terus gak ada ujungnya, kita kasih batas putaran biar gak infinity loop
+            while putaran_sekarang < jumlah_putaran:
+                print(f"- {saat_ini.data}")
+                saat_ini = saat_ini.next
+                
+                # Kalau udah balik ke head, berarti satu putaran selesai
+                if saat_ini == self.head:
+                    putaran_sekarang += 1
+                    print("--- (Siklus Berulang) ---")
 
     def to_list(self):
         if self.head is None:
@@ -57,11 +68,10 @@ class CircularLinkedList:
         hasil = []
         saat_ini = self.head
         
-        # Pakai do-while ala Python biar gampang
         while True:
             hasil.append(saat_ini.data)
             saat_ini = saat_ini.next
-            if saat_ini == self.head:  # Berhenti kalau udah muter balik ke kepala
+            if saat_ini == self.head:  
                 break
                 
         return hasil
