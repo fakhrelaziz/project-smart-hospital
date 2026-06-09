@@ -18,7 +18,7 @@ Struktur slot setelah insert:
 
 class HashObat:
     def __init__(self, ukuran = 20): #disini ukuran default kita buat 20, bisa diubah sesuai kebutuhan
-        #1. Menentukan ukuran slot lemari apotek
+        #1. Menentukan ukuran 
         self._ukuran = ukuran
         
         #2. Setiap slot diisi Dictionary kosong {} untuk wadah obat yang tabrakan (Chaining)
@@ -33,7 +33,7 @@ class HashObat:
     Menjumlahkan nilai ASCII setiap karakter kode, lalu modulo ukuran.
     Contoh: "OBT001"
       O=79, B=66, T=84, 0=48, 0=48, 1=49
-      total = 374  →  374 % 20 = 14  →  slot 14
+      total = 374  →  374 % 20 = 14  →  slot/indeks 14
     '''
 
     def hash_function(self, kode_obat):
@@ -61,7 +61,6 @@ class HashObat:
             
         #langsung simpan/timpa ke dalam dictionary slot tujuan secara diam-diam
         self._tabel[index][kode_obat] = detail_obat
-
 
     '''
     get — Mencari detail obat berdasarkan kode

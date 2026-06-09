@@ -157,7 +157,7 @@ def undo_pendaftaran_terakhir():
 
         if len(daftar_pasien) < jumlah_pasien_awal:
             save_json("data/pasien.json", daftar_pasien)
-            print(f"Pendaftaran NIK {nik_batal} berhasil dibatalkan.")
+            print(f"Pendaftaran pasien atas nama {aksi_terakhir['nama']} dengan NIK {nik_batal} berhasil dibatalkan.")
         else:
             print(f"ERROR: NIK {nik_batal} tidak ditemukan, gagal undo.")
     else:

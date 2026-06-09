@@ -219,8 +219,7 @@ def lihat_jadwal_obat_pasien():
     print(f"    Kamar    : {pasien_data['nomor_kamar']}")
     print(f"    Layanan  : {pasien_data.get('layanan', '-')}")
     print()
-    print("Siklus jadwal obat (tekan ENTER untuk lanjut, ketik 'q' untuk berhenti):")
     print("-" * 44)
 
     # Tampilkan siklus jadwal minum obat
-    jadwal.lihat_jadwal(jumlah_putaran=2)
+    jadwal.lihat_jadwal(interaktif=True)

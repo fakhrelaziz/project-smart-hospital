@@ -13,7 +13,6 @@ class QueuePendaftaran:
 
     def enqueue(self, pasien):
         """method untuk memasukkan data pasien yang baru didaftarkan ke stuktur data queue."""
-
         #validasi apakah data yang masuk beupa dict dan ada key 'nik
         if not pasien.get("nik"):
             print("ERROR: data pasien harus memiliki key 'nik'.")
@@ -26,7 +25,7 @@ class QueuePendaftaran:
 
     def dequeue(self):
         """Mengambil dan menghapus pasien pertama antri."""
-        #manggil method cek_antrian_kosong untuk cek antrian kosong
+        #manggil method cek_antrian_kosong untuk cek antrian jika kosong
         if self.cek_antrian_kosong():
             print(" Antrean kosong. Tidak ada pasien untuk diproses.")
             return None
@@ -52,7 +51,7 @@ class QueuePendaftaran:
             return
         print(f"Jumlah Antrean ({self.jmlh_antrian_pasien()} pasien)")
 
-        # Menampilkan nomor urut, NIK, nama, dan layanan pasien dalam antrian
+        # Menampilkan NIK, nama, dan layanan pasien dalam antrian
         nomor_urut = 1
         for p in self.items:
             nik_pasien = p["nik"] if "nik" in p else "-"

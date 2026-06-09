@@ -94,7 +94,7 @@
         "nama": "Omeprazole 20mg",
         "kategori": "Antasida",
         "bentuk": "Kapsul",
-        "stok": 75,
+        "stok": 73,
         "harga": 8000,
         "pemakaian_harian": 1
     },
@@ -178,5 +178,14 @@
         "stok": 30,
         "harga": 18000,
         "pemakaian_harian": 3
+    },
+    {
+        "kode": "OBT021",
+        "nama": "Cetirizine 10mg",
+        "kategori": "Antihistamin",
+        "bentuk": "Tablet",
+        "stok": 50,
+        "harga": 4000,
+        "pemakaian_harian": 5
     }
 ]

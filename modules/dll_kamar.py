@@ -32,8 +32,9 @@ class NavigasiKamar:
         """Menyusuri DLL dan mengembalikan daftar kamar yang Kosong."""
         kamar_tersedia = []
         saat_ini = self.head
+
         while saat_ini is not None:
-            # Pengecekan matematis lebih aman daripada string teks
+            # Memeriksa apakah kamar masih memiliki ruang kosong
             if len(saat_ini.data.pasien_terisi) < saat_ini.data.kapasitas_kasur:
                 kamar_tersedia.append(saat_ini.data)
             saat_ini = saat_ini.next

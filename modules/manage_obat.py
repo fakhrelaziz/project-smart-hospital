@@ -77,7 +77,7 @@ def cari_obat_kode():
     for i in data_obat:
         hash_tabel.insert(i['kode'], i)
 
-    print("\n--- PENCARIAN OBAT (HASH TABLE) ---")
+    print("\n--- PENCARIAN OBAT  ---")
     kode_cari = input("Masukkan kode obat yang dicari: ").strip()
     hasil = hash_tabel.get(kode_cari)
 
@@ -133,7 +133,6 @@ def tampilkan_katalog():
     """menampilkan katalog obat dalam bentuk direktori."""
     print("\n" + "=" * 52)
     print("             KATALOG OBAT FARMASI")
-    print("          Struktur Data: General Tree")
     print("=" * 52)
 
     katalog = KatalogObat()
