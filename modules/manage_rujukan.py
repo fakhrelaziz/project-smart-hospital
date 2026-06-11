@@ -40,7 +40,6 @@ def tampilkan_peta(graph_obj):
     print("=" * 52)
 
     for i, tetangga in graph_obj.graph.items():
-        status   = graph_obj.status.get(i, "?")
         koneksi  = " → ".join(tetangga)
         print(f"  - {i:<18} : {koneksi}")
 
@@ -59,14 +58,14 @@ def tampilkan_status(graph_obj):
 
 
 def lihat_peta_rujukan():
-    """Entry point CLI: tampilkan peta jaringan RS."""
+    """tampilkan peta jaringan RS."""
     graph_obj = GraphRujukan()
     tampilkan_peta(graph_obj)
     tampilkan_status(graph_obj)
 
 
 def cari_rs_rujukan():
-    """Entry point CLI: jalankan BFS untuk menemukan RS rujukan terdekat."""
+    """jalankan BFS untuk menemukan RS rujukan terdekat."""
     print("\n" + "=" * 52)
     print("       CARI RS RUJUKAN TERDEKAT")
     print("=" * 52)
@@ -94,7 +93,7 @@ def cari_rs_rujukan():
 
 
 def ubah_status_rs():
-    """Entry point CLI: ubah status Tersedia/Penuh sebuah RS."""
+    """ubah status Tersedia/Penuh sebuah RS."""
     graph_obj = GraphRujukan()
 
     print("\n" + "=" * 52)

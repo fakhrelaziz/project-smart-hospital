@@ -1,7 +1,7 @@
 """
 Mengimplementasikan Circular Linked List untuk mengelola siklus jadwal
 minum obat pasien rawat inap. Node terakhir (Malam) menunjuk kembali
-ke node pertama (Pagi) sehingga siklus berjalan tanpa batas.
+ke node pertama (Pagi) sehingga siklus berjalan.
 """
 
 class NodeJadwal:

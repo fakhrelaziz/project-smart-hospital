@@ -2,9 +2,6 @@
 Mengimplementasikan struktur data Queue untuk mengelola
 antrian pendaftaran pasien. Pasien yang datang lebih dulu dilayani
 lebih dulu (FIFO).
-- Queue diimplementasikan menggunakan list Python dengan:
-    enqueue() = append ke belakang list
-    dequeue()  = pop(0) dari depan list
 """
 
 class QueuePendaftaran:
