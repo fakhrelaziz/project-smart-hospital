@@ -1,12 +1,3 @@
-"""
-Mendefinisikan class Pasien sebagai representasi objek data pasien
-dalam sistem Smart Hospital. Menyimpan semua atribut dan method
-untuk manipulasi data pasien.
-- Rekam medis disimpan sebagai list dict dan dikelola oleh sll_rekammedis.py.
-- Method objek_ke_dict() digunakan untuk serialisasi ke JSON.
-- Method dict_ke_objek() digunakan untuk deserialisasi dari JSON.
-"""
-
 from modules.sll_rekammedis import SingleLinkedListRekamMedis
 
 class Pasien:

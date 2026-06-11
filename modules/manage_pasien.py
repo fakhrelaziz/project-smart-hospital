@@ -1,6 +1,6 @@
 """
 business logic dari smart hospital untuk mengelola pasien, termasuk pendaftaran, triase, dan rekam medis.
-Tujuan nya menyediakan operasi interaktif terminal validasi, menampilkan input/output
+Tujuan nya menyediakan operasi interaktif, menampilkan input/output
 dengan memanggil stuktur data antrean (Queue) dan pembatalan pendaftaran dengan (Stack).
     - Menggunakan struktur data Queue manual (QueuePendaftaran) untuk alur pasien 'antri'.
     - Menggunakan Stack manual (Stack_UGD) untuk keperluan Undo pendaftaran.
@@ -104,17 +104,15 @@ def daftar_pasien_baru():
  
 
 def proses_antrian_pendaftaran():
-    """pasien daftar pertama yang di layani kemudian status berubah selesai."""
+    """pasien daftar pertama yang di layani kemudian status berubah menjadi "diproses."""
     data_pasien = load_json("data/pasien.json")
 
-    # Inisialisasi antrean lokal dengan data
     pasien_antri = [p for p in data_pasien if p.get("status") == "antri"]
     antrean = QueuePendaftaran(pasien_antri)
 
     pasien_diproses = antrean.dequeue()
 
     if pasien_diproses:
-        # Refleksikan status baru ke master data
         for proses in data_pasien:
             if proses["nik"] == pasien_diproses["nik"]:
                 pasien_obj = Pasien()
@@ -127,7 +125,7 @@ def proses_antrian_pendaftaran():
 
 
 def lihat_antrian_pendaftaran():
-    """Menampilkan line up Queue Pendaftaran di layar tanpa memanipulasi datanya."""
+    """Menampilkan data pasien yang berstatus antri."""
     data_pasien = load_json("data/pasien.json")
 
     # Inisialisasi antrean dengan data
@@ -215,11 +213,9 @@ def tambah_rekam_medis_pasien():
         print("ERROR: Pasien tidak ditemukan.")
         return
 
-    # Pilihan 2: Menggunakan objek Pasien dari models
     pasien_obj = Pasien()
     pasien_obj.dict_ke_objek(pasien_target)
 
-    # Input terstruktur sesuai desain rekam medis
     print(f"\n--- TAMBAH CATATAN REKAM MEDIS: {pasien_obj.nama} ---")
     while True:
         tanggal = input("  Tanggal (YYYY-MM-DD) : ").strip()
@@ -274,10 +270,9 @@ def tambah_rekam_medis_pasien():
     if resep_list:
         save_json("data/obat.json", data_obat)
 
-    # Menggunakan method tingkat model Pasien
     pasien_obj.tambah_rekam_medis(tanggal, diagnosis, resep)
 
-    # Update status via OOP
+    # Update status pasien menjadi selesai setelah rekam medis ditambahkan
     pasien_obj.update_status("selesai")
     pasien_target.update(pasien_obj.objek_ke_dict())
     save_json("data/pasien.json", data_pasien)

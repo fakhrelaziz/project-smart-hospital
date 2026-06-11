@@ -17,7 +17,7 @@ class CircularLinkedList:
     def tambah_jadwal(self, data):
         node_baru = NodeJadwal(data)
         
-        # Kalau masih kosong, dia jadi head sekaligus ekor, dan menunjuk ke dirinya sendiri
+         # Kalau masih kosong, dia jadi head sekaligus ekor, dan menunjuk ke dirinya sendiri
         if self.head is None:
             self.head = node_baru
             self.tail = node_baru
