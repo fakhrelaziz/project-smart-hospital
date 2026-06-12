@@ -45,14 +45,6 @@ def _tampilkan_hasil(daftar_hasil, keyword=""):
 
 
 def linear_search_nama(daftar_pasien, keyword):
-    """
-    Mencari pasien yang namanya mengandung keyword menggunakan Linear Search.
-    Cara kerja:
-        Loop seluruh list dari index 0 sampai akhir.
-        Setiap pasien dicek apakah keyword ada di dalam namanya.
-        Semua pasien yang cocok dikumpulkan ke list hasil.
-        Tidak berhenti di hasil pertama — mengembalikan semua yang cocok.
-    """
     hasil = []
     # ubah ke huruf kecil untuk perbandingan
     keyword_lower = keyword.lower() 
@@ -81,18 +73,7 @@ def _urutkan_by_nik(daftar_pasien):
 
 
 def binary_search_nik(daftar_pasien, target_nik):
-    """
-    Mencari satu pasien berdasarkan NIK menggunakan Binary Search.
-    Cara kerja:
-        1. Pastikan list sudah terurut ascending by NIK (dilakukan di dalam fungsi ini)
-        2. Set low = 0 (index paling kiri), high = len-1 (index paling kanan)
-        3. Hitung mid = (low + high) // 2 (tengah)
-        4. Bandingkan NIK di index mid dengan target_nik:
-           - Sama      → DITEMUKAN, return pasien
-           - Lebih kecil → target ada di kanan, set low  = mid + 1
-           - Lebih besar → target ada di kiri,  set high = mid - 1
-        5. Ulangi sampai ditemukan atau low > high (tidak ada)
-    """
+
     # Urutkan dulu berdasarkan NIK 
     # copy agar list asli tidak berubah, karena Binary Search butuh data terurut
     daftar_terurut = _urutkan_by_nik(daftar_pasien[:])
@@ -119,7 +100,6 @@ def binary_search_nik(daftar_pasien, target_nik):
             # NIK target ada di KIRI — buang separuh kanan
             high = mid - 1
 
-    # Jika loop selesai tanpa return → tidak ditemukan
     return None
 
 

@@ -34,7 +34,6 @@ def _bangun_dll():
     return dll
 
 
-# ───────────────────────────────────────────────────────
 
 def lihat_kamar_tersedia():
     """Menampilkan daftar kamar yang masih memiliki kapasitas kosong pakai DLL."""
@@ -82,7 +81,7 @@ def assign_pasien_ke_kamar():
         print("ERROR: Kamar tidak ditemukan.")
         return
 
-    # Konversi dict → objek Kamar
+    # mengubah dict ke objek Kamar
     kamar_obj = _dict_ke_objek(kamar_data)
     if nik in kamar_obj.pasien_terisi:
         print("Pasien sudah tercatat di kamar ini.")
@@ -99,7 +98,6 @@ def assign_pasien_ke_kamar():
     pasien_obj.update_layanan("Rawat Inap")
     pasien_data.update(pasien_obj.objek_ke_dict())
 
-    # Sync dict kamar dari objek yang sudah diperbarui
     kamar_data.update(kamar_obj.objek_ke_dict())
     save_json("data/kamar.json", data_kamar)
     save_json("data/pasien.json", data_pasien)
@@ -190,10 +188,6 @@ def navigasi_kamar():
 
 
 def lihat_jadwal_obat_pasien():
-    """
-    Menampilkan siklus jadwal minum obat pasien rawat inap menggunakan
-    Circular Linked List (Pagi → Siang → Malam → Pagi → ...).
-    """
     data_pasien = load_json("data/pasien.json")
 
     nik = input("Masukkan NIK pasien: ").strip()
@@ -209,7 +203,7 @@ def lihat_jadwal_obat_pasien():
         print(f"Pasien '{pasien_data['nama']}' belum dirawat inap (tidak memiliki kamar).")
         return
 
-    # Bangun CLL jadwal default: Pagi → Siang → Malam
+    # Bangun CLL jadwal default Pagi → Siang → Malam
     jadwal = CircularLinkedList()
     jadwal.tambah_jadwal("PAGI   — 07.00 WIB")
     jadwal.tambah_jadwal("SIANG  — 13.00 WIB")
@@ -221,5 +215,4 @@ def lihat_jadwal_obat_pasien():
     print()
     print("-" * 44)
 
-    # Tampilkan siklus jadwal minum obat
     jadwal.lihat_jadwal(interaktif=True)

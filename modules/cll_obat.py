@@ -1,7 +1,7 @@
 """
 Mengimplementasikan Circular Linked List untuk mengelola siklus jadwal
 minum obat pasien rawat inap. Node terakhir (Malam) menunjuk kembali
-ke node pertama (Pagi) sehingga siklus berjalan tanpa batas.
+ke node pertama (Pagi) sehingga siklus berjalan.
 """
 
 class NodeJadwal:
@@ -17,7 +17,7 @@ class CircularLinkedList:
     def tambah_jadwal(self, data):
         node_baru = NodeJadwal(data)
         
-        # Kalau masih kosong, dia jadi head sekaligus ekor, dan menunjuk ke dirinya sendiri
+         # Kalau masih kosong, dia jadi head sekaligus ekor, dan menunjuk ke dirinya sendiri
         if self.head is None:
             self.head = node_baru
             self.tail = node_baru

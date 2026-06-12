@@ -5,6 +5,7 @@ baru ditambahkan (append) ke ujung list sebagai node baru.
 - Setiap node menyimpan satu catatan rekam medis (dict: tanggal, diagnosis, resep).
 - to_list() digunakan untuk serialisasi JSON.
 """
+
 class Node:
     def __init__(self, data):
         self.data = data  

@@ -1,8 +1,6 @@
 """
 Merepresentasikan jaringan rumah sakit rujukan sebagai Struktur Data Graph
 dengan adjacency list.
-- Data diimpor dari models/rumah_sakit.py.
-- Algoritma pencarian dan interaksi CLI dikelola oleh manage_rujukan.py.
 """
 from models.rumah_sakit import JARINGAN_RS
 from utils.json_handler import load_json, save_json

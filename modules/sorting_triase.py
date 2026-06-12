@@ -32,12 +32,6 @@ def label_kegawatan(danger_score):
 
 
 def bubble_sort_ugd(daftar_pasien):
-    """
-    Cara kerja Bubble Sort:
-        - Loop luar  : berjalan sebanyak (n-1) kali
-        - Loop dalam : membandingkan dua elemen bertetangga
-        - Jika elemen kiri LEBIH KECIL dari kanan → tukar posisi (swap)
-    """
     n = len(daftar_pasien)
 
     for i in range(n - 1):
@@ -130,7 +124,6 @@ def update_danger_score():
     # Update dan simpan
     score_lama = data_semua[pasien_index]["danger_score"]
     
-    # OOP Setter
     pasien_obj = Pasien()
     pasien_obj.dict_ke_objek(data_semua[pasien_index])
     pasien_obj.update_danger_score(score_baru)
@@ -159,11 +152,10 @@ def undo_danger_score():
     skor_lama = aksi_terakhir["skor_lama"]
     data_semua = load_json("data/pasien.json")
     
-    # Cari dan pulihkan
     pasien_ditemukan = False
     for data in data_semua:
         if data.get("nik") == nik_batal:
-            # OOP Setter
+
             pasien_obj = Pasien()
             pasien_obj.dict_ke_objek(data)
             pasien_obj.update_danger_score(skor_lama)
@@ -181,8 +173,7 @@ def undo_danger_score():
 def lihat_antrian_ugd():
     """
     Fungsi utama yang dipanggil dari main.py.
-    Mengambil pasien UGD, mengurutkan dengan Bubble Sort,
-    lalu menampilkan hasilnya.
+    Mengambil pasien UGD, mengurutkan dengan Bubble Sort, lalu menampilkan hasilnya.
     """
     data_semua = load_json("data/pasien.json")
 

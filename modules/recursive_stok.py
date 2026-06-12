@@ -3,12 +3,6 @@ Menghitung estimasi sisa hari pemakaian stok obat menggunakan
 fungsi rekursif. Program memanggil dirinya sendiri berulang kali,
 mengurangi stok sebesar pemakaian_harian setiap panggilan, hingga
 mencapai base case (stok <= 0).
-Cara kerja rekursif:
-    hitung_sisa_hari(stok=50, dosis=3, hari=0)
-        → stok 50 > 0, rekursif ke hitung_sisa_hari(47, 3, 1)
-            → stok 47 > 0, rekursif ke hitung_sisa_hari(44, 3, 2)
-                → ... terus hingga stok <= 0
-                    → BASE CASE: return hari  (= 17)
 """
 
 from models.obat import Obat
@@ -16,28 +10,6 @@ from utils.json_handler import load_json
 
 
 def hitung_sisa_hari(stok, pemakaian_harian, hari=0):
-    """
-    Menghitung estimasi sisa hari pemakaian obat secara REKURSIF.
-
-    Cara kerja:
-        BASE CASE    : Jika stok <= 0, return nilai hari.
-                       Ini adalah kondisi berhenti — stok sudah habis.
-        RECURSIVE CASE: Kurangi stok dengan pemakaian_harian, tambah hari 1,
-                        lalu panggil dirinya sendiri dengan nilai baru.
-
-    Contoh trace (stok=10, dosis=3):
-        hitung_sisa_hari(10, 3, 0)   → stok > 0, lanjut
-        hitung_sisa_hari( 7, 3, 1)   → stok > 0, lanjut
-        hitung_sisa_hari( 4, 3, 2)   → stok > 0, lanjut
-        hitung_sisa_hari( 1, 3, 3)   → stok > 0, lanjut
-        hitung_sisa_hari(-2, 3, 4)   → stok <= 0, BASE CASE → return 4
-
-    Args:
-        stok         (int) : Jumlah stok obat saat ini.
-        pemakaian_harian (int) : Berapa unit obat dipakai per hari.
-        hari         (int) : Akumulator — bertambah 1 setiap panggilan rekursif.
-                             Nilai awal selalu 0 (default).
-    """
 
     # base case
     if stok <= 0:
@@ -54,14 +26,12 @@ def prediksi_stok_obat(nama_obat, stok, pemakaian_harian):
     """
     sisa_hari = None
     
-    # Validasi untuk mencegah Infinite Recursion
     if pemakaian_harian <= 0:
         peringatan = "Pemakaian harian harus lebih dari 0."
     else:
-        # Langsung gunakan metode rekursif 
         sisa_hari = hitung_sisa_hari(stok, pemakaian_harian)
 
-        # Tentukan peringatan berdasarkan sisa hari
+        # peringatan berdasarkan sisa hari
         if sisa_hari == 0:
             peringatan = "STOK HABIS — Segera lakukan pengadaan!"
         elif sisa_hari <= 3:
@@ -106,11 +76,6 @@ def tampilkan_hasil_prediksi(hasil):
 
 
 def prediksi_semua_obat():
-    """
-    prediksi stok untuk seluruh obat di data.
-    Berguna untuk laporan ketersediaan obat secara menyeluruh.
-    Dipanggil dari main.py menu Farmasi.
-    """
     print("\n  " + "=" * 72)
     print("  " + "PREDIKSI STOK SEMUA OBAT".center(72))
     print("  " + "=" * 72)
